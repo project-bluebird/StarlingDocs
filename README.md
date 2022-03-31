@@ -1,2 +1,2 @@
 # StarlingDocs
-[Starling documentation](index.html)
+[Starling documentation](https://project-bluebird.github.io/StarlingDocs/)
