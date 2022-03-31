@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>starling.agent.agent_rule_based &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for starling.agent.agent_rule_based</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Environment</span>
+<span class="kn">from</span> <span class="nn">..core.pos2d</span> <span class="kn">import</span> <span class="n">Pos2D</span>
+<span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">geometry</span>
+
+
+<span class="kn">from</span> <span class="nn">pyproj</span> <span class="kn">import</span> <span class="n">Geod</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">default_rng</span>
+
+
+<div class="viewcode-block" id="get_ac_info"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.get_ac_info.html#starling.agent.agent_rule_based.get_ac_info">[docs]</a><span class="k">def</span> <span class="nf">get_ac_info</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">stripscan_position</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns key information for an aircraft specified by its position in the environment aircraft list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">aircraft_callsigns</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">))</span>
+    <span class="n">ac_callsign</span> <span class="o">=</span> <span class="n">aircraft_callsigns</span><span class="p">[</span><span class="n">stripscan_position</span><span class="p">]</span>
+    <span class="n">ac</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">ac_callsign</span><span class="p">]</span>
+    <span class="n">ac_exit_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">route_exit_fix</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ac_phase</span> <span class="o">=</span> <span class="n">phase_cat</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ac_callsign</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">ac_exit_pos</span><span class="p">,</span> <span class="n">ac_phase</span></div>
+
+
+<div class="viewcode-block" id="get_poisson_interval"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.get_poisson_interval.html#starling.agent.agent_rule_based.get_poisson_interval">[docs]</a><span class="k">def</span> <span class="nf">get_poisson_interval</span><span class="p">(</span><span class="n">p_lambda</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a random time from a poisson distribution with the provided lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rg</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">()</span>
+    <span class="n">interval</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">p_lambda</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">interval</span></div>
+
+
+<div class="viewcode-block" id="get_shortest_distance_to_route"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.get_shortest_distance_to_route.html#starling.agent.agent_rule_based.get_shortest_distance_to_route">[docs]</a><span class="k">def</span> <span class="nf">get_shortest_distance_to_route</span><span class="p">(</span><span class="n">ac</span><span class="p">,</span> <span class="n">environment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns distance of an aircraft from a great circle between entry and exit fix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ac_pos</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+    <span class="n">ac_entry_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">route_entry_fix</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ac_exit_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">route_exit_fix</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ac_bearing</span> <span class="o">=</span> <span class="n">ac_exit_pos</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">ac_pos</span><span class="p">)</span>
+    <span class="n">entry_bearing</span> <span class="o">=</span> <span class="n">ac_exit_pos</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">ac_entry_pos</span><span class="p">)</span>
+    <span class="n">mirror_pos</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate_about</span><span class="p">(</span><span class="n">ac_pos</span><span class="p">,</span> <span class="p">(</span><span class="n">ac_bearing</span> <span class="o">-</span> <span class="n">entry_bearing</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">ac_exit_pos</span><span class="p">)</span>
+    <span class="n">intersect</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">intersection</span><span class="p">((</span><span class="n">ac_entry_pos</span><span class="p">,</span> <span class="n">ac_exit_pos</span><span class="p">),</span> <span class="p">(</span><span class="n">ac_pos</span><span class="p">,</span> <span class="n">mirror_pos</span><span class="p">))</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">intersect</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">ac_pos</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dist</span></div>
+
+
+<div class="viewcode-block" id="phase_cat"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.phase_cat.html#starling.agent.agent_rule_based.phase_cat">[docs]</a><span class="k">def</span> <span class="nf">phase_cat</span><span class="p">(</span><span class="n">ac_afl</span><span class="p">,</span> <span class="n">ac_xfl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the flight phase of an aircraft given its current flight level and exit flight level</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ac_xfl</span> <span class="o">&gt;</span> <span class="n">ac_afl</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;outbound&quot;</span>
+    <span class="k">elif</span> <span class="n">ac_xfl</span> <span class="o">==</span> <span class="n">ac_afl</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;overflight&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;inbound&quot;</span></div>
+
+
+<div class="viewcode-block" id="vertical_interaction_exists"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.vertical_interaction_exists.html#starling.agent.agent_rule_based.vertical_interaction_exists">[docs]</a><span class="k">def</span> <span class="nf">vertical_interaction_exists</span><span class="p">(</span><span class="n">ac1_afl</span><span class="p">,</span> <span class="n">ac1_xfl</span><span class="p">,</span> <span class="n">ac2_afl</span><span class="p">,</span> <span class="n">ac2_xfl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether a vertical interaction exists between two aircraft given their current and required exit levels</span>
+
+<span class="sd">    Used to find planning problems, should be used alongside lateral assessments to judge if interactions are relevant</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">ac1_afl</span><span class="p">,</span> <span class="n">ac1_xfl</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">ac2_afl</span><span class="p">,</span> <span class="n">ac2_xfl</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">min</span><span class="p">(</span><span class="n">ac2_afl</span><span class="p">,</span> <span class="n">ac2_xfl</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">ac1_afl</span><span class="p">,</span> <span class="n">ac1_xfl</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="is_steppable"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.is_steppable.html#starling.agent.agent_rule_based.is_steppable">[docs]</a><span class="k">def</span> <span class="nf">is_steppable</span><span class="p">(</span><span class="n">ac1_afl</span><span class="p">,</span> <span class="n">ac1_xfl</span><span class="p">,</span> <span class="n">ac2_afl</span><span class="p">,</span> <span class="n">ac2_xfl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether a step climb/descent is viable for two aircraft based on levels alone - no lateral judgement</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ac1_afl</span> <span class="o">&gt;</span> <span class="n">ac2_afl</span> <span class="o">+</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">ac1_xfl</span> <span class="o">&gt;=</span> <span class="n">ac2_xfl</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">ac2_afl</span> <span class="o">&gt;</span> <span class="n">ac1_afl</span> <span class="o">+</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">ac2_xfl</span> <span class="o">&gt;=</span> <span class="n">ac1_xfl</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="climb_descend_distance"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.climb_descend_distance.html#starling.agent.agent_rule_based.climb_descend_distance">[docs]</a><span class="k">def</span> <span class="nf">climb_descend_distance</span><span class="p">(</span><span class="n">start_level</span><span class="p">,</span> <span class="n">end_level</span><span class="p">,</span> <span class="n">ground_speed</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns distance required to climb/descend a certain distance based on linear model. Climb/descent rate hard coded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">height_change</span> <span class="o">=</span> <span class="n">start_level</span> <span class="o">-</span> <span class="n">end_level</span>
+    <span class="n">time_to_lose</span> <span class="o">=</span> <span class="n">height_change</span><span class="o">/</span><span class="p">(</span><span class="mi">20</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span> <span class="c1"># 20 is climb/desc rate in flight levels hardcoded in linear pilot</span>
+    <span class="n">distance_required</span> <span class="o">=</span> <span class="n">time_to_lose</span><span class="o">*</span><span class="n">ground_speed</span><span class="o">/</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">distance_required</span></div>
+
+
+<div class="viewcode-block" id="tod_in_range"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.tod_in_range.html#starling.agent.agent_rule_based.tod_in_range">[docs]</a><span class="k">def</span> <span class="nf">tod_in_range</span><span class="p">(</span><span class="n">ac_pos</span><span class="p">,</span> <span class="n">ac_afl</span><span class="p">,</span> <span class="n">ac_xfl</span><span class="p">,</span> <span class="n">ac_spd</span><span class="p">,</span> <span class="n">exit_point</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether an aircraft has passed its top of descent based on linear model. Climb/descent rate hard coded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">height_to_lose</span> <span class="o">=</span> <span class="n">ac_afl</span> <span class="o">-</span> <span class="n">ac_xfl</span>
+    <span class="n">time_to_lose</span> <span class="o">=</span> <span class="n">height_to_lose</span><span class="o">*</span><span class="mi">60</span><span class="o">/</span><span class="mi">20</span>  <span class="c1"># 20 is climb/desc rate in flight levels hardcoded in linear pilot</span>
+    <span class="n">distance_to_lose</span> <span class="o">=</span> <span class="n">time_to_lose</span><span class="o">*</span><span class="n">ac_spd</span><span class="o">/</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+    <span class="n">distance_to_run</span> <span class="o">=</span> <span class="n">ac_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">exit_point</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">distance_to_run</span> <span class="o">&gt;</span> <span class="n">distance_to_lose</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="interaction_type"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.interaction_type.html#starling.agent.agent_rule_based.interaction_type">[docs]</a><span class="k">def</span> <span class="nf">interaction_type</span><span class="p">(</span><span class="n">ac1_afl</span><span class="p">,</span> <span class="n">ac1_xfl</span><span class="p">,</span> <span class="n">ac2_afl</span><span class="p">,</span> <span class="n">ac2_xfl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the interaction type between two aircraft as a combination of inbound, outbound and overflight</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">ac1_afl</span><span class="p">,</span> <span class="n">ac1_xfl</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ac2_afl</span><span class="p">,</span> <span class="n">ac2_xfl</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span> <span class="ow">or</span> <span class="nb">min</span><span class="p">(</span><span class="n">ac2_afl</span><span class="p">,</span> <span class="n">ac2_xfl</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ac1_afl</span><span class="p">,</span> <span class="n">ac1_xfl</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="n">type_key</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">type_raw</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">type_raw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phase_cat</span><span class="p">(</span><span class="n">ac1_afl</span><span class="p">,</span> <span class="n">ac1_xfl</span><span class="p">))</span>
+        <span class="n">type_raw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phase_cat</span><span class="p">(</span><span class="n">ac2_afl</span><span class="p">,</span> <span class="n">ac2_xfl</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">type_raw</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;inbound&quot;</span><span class="p">,</span> <span class="s2">&quot;inbound&quot;</span><span class="p">]:</span>
+            <span class="n">type_key</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">type_raw</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;overflight&quot;</span><span class="p">,</span> <span class="s2">&quot;overflight&quot;</span><span class="p">]:</span>
+            <span class="n">type_key</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">type_raw</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;outbound&quot;</span><span class="p">,</span> <span class="s2">&quot;outbound&quot;</span><span class="p">]:</span>
+            <span class="n">type_key</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">type_raw</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="s2">&quot;inbound&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">type_raw</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="s2">&quot;overflight&quot;</span><span class="p">):</span>
+            <span class="n">type_key</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="k">elif</span> <span class="n">type_raw</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="s2">&quot;inbound&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">type_raw</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="s2">&quot;outbound&quot;</span><span class="p">):</span>
+            <span class="n">type_key</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">elif</span> <span class="n">type_raw</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="s2">&quot;overflight&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">type_raw</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="s2">&quot;outbound&quot;</span><span class="p">):</span>
+            <span class="n">type_key</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;error in interaction classification&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">type_key</span></div>
+
+
+<div class="viewcode-block" id="choose_plan"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.choose_plan.html#starling.agent.agent_rule_based.choose_plan">[docs]</a><span class="k">def</span> <span class="nf">choose_plan</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">airspace</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns one of three plans for solving a simple I-sector head-on scenario, given the airspace and two aircraft</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">interact_type</span> <span class="o">=</span> <span class="n">interaction_type</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span>
+    <span class="n">ac1_exit_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">airspace</span><span class="o">.</span><span class="n">route_exit_fix</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ac2_exit_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">airspace</span><span class="o">.</span><span class="n">route_exit_fix</span><span class="p">(</span><span class="n">ac2</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ac1_pos</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+    <span class="n">ac2_pos</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">ac2</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">interact_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># No interaction</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;independent&quot;</span>
+    <span class="k">elif</span> <span class="n">interact_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># In/In</span>
+        <span class="k">if</span> <span class="n">is_steppable</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">):</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;step&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;split&quot;</span>
+    <span class="k">elif</span> <span class="n">interact_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># Over/Over</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;split&quot;</span>
+    <span class="k">elif</span> <span class="n">interact_type</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># Out/Out</span>
+        <span class="k">if</span> <span class="n">is_steppable</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">):</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;step&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;split&quot;</span>
+    <span class="k">elif</span> <span class="n">interact_type</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># In/Over</span>
+        <span class="k">if</span> <span class="n">phase_cat</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;inbound&quot;</span><span class="p">:</span>
+            <span class="n">start_level</span> <span class="o">=</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span> <span class="o">+</span> <span class="mi">10</span>
+            <span class="n">target_level</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span>
+            <span class="n">speed</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">speed</span>
+            <span class="n">exit_dist</span> <span class="o">=</span> <span class="n">ac1_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">ac1_exit_pos</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">start_level</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">fl</span> <span class="o">+</span> <span class="mi">10</span>
+            <span class="n">target_level</span> <span class="o">=</span> <span class="n">ac2</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span>
+            <span class="n">speed</span> <span class="o">=</span> <span class="n">ac2</span><span class="o">.</span><span class="n">speed</span>
+            <span class="n">exit_dist</span> <span class="o">=</span> <span class="n">ac2_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">ac2_exit_pos</span><span class="p">)</span>
+        <span class="n">time_to_exit</span> <span class="o">=</span> <span class="n">exit_dist</span> <span class="o">/</span> <span class="n">speed</span>
+        <span class="n">time_to_lose</span> <span class="o">=</span> <span class="p">(</span><span class="n">climb_descend_distance</span><span class="p">(</span><span class="n">start_level</span><span class="p">,</span> <span class="n">target_level</span><span class="p">,</span> <span class="n">speed</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="n">speed</span>  <span class="c1"># 5 extra dist for cross</span>
+        <span class="n">time_to_cross</span> <span class="o">=</span> <span class="n">ac1_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">ac2_pos</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">speed</span> <span class="o">+</span> <span class="n">ac2</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">time_to_exit</span> <span class="o">-</span> <span class="n">time_to_cross</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">time_to_lose</span> <span class="ow">and</span> <span class="n">ac1</span><span class="o">.</span><span class="n">requested_fl</span> <span class="o">!=</span> <span class="n">ac2</span><span class="o">.</span><span class="n">requested_fl</span><span class="p">:</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;step&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;split&quot;</span>
+    <span class="k">elif</span> <span class="n">interact_type</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># In/Out</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;split&quot;</span>
+    <span class="k">elif</span> <span class="n">interact_type</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>  <span class="c1"># Over/Out</span>
+        <span class="k">if</span> <span class="n">phase_cat</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;outbound&quot;</span><span class="p">:</span>
+            <span class="n">start_level</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">fl</span>
+            <span class="n">target_level</span> <span class="o">=</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span>
+            <span class="n">speed</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">speed</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">start_level</span> <span class="o">=</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span>
+            <span class="n">target_level</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">fl</span>
+            <span class="n">speed</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">speed</span>
+        <span class="n">time_to_gain</span> <span class="o">=</span> <span class="p">(</span><span class="n">climb_descend_distance</span><span class="p">(</span><span class="n">target_level</span><span class="p">,</span> <span class="n">start_level</span><span class="p">,</span> <span class="n">speed</span><span class="p">))</span> <span class="o">/</span> <span class="n">speed</span>
+        <span class="n">time_to_cross</span> <span class="o">=</span> <span class="p">(</span><span class="n">ac1_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">ac2_pos</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">speed</span> <span class="o">+</span> <span class="n">ac2</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>  <span class="c1"># +5 for full cross</span>
+        <span class="k">if</span> <span class="n">time_to_gain</span> <span class="o">&gt;</span> <span class="n">time_to_cross</span><span class="p">:</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;step&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;split&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error in choose plan&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">plan</span></div>
+
+
+<div class="viewcode-block" id="get_best_level_independent"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.get_best_level_independent.html#starling.agent.agent_rule_based.get_best_level_independent">[docs]</a><span class="k">def</span> <span class="nf">get_best_level_independent</span><span class="p">(</span><span class="n">ac</span><span class="p">,</span> <span class="n">ac_exit_pos</span><span class="p">,</span> <span class="n">ac_phase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns best cleared level for a flight assuming no other aircraft interactions - early climb, late descent</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ac_pos</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">requested_fl</span> <span class="o">==</span> <span class="n">ac</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">:</span>
+        <span class="n">best_level</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="n">ac_phase</span> <span class="o">==</span> <span class="s2">&quot;outbound&quot;</span><span class="p">:</span>
+        <span class="n">best_level</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span>
+    <span class="k">elif</span> <span class="n">ac_phase</span> <span class="o">==</span> <span class="s2">&quot;inbound&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tod_in_range</span><span class="p">(</span><span class="n">ac_pos</span><span class="p">,</span> <span class="n">ac</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="n">ac_exit_pos</span><span class="p">):</span>
+            <span class="n">best_level</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">best_level</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error in get_best_level_independent&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_level</span></div>
+
+
+<div class="viewcode-block" id="get_action_independent"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.get_action_independent.html#starling.agent.agent_rule_based.get_action_independent">[docs]</a><span class="k">def</span> <span class="nf">get_action_independent</span><span class="p">(</span><span class="n">ac_callsign</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">ac_exit_pos</span><span class="p">,</span> <span class="n">ac_phase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns best action for a flight assuming no other aircraft interactions - currently only considers levels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">best_level</span> <span class="o">=</span> <span class="n">get_best_level_independent</span><span class="p">(</span><span class="n">ac</span><span class="p">,</span> <span class="n">ac_exit_pos</span><span class="p">,</span> <span class="n">ac_phase</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">best_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">ac_callsign</span><span class="p">,</span> <span class="s2">&quot;change_flight_level_to&quot;</span><span class="p">,</span> <span class="n">best_level</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">action</span></div>
+
+
+<div class="viewcode-block" id="get_action_split"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.get_action_split.html#starling.agent.agent_rule_based.get_action_split">[docs]</a><span class="k">def</span> <span class="nf">get_action_split</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac2_exit_pos</span><span class="p">,</span> <span class="n">split_phase</span><span class="p">,</span> <span class="n">split_phases</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns action for the &quot;split&quot; plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">action</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">split_logic</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac2_exit_pos</span><span class="p">,</span> <span class="n">split_phase</span><span class="p">,</span> <span class="n">split_phases</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">action</span></div>
+
+
+<div class="viewcode-block" id="split_phase_update"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.split_phase_update.html#starling.agent.agent_rule_based.split_phase_update">[docs]</a><span class="k">def</span> <span class="nf">split_phase_update</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac2_exit_pos</span><span class="p">,</span> <span class="n">split_phase</span><span class="p">,</span> <span class="n">split_phases</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the updated phase of the &quot;split&quot; plan for an aircraft</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">new_split_phase</span> <span class="o">=</span> <span class="n">split_logic</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac2_exit_pos</span><span class="p">,</span> <span class="n">split_phase</span><span class="p">,</span> <span class="n">split_phases</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_split_phase</span></div>
+
+
+<div class="viewcode-block" id="split_logic"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.split_logic.html#starling.agent.agent_rule_based.split_logic">[docs]</a><span class="k">def</span> <span class="nf">split_logic</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac2_exit_pos</span><span class="p">,</span> <span class="n">split_phase</span><span class="p">,</span> <span class="n">split_phases</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Logic to return best action and phase update for &quot;split&quot; plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ac1_pos</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+    <span class="n">ac2_pos</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">ac2</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+    <span class="n">vert_int_exists</span> <span class="o">=</span> <span class="n">vertical_interaction_exists</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">new_split_phase</span> <span class="o">=</span> <span class="n">split_phase</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">vert_int_exists</span> <span class="ow">and</span> <span class="n">split_phase</span> <span class="o">!=</span> <span class="s2">&quot;complete&quot;</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="s2">&quot;on_route&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">new_split_phase</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
+    <span class="k">elif</span> <span class="n">split_phase</span> <span class="o">==</span> <span class="s2">&quot;initial&quot;</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="s2">&quot;change_heading_by&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">new_split_phase</span> <span class="o">=</span> <span class="s2">&quot;vectoring&quot;</span>
+    <span class="k">elif</span> <span class="n">split_phase</span> <span class="o">==</span> <span class="s2">&quot;vectoring&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">get_shortest_distance_to_route</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="s2">&quot;change_heading_by&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">new_split_phase</span> <span class="o">=</span> <span class="s2">&quot;parallel&quot;</span>
+    <span class="k">elif</span> <span class="n">split_phase</span> <span class="o">==</span> <span class="s2">&quot;parallel&quot;</span><span class="p">:</span>
+        <span class="n">ac1_home_bearing</span> <span class="o">=</span> <span class="n">ac1_pos</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">ac1_exit_pos</span><span class="p">)</span>
+        <span class="n">ac2_home_bearing</span> <span class="o">=</span> <span class="n">ac2_pos</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">ac2_exit_pos</span><span class="p">)</span>
+        <span class="n">cap</span> <span class="o">=</span> <span class="n">get_cap</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_home_bearing</span><span class="p">,</span> <span class="n">ac2_home_bearing</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cap</span> <span class="o">&gt;</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="s2">&quot;on_route&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">#on_route</span>
+            <span class="n">new_split_phase</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
+    <span class="k">elif</span> <span class="n">split_phase</span> <span class="o">==</span> <span class="s2">&quot;complete&quot;</span><span class="p">:</span>
+        <span class="n">new_split_phase</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;invalid split phase&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">split_phases</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="s2">&quot;initial&quot;</span><span class="p">):</span>
+        <span class="n">best_level</span> <span class="o">=</span> <span class="n">get_best_level_independent</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">phase_cat</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">best_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="s2">&quot;change_flight_level_to&quot;</span><span class="p">,</span> <span class="n">best_level</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">action</span><span class="p">,</span> <span class="n">new_split_phase</span></div>
+
+
+<div class="viewcode-block" id="get_action_step"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.get_action_step.html#starling.agent.agent_rule_based.get_action_step">[docs]</a><span class="k">def</span> <span class="nf">get_action_step</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac1_phase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns action for the &quot;step&quot; plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ac1_pos</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">get_cap</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">best_level</span> <span class="o">=</span> <span class="n">get_best_level_independent</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac1_phase</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ac1_phase</span> <span class="o">==</span> <span class="s2">&quot;overflight&quot;</span><span class="p">:</span>
+        <span class="n">best_level</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="n">ac1_phase</span> <span class="o">==</span> <span class="s2">&quot;outbound&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span> <span class="o">&gt;</span> <span class="n">ac1</span><span class="o">.</span><span class="n">fl</span> <span class="ow">and</span> <span class="n">ac1</span><span class="o">.</span><span class="n">requested_fl</span> <span class="o">&lt;</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">:</span>
+            <span class="n">best_level</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ac2</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">requested_fl</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">-</span> <span class="mi">10</span>
+            <span class="k">if</span> <span class="n">best_level</span> <span class="o">&gt;</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">:</span>
+                <span class="n">best_level</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">best_level</span> <span class="o">=</span> <span class="n">get_best_level_independent</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac1_phase</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tod_in_range</span><span class="p">(</span><span class="n">ac1_pos</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">ac2</span><span class="o">.</span><span class="n">fl</span> <span class="o">&lt;</span> <span class="n">ac1</span><span class="o">.</span><span class="n">fl</span> <span class="ow">and</span> <span class="n">ac1</span><span class="o">.</span><span class="n">requested_fl</span> <span class="o">&gt;</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">:</span>
+                <span class="n">best_level</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">ac2</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">requested_fl</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">10</span>
+                <span class="k">if</span> <span class="n">best_level</span> <span class="o">&lt;</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">:</span>
+                    <span class="n">best_level</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">best_level</span> <span class="o">=</span> <span class="n">get_best_level_independent</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac1_phase</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">best_level</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">best_level</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">best_level</span> <span class="o">==</span> <span class="n">ac1</span><span class="o">.</span><span class="n">requested_fl</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="s2">&quot;change_flight_level_to&quot;</span><span class="p">,</span> <span class="n">best_level</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">action</span></div>
+
+
+<div class="viewcode-block" id="get_cap"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.get_cap.html#starling.agent.agent_rule_based.get_cap">[docs]</a><span class="k">def</span> <span class="nf">get_cap</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_hdg_override</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ac2_hdg_override</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns closest approach for two aircraft based on straight line forecast behaviour. Accepts heading overrides.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">geodesic</span> <span class="o">=</span> <span class="n">Geod</span><span class="p">(</span><span class="n">ellps</span><span class="o">=</span><span class="s1">&#39;WGS84&#39;</span><span class="p">)</span>
+    <span class="n">npts</span> <span class="o">=</span> <span class="mi">600</span>
+
+    <span class="n">ac1_del_s</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">speed</span>
+    <span class="n">ac2_del_s</span> <span class="o">=</span> <span class="n">ac2</span><span class="o">.</span><span class="n">speed</span>
+
+    <span class="k">if</span> <span class="n">ac1_hdg_override</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ac1_az</span> <span class="o">=</span> <span class="n">ac1</span><span class="o">.</span><span class="n">heading</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ac1_az</span> <span class="o">=</span> <span class="n">ac1_hdg_override</span>
+
+    <span class="k">if</span> <span class="n">ac2_hdg_override</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ac2_az</span> <span class="o">=</span> <span class="n">ac2</span><span class="o">.</span><span class="n">heading</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ac2_az</span> <span class="o">=</span> <span class="n">ac2_hdg_override</span>
+
+    <span class="n">ac1_tp</span> <span class="o">=</span> <span class="n">geodesic</span><span class="o">.</span><span class="n">fwd_intermediate</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">ac1</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac1_az</span><span class="p">,</span> <span class="n">npts</span><span class="o">=</span><span class="n">npts</span><span class="p">,</span> <span class="n">del_s</span><span class="o">=</span><span class="n">ac1_del_s</span><span class="p">)</span>
+    <span class="n">ac2_tp</span> <span class="o">=</span> <span class="n">geodesic</span><span class="o">.</span><span class="n">fwd_intermediate</span><span class="p">(</span><span class="n">ac2</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">ac2</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">ac2_az</span><span class="p">,</span> <span class="n">npts</span><span class="o">=</span><span class="n">npts</span><span class="p">,</span> <span class="n">del_s</span><span class="o">=</span><span class="n">ac2_del_s</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">geodesic</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">ac1_tp</span><span class="o">.</span><span class="n">lons</span><span class="p">,</span> <span class="n">ac1_tp</span><span class="o">.</span><span class="n">lats</span><span class="p">,</span> <span class="n">ac2_tp</span><span class="o">.</span><span class="n">lons</span><span class="p">,</span> <span class="n">ac2_tp</span><span class="o">.</span><span class="n">lats</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">M_TO_NMI</span>  <span class="c1"># convert to nm</span></div>
+
+
+<div class="viewcode-block" id="RuleBased"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.RuleBased.html#starling.agent.agent_rule_based.RuleBased">[docs]</a><span class="k">class</span> <span class="nc">RuleBased</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Agent designed for I-sector head on scenarios with two aircraft. Chooses a plan and controls based on that plan.</span>
+
+<span class="sd">    Plans are:</span>
+<span class="sd">    &quot;Independent&quot; - aircraft don&#39;t interact so can be controlled independently</span>
+<span class="sd">    &quot;Split&quot; - aircraft interact and need vectoring away from each other to achieve optimal vertical profiles</span>
+<span class="sd">    &quot;Step&quot; - aircraft interact but can achieve their optimal vertical profiles by using step climbs or step descents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># begin constructor</span>
+<div class="viewcode-block" id="RuleBased.__init__"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.RuleBased.html#starling.agent.agent_rule_based.RuleBased.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poisson</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poisson</span> <span class="o">=</span> <span class="n">poisson</span>
+
+        <span class="c1"># For scanning through aircraft</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stripscan_position</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># For creating &quot;the plan&quot; for all aircraft</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">split_phases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;initial&quot;</span><span class="p">,</span> <span class="s2">&quot;initial&quot;</span><span class="p">]</span>
+
+        <span class="c1"># For caching actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_cache</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_init_time</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="RuleBased.advance_stripscan"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.RuleBased.html#starling.agent.agent_rule_based.RuleBased.advance_stripscan">[docs]</a>    <span class="k">def</span> <span class="nf">advance_stripscan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Advances the stripscan position which defines which aircraft the agent focuses on at a timestep</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stripscan_position</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stripscan_position</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span></div>
+
+<div class="viewcode-block" id="RuleBased.make_plan"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.RuleBased.html#starling.agent.agent_rule_based.RuleBased.make_plan">[docs]</a>    <span class="k">def</span> <span class="nf">make_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac2_callsign</span><span class="p">,</span> <span class="n">airspace</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a plan for the scenario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">=</span> <span class="n">choose_plan</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">airspace</span><span class="p">)</span></div>
+        <span class="c1"># print(ac1_callsign, &quot;NFL:&quot;, ac1.requested_fl, &quot;XFL:&quot;, ac1.flight_plan.exit.fl)</span>
+        <span class="c1"># print(ac2_callsign, &quot;NFL:&quot;, ac2.requested_fl, &quot;XFL:&quot;, ac2.flight_plan.exit.fl)</span>
+        <span class="c1"># print(&quot;The plan is: &quot;, self.plan)</span>
+
+<div class="viewcode-block" id="RuleBased.cache_action"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.RuleBased.html#starling.agent.agent_rule_based.RuleBased.cache_action">[docs]</a>    <span class="k">def</span> <span class="nf">cache_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Caches an action to be executed at a later time point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">interval</span> <span class="o">=</span> <span class="n">get_poisson_interval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">poisson</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_cache</span> <span class="o">=</span> <span class="n">action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_init_time</span> <span class="o">=</span> <span class="n">time</span> <span class="o">+</span> <span class="n">interval</span></div>
+
+<div class="viewcode-block" id="RuleBased.generate_actions"><a class="viewcode-back" href="../../../_autosummary/starling.agent.agent_rule_based.RuleBased.html#starling.agent.agent_rule_based.RuleBased.generate_actions">[docs]</a>    <span class="k">def</span> <span class="nf">generate_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns actions. On first run creates a plan, and updates the plan as the situation evolves.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set variables for planning and controlling logic</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac1_phase</span> <span class="o">=</span> <span class="n">get_ac_info</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stripscan_position</span><span class="p">)</span>
+        <span class="n">ac2_callsign</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac2_exit_pos</span><span class="p">,</span> <span class="n">ac2_phase</span> <span class="o">=</span> <span class="n">get_ac_info</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stripscan_position</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># If previously cached action exists, wait and issue at correct time</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_init_time</span><span class="p">:</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">action_cache</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">action_cache</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Planning</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">make_plan</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac2_callsign</span><span class="p">,</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="p">)</span>
+
+            <span class="c1"># Controlling</span>
+
+            <span class="c1"># Make no action if current aircraft is not in sector</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">ac1</span><span class="o">.</span><span class="n">pos3d</span><span class="p">()):</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># Get action based on plan</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">==</span> <span class="s2">&quot;independent&quot;</span><span class="p">:</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">get_action_independent</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac1_phase</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">==</span> <span class="s2">&quot;split&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_phases</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;complete&quot;</span><span class="p">,</span> <span class="s2">&quot;complete&quot;</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;independent&quot;</span>
+                <span class="n">split_phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_phases</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stripscan_position</span><span class="p">]</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">get_action_split</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac2_exit_pos</span><span class="p">,</span> <span class="n">split_phase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_phases</span><span class="p">,</span> <span class="n">environment</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">split_phases</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stripscan_position</span><span class="p">]</span> <span class="o">=</span> <span class="n">split_phase_update</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac2_exit_pos</span><span class="p">,</span> <span class="n">split_phase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_phases</span><span class="p">,</span> <span class="n">environment</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">==</span> <span class="s2">&quot;step&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">get_cap</span><span class="p">(</span><span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">=</span> <span class="s2">&quot;independent&quot;</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">get_action_step</span><span class="p">(</span><span class="n">ac1_callsign</span><span class="p">,</span> <span class="n">ac1</span><span class="p">,</span> <span class="n">ac2</span><span class="p">,</span> <span class="n">ac1_exit_pos</span><span class="p">,</span> <span class="n">ac1_phase</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No plan assigned error!&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">poisson</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cache_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+                    <span class="n">action</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="n">action</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance_stripscan</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     print(action[0].callsign, action[0].kind, action[0].value)</span>
+        <span class="k">return</span> <span class="n">action</span></div></div>
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/starling.html">starling</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Freddy Wordingham.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

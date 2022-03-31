@@ -1,2 +1,2 @@
 # StarlingDocs
-Starling documentation
+[Starling documentation](index.html)

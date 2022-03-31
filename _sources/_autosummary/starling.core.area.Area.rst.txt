@@ -1,0 +1,32 @@
+starling.core.area.Area
+=======================
+
+.. currentmodule:: starling.core.area
+
+.. autoclass:: Area
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Area.__init__
+      ~Area.contains
+      ~Area.data
+      ~Area.from_json
+      ~Area.load
+      ~Area.on_boundary
+      ~Area.save
+      ~Area.to_json
+   
+   
+
+   
+   
+   
