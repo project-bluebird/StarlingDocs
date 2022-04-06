@@ -1,0 +1,497 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>starling.render.radar &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for starling.render.radar</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">tm</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Aircraft</span><span class="p">,</span>
+    <span class="n">Action</span><span class="p">,</span>
+    <span class="n">Environment</span><span class="p">,</span>
+    <span class="n">Fixes</span><span class="p">,</span>
+    <span class="n">Route</span><span class="p">,</span>
+    <span class="n">Pos2D</span><span class="p">,</span>
+    <span class="n">Pos3D</span><span class="p">,</span>
+    <span class="n">Pos4D</span><span class="p">,</span>
+    <span class="n">Trajectory</span><span class="p">,</span>
+    <span class="n">Plan</span><span class="p">,</span>
+    <span class="n">Volume</span><span class="p">,</span>
+    <span class="n">Area</span><span class="p">,</span>
+    <span class="n">Sector</span><span class="p">,</span>
+    <span class="n">Airspace</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">svg</span>
+<span class="kn">from</span> <span class="nn">.render</span> <span class="kn">import</span> <span class="n">Render</span>
+
+
+<div class="viewcode-block" id="Radar"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar">[docs]</a><span class="k">class</span> <span class="nc">Radar</span><span class="p">(</span><span class="n">Render</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Radar image generator.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Radar.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centre</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">aspect_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise the Radar to observe a central location and a given width scale [nmi] with a given aspect-ratio (=width/height).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">aspect_ratio</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Aspect ratio must be positive.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">centre</span> <span class="o">=</span> <span class="n">centre</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">aspect_ratio</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span></div>
+
+<div class="viewcode-block" id="Radar.save"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the drawing to an SVG image then clear the buffer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span>
+
+        <span class="n">min_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lon</span> <span class="o">-</span> <span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">min_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="p">(</span><span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&quot;&quot;&lt;svg viewBox=&quot;</span><span class="si">{</span><span class="n">min_x</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">min_y</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;monospace&quot; transform=&quot;scale(1, -1)&quot;&gt;</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="si">}</span><span class="s2">&lt;/svg&gt;&quot;&quot;&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Radar.draw"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the Environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_environment</span><span class="p">(</span><span class="n">environment</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Radar.draw_pos2d"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_pos2d">[docs]</a>    <span class="k">def</span> <span class="nf">draw_pos2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a location.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span>
+            <span class="n">location</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">1e-4</span><span class="p">,</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+            <span class="n">stroke</span><span class="o">=</span><span class="s2">&quot;chocolate&quot;</span><span class="p">,</span>
+            <span class="n">stroke_width</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">1e-4</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">4e-4</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_pos3d"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_pos3d">[docs]</a>    <span class="k">def</span> <span class="nf">draw_pos3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">Pos3D</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">position</span><span class="o">.</span><span class="n">fl</span> <span class="o">/</span> <span class="mf">400.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="n">red</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">green</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">f</span>
+        <span class="n">blue</span> <span class="o">=</span> <span class="n">f</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span>
+            <span class="n">position</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+            <span class="n">position</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">1e-4</span><span class="p">,</span>
+            <span class="n">fill</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;rgb(</span><span class="si">{</span><span class="p">(</span><span class="n">red</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s2">%, </span><span class="si">{</span><span class="p">(</span><span class="n">green</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s2">%, </span><span class="si">{</span><span class="p">(</span><span class="n">blue</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">,</span>
+            <span class="n">stroke</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+            <span class="n">stroke_width</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.2e-4</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">position</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">position</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">4e-4</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_pos4d"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_pos4d">[docs]</a>    <span class="k">def</span> <span class="nf">draw_pos4d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_point</span><span class="p">:</span> <span class="n">Pos4D</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a control point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">control_point</span><span class="o">.</span><span class="n">fl</span> <span class="o">/</span> <span class="mf">400.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">f</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="n">fill</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rgb(</span><span class="si">{</span><span class="n">r</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%, </span><span class="si">{</span><span class="n">g</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%, </span><span class="si">{</span><span class="n">b</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%)&quot;</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">fmod</span><span class="p">(</span><span class="n">control_point</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">900.0</span>
+        <span class="n">stroke</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;hsl(</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mi">360</span><span class="p">)</span><span class="si">}</span><span class="s2">, 70%, 40%)&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span>
+            <span class="n">control_point</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+            <span class="n">control_point</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.25e-4</span><span class="p">,</span>
+            <span class="n">fill</span><span class="o">=</span><span class="n">fill</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span>
+            <span class="n">control_point</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+            <span class="n">control_point</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.25e-4</span><span class="p">,</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+            <span class="n">stroke</span><span class="o">=</span><span class="n">stroke</span><span class="p">,</span>
+            <span class="n">stroke_width</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.125e-4</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">label</span><span class="p">,</span> <span class="n">control_point</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">control_point</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">4e-4</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_environment_time"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_environment_time">[docs]</a>    <span class="k">def</span> <span class="nf">draw_environment_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add environment time and step count to visualisation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span>
+        
+        <span class="n">time_location</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lon</span> <span class="o">-</span> <span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mf">8.0</span><span class="p">),</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mf">8.0</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">time_label</span> <span class="o">=</span> <span class="s2">&quot;Environment Time:&quot;</span> <span class="o">+</span> <span class="n">tm</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">tm</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">time_label</span><span class="p">,</span> <span class="n">time_location</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">time_location</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+
+        <span class="n">step_location</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lon</span> <span class="o">+</span> <span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mf">8.0</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mf">8.0</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">step_label</span> <span class="o">=</span> <span class="s2">&quot;Step:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">step_label</span><span class="p">,</span> <span class="n">step_location</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">step_location</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="Radar.draw_fixes"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_fixes">[docs]</a>    <span class="k">def</span> <span class="nf">draw_fixes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a set of fixes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_pos2d</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_route"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_route">[docs]</a>    <span class="k">def</span> <span class="nf">draw_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span><span class="p">,</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a route.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">location_a</span><span class="p">,</span> <span class="n">location_b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">location_a</span><span class="p">]</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">location_b</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+                <span class="n">start</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+                <span class="n">start</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+                <span class="n">stroke_width</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">1e-4</span><span class="p">),</span>
+                <span class="n">stroke</span><span class="o">=</span><span class="s2">&quot;#DDDDDD&quot;</span><span class="p">,</span>
+                <span class="n">stroke_linecap</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">end</span> <span class="o">=</span> <span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">end</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">end</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.75e-4</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_plan"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_plan">[docs]</a>    <span class="k">def</span> <span class="nf">draw_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span> <span class="n">Plan</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a plan.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">plan</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">plan</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;plan_grad_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">start</span><span class="o">.</span><span class="n">fl</span> <span class="o">/</span> <span class="mf">400.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">start_col</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rgb(0%, </span><span class="si">{</span><span class="n">f</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%, </span><span class="si">{</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%)&quot;</span>
+
+            <span class="n">g</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="o">.</span><span class="n">fl</span> <span class="o">/</span> <span class="mf">400.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">end_col</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rgb(0%, </span><span class="si">{</span><span class="n">g</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%, </span><span class="si">{</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%)&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">start</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">start</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">end</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">end</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="p">[</span><span class="n">end_col</span><span class="p">,</span> <span class="n">start_col</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+                <span class="n">start</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+                <span class="n">start</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+                <span class="n">stroke_width</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">1e-4</span><span class="p">),</span>
+                <span class="n">stroke</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;url(&quot;#</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">,</span>
+                <span class="n">stroke_dasharray</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">4e-4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">1.5e-4</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">stroke_linecap</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">plan</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">plan</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.75e-4</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">plan</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">plan</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.75e-4</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_trajectory"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">draw_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a trajectory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">control_point</span> <span class="ow">in</span> <span class="n">trajectory</span><span class="o">.</span><span class="n">control_points</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_pos4d</span><span class="p">(</span><span class="n">control_point</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_area"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_area">[docs]</a>    <span class="k">def</span> <span class="nf">draw_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">area</span><span class="p">:</span> <span class="n">Area</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw an area.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">area</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;#FAFAFA&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_volume"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_volume">[docs]</a>    <span class="k">def</span> <span class="nf">draw_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="n">Volume</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a volume.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">volume</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">((</span><span class="n">volume</span><span class="o">.</span><span class="n">min_fl</span> <span class="o">+</span> <span class="n">volume</span><span class="o">.</span><span class="n">max_fl</span><span class="p">)</span> <span class="o">/</span> <span class="mf">800.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">fill</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;rgba(0%, </span><span class="si">{</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%, </span><span class="si">{</span><span class="n">f</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%, 0.1)&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">fill</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_sector"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_sector">[docs]</a>    <span class="k">def</span> <span class="nf">draw_sector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sector</span><span class="p">:</span> <span class="n">Sector</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a sector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">sector</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_area</span><span class="p">(</span><span class="n">volume</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">sector</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_volume</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_airspace"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_airspace">[docs]</a>    <span class="k">def</span> <span class="nf">draw_airspace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw an airspace.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">sector</span> <span class="ow">in</span> <span class="n">airspace</span><span class="o">.</span><span class="n">sectors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">sector</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_area</span><span class="p">(</span><span class="n">volume</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sector</span> <span class="ow">in</span> <span class="n">airspace</span><span class="o">.</span><span class="n">sectors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">sector</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_volume</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_fixes</span><span class="p">(</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_aircraft"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">draw_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">:</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw an aircraft.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">wings</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">],</span>
+        <span class="p">]</span>
+        <span class="n">fuselage</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
+        <span class="p">]</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="p">]</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">svg</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">wings</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">stroke</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">stroke_width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">fuselage</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;gainsboro&quot;</span><span class="p">,</span> <span class="n">stroke</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">stroke_width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">stroke</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">stroke_width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">heading</span> <span class="o">-</span> <span class="mi">90</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">aircraft</span><span class="o">.</span><span class="n">lon</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">aircraft</span><span class="o">.</span><span class="n">lat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">svg</span><span class="o">.</span><span class="n">whitespace</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+            <span class="n">lat_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">4e-4</span>
+            <span class="n">lon_diff</span> <span class="o">=</span> <span class="n">lat_diff</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">label</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;FL&quot;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">fl_gradient</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">lon</span> <span class="o">+</span> <span class="n">lon_diff</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">lat_diff</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">lon</span> <span class="o">+</span> <span class="n">lon_diff</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">lat_diff</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Radar.draw_environment"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_environment">[docs]</a>    <span class="k">def</span> <span class="nf">draw_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_environment_time</span><span class="p">(</span><span class="n">environment</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">sector</span> <span class="ow">in</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">sectors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">sector</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_area</span><span class="p">(</span><span class="n">volume</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sector</span> <span class="ow">in</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">sectors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">sector</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_volume</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">aircraft</span> <span class="ow">in</span> <span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">time</span>
+            <span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_route</span><span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">,</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">aircraft</span> <span class="ow">in</span> <span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">time</span>
+            <span class="p">):</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">end</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">end</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.75e-4</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_fixes</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">aircraft</span> <span class="ow">in</span> <span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">time</span>
+            <span class="p">):</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;FL</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span><span class="si">}</span><span class="s2"> FL</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">requested_fl</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;C</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_aircraft</span><span class="p">(</span><span class="n">aircraft</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Radar.draw_actions"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_actions">[docs]</a>    <span class="k">def</span> <span class="nf">draw_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds current actions to the bottom left of image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span>
+
+        <span class="n">action_location</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lon</span> <span class="o">-</span> <span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mf">8.0</span><span class="p">),</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mf">8.0</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">action</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lat_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">4e-4</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">action</span><span class="p">)):</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="n">_</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">action_location</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">action_location</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="n">lat_diff</span> <span class="o">-</span> <span class="n">_</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Freddy Wordingham.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

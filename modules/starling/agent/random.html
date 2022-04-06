@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>starling.agent.random &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for starling.agent.random</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Environment</span>
+<span class="kn">from</span> <span class="nn">.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+
+
+<div class="viewcode-block" id="Random"><a class="viewcode-back" href="../../.././autosummary/starling.agent.random.Random.html#starling.agent.random.Random">[docs]</a><span class="k">class</span> <span class="nc">Random</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates N random actions for randomly selected planes within the environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Random.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.agent.random.Random.html#starling.agent.random.Random.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">action_probability</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">num_actions</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Number of generated actions must be non-negative.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_actions</span> <span class="o">=</span> <span class="n">num_actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_probability</span> <span class="o">=</span> <span class="n">action_probability</span></div>
+
+<div class="viewcode-block" id="Random.create_action_set"><a class="viewcode-back" href="../../.././autosummary/starling.agent.random.Random.html#starling.agent.random.Random.create_action_set">[docs]</a>    <span class="k">def</span> <span class="nf">create_action_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a set of actions for a given aircraft (callsign)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">action_set</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Action</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="s2">&quot;change_heading_by&quot;</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">])),</span>
+            <span class="n">Action</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="s2">&quot;change_flight_level_to&quot;</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">10</span><span class="p">))),</span>
+            <span class="n">Action</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="s2">&quot;on_route&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="c1"># Action(callsign, &quot;set_route&quot;, random.choice([&quot;AIR&quot;, &quot;WATER&quot;]))</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">action_set</span></div>
+
+<div class="viewcode-block" id="Random.generate_actions"><a class="viewcode-back" href="../../.././autosummary/starling.agent.random.Random.html#starling.agent.random.Random.generate_actions">[docs]</a>    <span class="k">def</span> <span class="nf">generate_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Randomly select planes and send random commands to them.</span>
+<span class="sd">        This agent does not consider any previously sent commands</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">selected_aircraft</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_actions</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">selected_aircraft</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_probability</span><span class="p">:</span>
+                <span class="n">action_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_action_set</span><span class="p">(</span><span class="n">ac</span><span class="p">)</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">action_set</span><span class="p">)</span>
+                <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">actions</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Freddy Wordingham.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

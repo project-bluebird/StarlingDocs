@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>starling.core.trajectory &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for starling.core.trajectory</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">geometry</span>
+<span class="kn">from</span> <span class="nn">.pos4d</span> <span class="kn">import</span> <span class="n">Pos4D</span>
+<span class="kn">from</span> <span class="nn">.route</span> <span class="kn">import</span> <span class="n">Route</span>
+
+
+<div class="viewcode-block" id="Trajectory"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory">[docs]</a><span class="k">class</span> <span class="nc">Trajectory</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Four-dimensional spacetime line.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Trajectory.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pos4D</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trajectory must contain at least two control-points.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># stack the (4,) shape arrays into (n, 4) array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">cp</span><span class="o">.</span><span class="n">location</span> <span class="k">for</span> <span class="n">cp</span> <span class="ow">in</span> <span class="n">control_points</span><span class="p">])</span>
+
+        <span class="c1"># check that the times are monotonically increasing</span>
+        <span class="c1"># (difference between them is &gt;= 0)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Control point times should be sequentially non-decreasing.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Trajectory.from_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance from JSON representation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">control_points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cp</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="n">control_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Pos4D</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">cp</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Trajectory.from_array"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.from_array">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_array</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance from a numpy array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected array shape (:,4), given: </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Trajectory</span><span class="p">([</span><span class="n">Pos4D</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">a</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Trajectory.load"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.load">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance from a file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Trajectory</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pos4D</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Trajectory as a list of Pos4D.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Pos4D</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Trajectory.data"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the data as a serialisable list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">cp</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Trajectory.to_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Serialise the instance to JSON.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Trajectory.save"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the instance to a file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Trajectory.route"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.route">[docs]</a>    <span class="k">def</span> <span class="nf">route</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Route</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Route of the Trajectory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Route</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">pos3d</span><span class="p">())</span> <span class="k">for</span> <span class="n">cp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Trajectory.segments"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.segments">[docs]</a>    <span class="k">def</span> <span class="nf">segments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Pos4D</span><span class="p">,</span> <span class="n">Pos4D</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create an iterator of the Trajectory segments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span></div>
+
+<div class="viewcode-block" id="Trajectory.min_distance"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.min_distance">[docs]</a>    <span class="k">def</span> <span class="nf">min_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the minimum distance [nmi] to another Trajectory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># extract both trajectories (lat,lon,fl) and convert fl to height in nmi</span>
+        <span class="c1"># note: we copy here to avoid altering the internal state of either trajectory</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">t0</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="n">convert</span><span class="o">.</span><span class="n">FL_TO_NMI</span>
+        <span class="n">t0_times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">locations</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">t1</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="n">convert</span><span class="o">.</span><span class="n">FL_TO_NMI</span>
+        <span class="n">t1_times</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">locations</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span>
+
+        <span class="n">min_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="c1"># for both trajectories iterate through all consecutive pairs of points and their corresponding times</span>
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a_time</span><span class="p">,</span> <span class="n">b_time</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">t0</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">t0</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">t0_times</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">t0_times</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="n">segment_ab</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">c_time</span><span class="p">,</span> <span class="n">d_time</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">t1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">t1</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">t1_times</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">t1_times</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+                <span class="n">segment_cd</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+                <span class="c1"># skip the distance calculation if the start time of a-&gt;b occurs after the end time of c-&gt;d</span>
+                <span class="k">if</span> <span class="n">a_time</span> <span class="o">&gt;</span> <span class="n">d_time</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># stop checking if the start time of c-&gt;d occurs after the end time of a-&gt;b. we know that all</span>
+                <span class="c1"># subsequent sections in t1 will occur after the one just evaluated, so there can be no overlap</span>
+                <span class="k">elif</span> <span class="n">c_time</span> <span class="o">&gt;</span> <span class="n">b_time</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="n">distance</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">min_distance_between_segments</span><span class="p">(</span><span class="n">segment_ab</span><span class="p">,</span> <span class="n">segment_cd</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">min_dist</span><span class="p">:</span>
+                    <span class="n">min_dist</span> <span class="o">=</span> <span class="n">distance</span>
+
+        <span class="k">return</span> <span class="n">min_dist</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Freddy Wordingham.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

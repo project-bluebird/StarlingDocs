@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>starling.agent.policy_gradient &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for starling.agent.policy_gradient</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">torch.distributions</span> <span class="kn">import</span> <span class="n">Categorical</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+
+
+<div class="viewcode-block" id="PolicyGradient"><a class="viewcode-back" href="../../.././autosummary/starling.agent.policy_gradient.PolicyGradient.html#starling.agent.policy_gradient.PolicyGradient">[docs]</a><span class="k">class</span> <span class="nc">PolicyGradient</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">Agent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Policy-gradient (PG) agent</span>
+
+<span class="sd">    This class contains methods to:</span>
+<span class="sd">    - train a PG agent</span>
+<span class="sd">    - generate actions for a given state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PolicyGradient.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.agent.policy_gradient.PolicyGradient.html#starling.agent.policy_gradient.PolicyGradient.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_layers</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+        <span class="n">hidden_dropouts</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+        <span class="n">hidden_activations</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">onpolicy_reset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">train_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_optim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_sched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the agent&quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">PolicyGradient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Define self.model</span>
+        <span class="c1"># Note that the first layer is the input layer (state)</span>
+        <span class="c1"># and the last layer is the output layer (action)</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hidden_layers</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_layers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">hidden_layers</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">hidden_dropouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">hidden_dropouts</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">hidden_activations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hidden_activations</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
+
+        <span class="c1"># Set variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_sent</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_optim</span> <span class="o">=</span> <span class="n">add_optim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_sched</span> <span class="o">=</span> <span class="n">add_sched</span>
+
+        <span class="k">if</span> <span class="n">onpolicy_reset</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onpolicy_reset</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">train_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_optim</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_optimizer</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_sched</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_scheduler</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">add_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.003</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">sc_gamma</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">step_size</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">sc_gamma</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">onpolicy_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_probs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rewards</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="PolicyGradient.forward"><a class="viewcode-back" href="../../.././autosummary/starling.agent.policy_gradient.PolicyGradient.html#starling.agent.policy_gradient.PolicyGradient.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">use_softmax</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass of the network</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdparam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_softmax</span><span class="p">:</span>
+            <span class="n">pdparam</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">pdparam</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pdparam</span></div>
+
+    <span class="k">def</span> <span class="nf">state_reader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">plane_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AIR0&quot;</span><span class="p">,</span> <span class="s2">&quot;AIR1&quot;</span><span class="p">]):</span>
+
+        <span class="n">inp_state</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># distance</span>
+        <span class="n">dist_matrix</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">dist_matrix</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dist_matrix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">dist_matrix</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">dist_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">inp_state</span><span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span>
+
+        <span class="c1"># heading</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">plane_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">heading</span>
+            <span class="n">h2</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">plane_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">heading</span>
+            <span class="n">dh</span> <span class="o">=</span> <span class="p">(</span><span class="n">h1</span> <span class="o">-</span> <span class="n">h2</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">dh</span> <span class="o">=</span> <span class="o">-</span><span class="mi">180</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="n">dh</span> <span class="o">=</span> <span class="o">-</span><span class="mi">180</span>
+
+        <span class="n">inp_state</span><span class="p">[</span><span class="s2">&quot;heading&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dh</span>
+
+        <span class="k">return</span> <span class="n">inp_state</span>
+
+    <span class="k">def</span> <span class="nf">state_encoder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">plane_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AIR0&quot;</span><span class="p">,</span> <span class="s2">&quot;AIR1&quot;</span><span class="p">]):</span>
+
+        <span class="n">inp_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_reader</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">plane_list</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="s2">&quot;distance&quot;</span> <span class="ow">in</span> <span class="n">inp_state</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;distance not in inp_state&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;heading&quot;</span> <span class="ow">in</span> <span class="n">inp_state</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;heading not in inp_state&quot;</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">inp_state</span><span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">],</span> <span class="n">inp_state</span><span class="p">[</span><span class="s2">&quot;heading&quot;</span><span class="p">]])</span>
+
+    <span class="k">def</span> <span class="nf">find_closest_pair</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist_matrix</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">aircraft</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">ilt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tril_indices</span><span class="p">(</span><span class="n">dist_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">dist_matrix</span><span class="p">[</span><span class="n">ilt</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">dist_matrix</span> <span class="o">=</span> <span class="n">dist_matrix</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">indx2min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span> <span class="n">dist_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">plane_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">aircraft</span><span class="p">[</span><span class="n">indx2min</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">aircraft</span><span class="p">[</span><span class="n">indx2min</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+        <span class="k">return</span> <span class="n">plane_list</span>
+
+<div class="viewcode-block" id="PolicyGradient.generate_actions"><a class="viewcode-back" href="../../.././autosummary/starling.agent.policy_gradient.PolicyGradient.html#starling.agent.policy_gradient.PolicyGradient.generate_actions">[docs]</a>    <span class="k">def</span> <span class="nf">generate_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_state</span><span class="p">,</span> <span class="n">plane_mode</span><span class="o">=</span><span class="s2">&quot;find_closest_pair&quot;</span><span class="p">):</span>
+        <span class="n">aircraft</span><span class="p">,</span> <span class="n">dist_matrix</span> <span class="o">=</span> <span class="n">raw_state</span><span class="o">.</span><span class="n">active_aircraft_lateral_distance</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">aircraft</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_sent</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="n">plane_mode</span> <span class="o">==</span> <span class="s2">&quot;find_closest_pair&quot;</span><span class="p">:</span>
+            <span class="n">plane_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_closest_pair</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_sent</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_actions_two_planes</span><span class="p">(</span><span class="n">raw_state</span><span class="p">,</span> <span class="n">plane_list</span><span class="o">=</span><span class="n">plane_list</span><span class="p">,</span> <span class="n">decode_action</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="k">def</span> <span class="nf">generate_actions_two_planes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_state</span><span class="p">,</span> <span class="n">plane_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AIR0&quot;</span><span class="p">,</span> <span class="s2">&quot;AIR1&quot;</span><span class="p">],</span> <span class="n">decode_action</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_encoder</span><span class="p">(</span><span class="n">raw_state</span><span class="p">,</span> <span class="n">plane_list</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+        <span class="n">pdparam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># pd = Categorical(logits=pdparam)</span>
+        <span class="n">pd</span> <span class="o">=</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">pdparam</span><span class="p">)</span>
+        <span class="n">action_from_agent</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+        <span class="n">log_prob</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">action_from_agent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_prob</span><span class="p">)</span>
+
+        <span class="n">action_from_agent</span> <span class="o">=</span> <span class="n">action_from_agent</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">decode_action</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_decoder</span><span class="p">(</span><span class="n">action_from_agent</span><span class="p">,</span> <span class="n">plane_list</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">action_from_agent</span>
+
+    <span class="k">def</span> <span class="nf">action_decoder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_from_agent</span><span class="p">,</span> <span class="n">plane_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AIR0&quot;</span><span class="p">,</span> <span class="s2">&quot;AIR1&quot;</span><span class="p">]):</span>
+
+        <span class="n">action</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">action_from_agent</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="n">action_from_agent</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">action2send</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">plane_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;change_heading_by&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">action_from_agent</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">action2send</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;requested&quot;</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action2send</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">action2send</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">plane_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;change_heading_by&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">action_from_agent</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">action2send</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;requested&quot;</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action2send</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">action</span>
+
+    <span class="k">def</span> <span class="nf">model_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">onpolicy_reset</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="n">R</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">policy_loss</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rewards</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">R</span>
+            <span class="n">rets</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+
+        <span class="n">rets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">rets</span><span class="p">)</span>
+        <span class="c1"># rets = (rets - rets.mean()) / (rets.std() + eps)</span>
+        <span class="k">for</span> <span class="n">log_prob</span><span class="p">,</span> <span class="n">R</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_probs</span><span class="p">,</span> <span class="n">rets</span><span class="p">):</span>
+            <span class="n">policy_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">log_prob</span> <span class="o">*</span> <span class="n">R</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="n">policy_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">policy_loss</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="n">policy_loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_sched</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_probs</span><span class="p">[:]</span>
+
+        <span class="n">total_reward</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rewards</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">onpolicy_reset</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onpolicy_reset</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">policy_loss</span><span class="p">,</span> <span class="n">total_reward</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="nb">eval</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">eval</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">add_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_sent</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Freddy Wordingham.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
