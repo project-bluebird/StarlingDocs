@@ -38,7 +38,7 @@
 <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">bada</span>
 <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span>
 
-<div class="viewcode-block" id="BadaPilot"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot">[docs]</a><span class="k">class</span> <span class="nc">BadaPilot</span><span class="p">(</span><span class="n">Predictor</span><span class="p">):</span>
+<div class="viewcode-block" id="BadaPilot"><a class="viewcode-back" href="../../../autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot">[docs]</a><span class="k">class</span> <span class="nc">BadaPilot</span><span class="p">(</span><span class="n">Predictor</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Evolves the Aircraft with constant speed along it&#39;s heading.</span>
 <span class="sd">    If aircraft is in Route following mode, the heading is updated accordingly.</span>
@@ -51,7 +51,7 @@
 <span class="sd">    The rate of climb or descent is determined using a BADA model implementation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BadaPilot.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">step_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fix_proximity_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="BadaPilot.__init__"><a class="viewcode-back" href="../../../autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">step_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fix_proximity_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 
@@ -72,7 +72,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">step_time</span> <span class="o">=</span> <span class="n">step_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fix_proximity_threshold</span> <span class="o">=</span> <span class="n">fix_proximity_threshold</span></div>
 
-<div class="viewcode-block" id="BadaPilot.get_target_pos"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.get_target_pos">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
+<div class="viewcode-block" id="BadaPilot.get_target_pos"><a class="viewcode-back" href="../../../autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.get_target_pos">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get Pos2D of next Fix on Route.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -83,7 +83,7 @@
 
         <span class="k">return</span> <span class="n">target_pos</span></div>
 
-<div class="viewcode-block" id="BadaPilot.future_trajectory"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.future_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">future_trajectory</span><span class="p">(</span>
+<div class="viewcode-block" id="BadaPilot.future_trajectory"><a class="viewcode-back" href="../../../autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.future_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">future_trajectory</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -133,7 +133,7 @@
 
         <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BadaPilot.get_bearing"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.get_bearing">[docs]</a>    <span class="k">def</span> <span class="nf">get_bearing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="BadaPilot.get_bearing"><a class="viewcode-back" href="../../../autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.get_bearing">[docs]</a>    <span class="k">def</span> <span class="nf">get_bearing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get bearing corresponding to issued action/command.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -172,7 +172,7 @@
 
         <span class="k">return</span> <span class="n">bearing</span></div>
 
-<div class="viewcode-block" id="BadaPilot.update_bearing"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.update_bearing">[docs]</a>    <span class="k">def</span> <span class="nf">update_bearing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<div class="viewcode-block" id="BadaPilot.update_bearing"><a class="viewcode-back" href="../../../autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.update_bearing">[docs]</a>    <span class="k">def</span> <span class="nf">update_bearing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update aircraft bearing.</span>
 
@@ -206,7 +206,7 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_fix</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">next_fix</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="BadaPilot.update_flight_level"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.update_flight_level">[docs]</a>    <span class="k">def</span> <span class="nf">update_flight_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<div class="viewcode-block" id="BadaPilot.update_flight_level"><a class="viewcode-back" href="../../../autosummary/starling.predictor.bada_pilot.BadaPilot.html#starling.predictor.bada_pilot.BadaPilot.update_flight_level">[docs]</a>    <span class="k">def</span> <span class="nf">update_flight_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update aircraft&#39;s flight level based on BADA model. Here we assume</span>
 <span class="sd">        an ISA (International Standard Atmospehere) at position of the aircraft.</span>
@@ -242,7 +242,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

@@ -42,12 +42,12 @@
 <span class="kn">from</span> <span class="nn">.trajectory</span> <span class="kn">import</span> <span class="n">Trajectory</span>
 
 
-<div class="viewcode-block" id="Aircraft"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft">[docs]</a><span class="k">class</span> <span class="nc">Aircraft</span><span class="p">:</span>
+<div class="viewcode-block" id="Aircraft"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft">[docs]</a><span class="k">class</span> <span class="nc">Aircraft</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An aeroplane, helicopter, or other machine capable of flight.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Aircraft.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Aircraft.__init__"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">flight_plan</span><span class="p">:</span> <span class="n">FlightPlan</span><span class="p">,</span>
         <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -90,7 +90,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Requested flight level must be non-negative.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">requested_fl</span> <span class="o">=</span> <span class="n">fl</span></div>
 
-<div class="viewcode-block" id="Aircraft.from_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Aircraft.from_json"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Aircraft</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from JSON representation.</span>
@@ -112,7 +112,7 @@
 
         <span class="k">return</span> <span class="n">Aircraft</span><span class="p">(</span><span class="n">flight_plan</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">fl</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">vertical_speed</span><span class="p">,</span> <span class="n">aircraft_type</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Aircraft.load"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.load">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Aircraft.load"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.load">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Aircraft</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a file.</span>
@@ -121,7 +121,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Aircraft</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Aircraft.data"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="Aircraft.data"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Serialise the instance to JSON.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -135,14 +135,14 @@
             <span class="s2">&quot;aircraft_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_type</span><span class="p">,</span>
         <span class="p">}</span></div>
 
-<div class="viewcode-block" id="Aircraft.to_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Aircraft.to_json"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Serialise the instance to JSON.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Aircraft.save"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Aircraft.save"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the instance to a file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -150,21 +150,21 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Aircraft.pos2d"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.pos2d">[docs]</a>    <span class="k">def</span> <span class="nf">pos2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
+<div class="viewcode-block" id="Aircraft.pos2d"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.pos2d">[docs]</a>    <span class="k">def</span> <span class="nf">pos2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the two-dimensional position of the Aircraft.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Aircraft.pos3d"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.pos3d">[docs]</a>    <span class="k">def</span> <span class="nf">pos3d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
+<div class="viewcode-block" id="Aircraft.pos3d"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.pos3d">[docs]</a>    <span class="k">def</span> <span class="nf">pos3d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the three-dimensional position of the Aircraft.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">Pos3D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Aircraft.travel"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.travel">[docs]</a>    <span class="k">def</span> <span class="nf">travel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">):</span>
+<div class="viewcode-block" id="Aircraft.travel"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.travel">[docs]</a>    <span class="k">def</span> <span class="nf">travel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Travel a given Trajectory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -183,14 +183,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">heading</span> <span class="o">=</span> <span class="n">penultimate</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">final</span><span class="p">)</span> <span class="o">%</span> <span class="mf">360.0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vertical_speed</span> <span class="o">=</span> <span class="n">final</span><span class="o">.</span><span class="n">fl</span> <span class="o">-</span> <span class="n">penultimate</span><span class="o">.</span><span class="n">fl</span> <span class="o">/</span> <span class="p">(</span><span class="n">final</span><span class="o">.</span><span class="n">time</span> <span class="o">-</span> <span class="n">penultimate</span><span class="o">.</span><span class="n">time</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Aircraft.distance"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Pos3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Aircraft.distance"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Pos3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate distance [nmi] between Aircraft and another Pos3D location.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos3d</span><span class="p">()</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Aircraft.distance_to_exit"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.distance_to_exit">[docs]</a>    <span class="k">def</span> <span class="nf">distance_to_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Aircraft.distance_to_exit"><a class="viewcode-back" href="../../../autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.distance_to_exit">[docs]</a>    <span class="k">def</span> <span class="nf">distance_to_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate Aircraft distance [nmi] to the contracted exit Pos3D.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -216,7 +216,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

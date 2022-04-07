@@ -39,12 +39,12 @@
 <span class="kn">from</span> <span class="nn">.pos3d</span> <span class="kn">import</span> <span class="n">Pos3D</span>
 
 
-<div class="viewcode-block" id="Plan"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan">[docs]</a><span class="k">class</span> <span class="nc">Plan</span><span class="p">:</span>
+<div class="viewcode-block" id="Plan"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan">[docs]</a><span class="k">class</span> <span class="nc">Plan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Three-dimensional space line.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Plan.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pos3D</span><span class="p">]):</span>
+<div class="viewcode-block" id="Plan.__init__"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pos3D</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -54,7 +54,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span></div>
 
-<div class="viewcode-block" id="Plan.from_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Plan.from_json"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Plan</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from JSON representation.</span>
@@ -66,7 +66,7 @@
 
         <span class="k">return</span> <span class="n">Plan</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Plan.load"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.load">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Plan.load"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.load">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Plan</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a file.</span>
@@ -75,21 +75,21 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Plan</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Plan.data"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="Plan.data"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the data as a serialisable list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Plan.to_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Plan.to_json"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Serialise the instance to JSON.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Plan.save"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Plan.save"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the instance to a file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -97,14 +97,14 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Plan.segments"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.segments">[docs]</a>    <span class="k">def</span> <span class="nf">segments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Pos2D</span><span class="p">,</span> <span class="n">Pos2D</span><span class="p">]]:</span>
+<div class="viewcode-block" id="Plan.segments"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.segments">[docs]</a>    <span class="k">def</span> <span class="nf">segments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Pos2D</span><span class="p">,</span> <span class="n">Pos2D</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an iterator of the Plan segments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span></div>
 
-<div class="viewcode-block" id="Plan.min_distance"><a class="viewcode-back" href="../../.././autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.min_distance">[docs]</a>    <span class="k">def</span> <span class="nf">min_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Plan</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Plan.min_distance"><a class="viewcode-back" href="../../../autosummary/starling.core.plan.Plan.html#starling.core.plan.Plan.min_distance">[docs]</a>    <span class="k">def</span> <span class="nf">min_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Plan</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the minimum distance [nmi] to another Plan.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -144,7 +144,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

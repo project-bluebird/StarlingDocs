@@ -47,13 +47,13 @@
 <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span>
 
 
-<div class="viewcode-block" id="Stepper"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper">[docs]</a><span class="k">class</span> <span class="nc">Stepper</span><span class="p">:</span>
+<div class="viewcode-block" id="Stepper"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper">[docs]</a><span class="k">class</span> <span class="nc">Stepper</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that handles and combines other objects to evolve the environment,</span>
 <span class="sd">    calculate the reward, log and visualise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Stepper.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Stepper.__init__"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">predictor</span><span class="p">,</span>
         <span class="n">environment</span><span class="p">,</span>
@@ -202,7 +202,7 @@
         <span class="c1"># Log the metadata</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_metadata</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Stepper.reset"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.reset"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Reset internal variables&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">predictor</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictor_orig</span><span class="p">)</span>
@@ -236,7 +236,7 @@
 
         <span class="k">return</span> <span class="n">state</span></div>
 
-<div class="viewcode-block" id="Stepper.compute_dist_matrix"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.compute_dist_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">compute_dist_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.compute_dist_matrix"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.compute_dist_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">compute_dist_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate distance matrix between all aircraft.&quot;&quot;&quot;</span>
 
         <span class="n">aircraft</span><span class="p">,</span> <span class="n">dist_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">active_aircraft_lateral_distance</span><span class="p">()</span>
@@ -254,7 +254,7 @@
 
         <span class="k">return</span> <span class="n">aircraft</span><span class="p">,</span> <span class="n">dist_matrix</span></div>
 
-<div class="viewcode-block" id="Stepper.log_environment"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_environment">[docs]</a>    <span class="k">def</span> <span class="nf">log_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.log_environment"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_environment">[docs]</a>    <span class="k">def</span> <span class="nf">log_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Logs current environment data to internal class dictionaries</span>
 <span class="sd">        and to external .csv files.&quot;&quot;&quot;</span>
 
@@ -309,7 +309,7 @@
                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">aircraft</span><span class="o">.</span><span class="n">distance_to_exit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stepper.log_reward"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_reward">[docs]</a>    <span class="k">def</span> <span class="nf">log_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.log_reward"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_reward">[docs]</a>    <span class="k">def</span> <span class="nf">log_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Logs current reward to internal class dictionaries</span>
 <span class="sd">        and to external .csv files.&quot;&quot;&quot;</span>
 
@@ -324,7 +324,7 @@
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">istep</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">reward</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">reward</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">reward</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stepper.log_action"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_action">[docs]</a>    <span class="k">def</span> <span class="nf">log_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.log_action"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_action">[docs]</a>    <span class="k">def</span> <span class="nf">log_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Logs current environment actions to internal class dictionaries</span>
 <span class="sd">        and to external .csv files.&quot;&quot;&quot;</span>
 
@@ -344,7 +344,7 @@
                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">istep</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">callsign</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">single_action</span><span class="o">.</span><span class="n">kind</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">single_action</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stepper.log_metadata"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">log_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.log_metadata"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">log_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Logs the metadata to internal memory and csv&quot;&quot;&quot;</span>
 
         <span class="c1"># log the metadata in memory</span>
@@ -371,7 +371,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">metadata_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Radar_Sweep_Period,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">radar_sweep_period</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">metadata_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metadata_log_time,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata_log</span><span class="p">[</span><span class="s1">&#39;Log_time&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stepper.git_params"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.git_params">[docs]</a>    <span class="k">def</span> <span class="nf">git_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.git_params"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.git_params">[docs]</a>    <span class="k">def</span> <span class="nf">git_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets the current git commit hash and author&quot;&quot;&quot;</span>
         <span class="n">gitstr</span> <span class="o">=</span> <span class="n">git</span><span class="o">.</span><span class="n">Git</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span><span class="p">)</span>
         <span class="n">log_info_split</span> <span class="o">=</span> <span class="n">gitstr</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -381,7 +381,7 @@
         <span class="n">git_author</span> <span class="o">=</span> <span class="n">log_info_split</span><span class="p">[</span><span class="n">author_index</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">log_info_split</span><span class="p">[</span><span class="n">author_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">git_hash</span><span class="p">,</span> <span class="n">git_author</span></div>
 
-<div class="viewcode-block" id="Stepper.log_to_json"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_to_json">[docs]</a>    <span class="k">def</span> <span class="nf">log_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.log_to_json"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.log_to_json">[docs]</a>    <span class="k">def</span> <span class="nf">log_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Writes the internal logs to .json files&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="s2">&quot;total_steps&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">istep</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logs_directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;environment_log</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">logs_suffix</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -393,7 +393,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logs_directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;actions_log</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">logs_suffix</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_log</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Stepper.next_trajectory"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.next_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">next_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.next_trajectory"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.next_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">next_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Uses the simulator (predictor) to calculate new trajectories</span>
 <span class="sd">        and moves aircraft on these trajectories.&quot;&quot;&quot;</span>
         <span class="n">trajectories</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -408,14 +408,14 @@
 
         <span class="k">return</span> <span class="n">trajectories</span></div>
 
-<div class="viewcode-block" id="Stepper.render"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;history&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.render"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;history&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Visualise the environment&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;history&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plot_history</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;history_complete&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plot_history_complete</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Stepper.plot_history"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.plot_history">[docs]</a>    <span class="k">def</span> <span class="nf">plot_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">istep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">new_axes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.plot_history"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.plot_history">[docs]</a>    <span class="k">def</span> <span class="nf">plot_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">istep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">new_axes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Plot 2D aircraft trajectories starting from a given step in the</span>
 <span class="sd">        simulation (istep) or from the current step if istep=None.&quot;&quot;&quot;</span>
 
@@ -477,7 +477,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stepper.plot_history_complete"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.plot_history_complete">[docs]</a>    <span class="k">def</span> <span class="nf">plot_history_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">istep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">new_axes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.plot_history_complete"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.plot_history_complete">[docs]</a>    <span class="k">def</span> <span class="nf">plot_history_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">istep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">new_axes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Plot 2D aircraft trajectories and flight level starting from a given step in the</span>
 <span class="sd">        simulation (istep) or from the current step if istep=None.&quot;&quot;&quot;</span>
 
@@ -601,7 +601,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stepper.compute_state"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.compute_state">[docs]</a>    <span class="k">def</span> <span class="nf">compute_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+<div class="viewcode-block" id="Stepper.compute_state"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.compute_state">[docs]</a>    <span class="k">def</span> <span class="nf">compute_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds extra variables to state&quot;&quot;&quot;</span>
         <span class="c1"># s = {&quot;environment&quot;: self.environment, &quot;distance_matrix&quot;: self.dist_matrix}</span>
         <span class="c1"># for now, we store all required data in the environment</span>
@@ -612,7 +612,7 @@
     <span class="k">def</span> <span class="nf">close_fig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Stepper.compute_reward"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.compute_reward">[docs]</a>    <span class="k">def</span> <span class="nf">compute_reward</span><span class="p">(</span>
+<div class="viewcode-block" id="Stepper.compute_reward"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.compute_reward">[docs]</a>    <span class="k">def</span> <span class="nf">compute_reward</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">aircraft</span><span class="p">,</span>
         <span class="n">dist_matrix</span><span class="p">,</span>
@@ -655,7 +655,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Stepper.step"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="Stepper.step"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="o">=</span><span class="p">[]):</span>
         <span class="sd">&quot;&quot;&quot;Advances simulation by one time step, calculates reward and logs.&quot;&quot;&quot;</span>
 
         <span class="c1"># Should be removed</span>
@@ -689,7 +689,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span></div>
 
-<div class="viewcode-block" id="Stepper.setup_logger"><a class="viewcode-back" href="../../.././autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.setup_logger">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Stepper.setup_logger"><a class="viewcode-back" href="../../../autosummary/starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper.setup_logger">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Setup an INFO-level logger object which logs a message,</span>
 <span class="sd">        as well as a handler and formatter&quot;&quot;&quot;</span>
@@ -725,7 +725,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

@@ -35,7 +35,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 
 
-<div class="viewcode-block" id="Planner"><a class="viewcode-back" href="../../.././autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner">[docs]</a><span class="k">class</span> <span class="nc">Planner</span><span class="p">:</span>
+<div class="viewcode-block" id="Planner"><a class="viewcode-back" href="../../../autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner">[docs]</a><span class="k">class</span> <span class="nc">Planner</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Trajectory factory class.</span>
 <span class="sd">    helps concisely create a Trajectory</span>
@@ -43,7 +43,7 @@
 <span class="sd">    which would enable an Aircraft to fly between the given control points.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Planner.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">num_control_points</span><span class="p">,</span> <span class="n">num_eval_points</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="Planner.__init__"><a class="viewcode-back" href="../../../autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">num_control_points</span><span class="p">,</span> <span class="n">num_eval_points</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -68,7 +68,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">start</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">distance</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">bearing</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">fl</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">fl</span> <span class="o">+</span> <span class="p">(</span><span class="n">d_fl</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Planner.get_control_points"><a class="viewcode-back" href="../../.././autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner.get_control_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
+<div class="viewcode-block" id="Planner.get_control_points"><a class="viewcode-back" href="../../../autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner.get_control_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the control-points offset by some deltas.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -94,7 +94,7 @@
 
         <span class="k">return</span> <span class="n">cps</span></div>
 
-<div class="viewcode-block" id="Planner.get_trajectory"><a class="viewcode-back" href="../../.././autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
+<div class="viewcode-block" id="Planner.get_trajectory"><a class="viewcode-back" href="../../../autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a Trajectory from a parameterisation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -119,7 +119,7 @@
 
         <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">traj</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Planner.get_actions"><a class="viewcode-back" href="../../.././autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner.get_actions">[docs]</a>    <span class="k">def</span> <span class="nf">get_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
+<div class="viewcode-block" id="Planner.get_actions"><a class="viewcode-back" href="../../../autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner.get_actions">[docs]</a>    <span class="k">def</span> <span class="nf">get_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct an Action set from a parameterisation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -161,7 +161,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">
