@@ -38,12 +38,12 @@
 <span class="kn">from</span> <span class="nn">.volume</span> <span class="kn">import</span> <span class="n">Volume</span>
 
 
-<div class="viewcode-block" id="Sector"><a class="viewcode-back" href="../../../autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector">[docs]</a><span class="k">class</span> <span class="nc">Sector</span><span class="p">:</span>
+<div class="viewcode-block" id="Sector"><a class="viewcode-back" href="../../.././autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector">[docs]</a><span class="k">class</span> <span class="nc">Sector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Union of adjacent Volumes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Sector.__init__"><a class="viewcode-back" href="../../../autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volumes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Volume</span><span class="p">]):</span>
+<div class="viewcode-block" id="Sector.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volumes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Volume</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -53,7 +53,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">volumes</span> <span class="o">=</span> <span class="n">volumes</span>  <span class="c1"># Note that the order of Volumes should not matter.</span></div>
 
-<div class="viewcode-block" id="Sector.from_json"><a class="viewcode-back" href="../../../autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Sector.from_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sector</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from JSON representation.</span>
@@ -65,7 +65,7 @@
 
         <span class="k">return</span> <span class="n">Sector</span><span class="p">(</span><span class="n">volumes</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Sector.load"><a class="viewcode-back" href="../../../autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.load">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Sector.load"><a class="viewcode-back" href="../../.././autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.load">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sector</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a file.</span>
@@ -74,21 +74,21 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Sector</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Sector.data"><a class="viewcode-back" href="../../../autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<div class="viewcode-block" id="Sector.data"><a class="viewcode-back" href="../../.././autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the data as a serialisable list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">volume</span><span class="p">:</span> <span class="n">volume</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">volumes</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Sector.to_json"><a class="viewcode-back" href="../../../autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Sector.to_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Serialise the instance to JSON.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Sector.save"><a class="viewcode-back" href="../../../autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Sector.save"><a class="viewcode-back" href="../../.././autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the instance to a file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -96,7 +96,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Sector.contains"><a class="viewcode-back" href="../../../autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">Pos3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="Sector.contains"><a class="viewcode-back" href="../../.././autosummary/starling.core.sector.Sector.html#starling.core.sector.Sector.contains">[docs]</a>    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">Pos3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if a given position is contained within the Sector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -121,7 +121,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

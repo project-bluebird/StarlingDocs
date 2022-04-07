@@ -37,7 +37,7 @@
 <span class="kn">from</span> <span class="nn">.objective</span> <span class="kn">import</span> <span class="n">Objective</span>
 
 
-<div class="viewcode-block" id="PreferredFlightLevel"><a class="viewcode-back" href="../../../autosummary/starling.objective.preferred_flight_level.PreferredFlightLevel.html#starling.objective.preferred_flight_level.PreferredFlightLevel">[docs]</a><span class="k">class</span> <span class="nc">PreferredFlightLevel</span><span class="p">(</span><span class="n">Objective</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferredFlightLevel"><a class="viewcode-back" href="../../.././autosummary/starling.objective.preferred_flight_level.PreferredFlightLevel.html#starling.objective.preferred_flight_level.PreferredFlightLevel">[docs]</a><span class="k">class</span> <span class="nc">PreferredFlightLevel</span><span class="p">(</span><span class="n">Objective</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Quantify how close the flight level of the aircraft is to the preferred flight level (PFL).</span>
 <span class="sd">    When the aircraft wants to descent, it should descend as late as possible. When the aircraft</span>
@@ -45,7 +45,7 @@
 <span class="sd">    between the sector entry level and the sector exit level.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PreferredFlightLevel.__init__"><a class="viewcode-back" href="../../../autosummary/starling.objective.preferred_flight_level.PreferredFlightLevel.html#starling.objective.preferred_flight_level.PreferredFlightLevel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exponent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferredFlightLevel.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.objective.preferred_flight_level.PreferredFlightLevel.html#starling.objective.preferred_flight_level.PreferredFlightLevel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exponent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 
@@ -60,7 +60,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">exponent</span> <span class="o">=</span> <span class="n">exponent</span></div>
 
-<div class="viewcode-block" id="PreferredFlightLevel.evaluate"><a class="viewcode-back" href="../../../autosummary/starling.objective.preferred_flight_level.PreferredFlightLevel.html#starling.objective.preferred_flight_level.PreferredFlightLevel.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Reward</span><span class="p">:</span>
+<div class="viewcode-block" id="PreferredFlightLevel.evaluate"><a class="viewcode-back" href="../../.././autosummary/starling.objective.preferred_flight_level.PreferredFlightLevel.html#starling.objective.preferred_flight_level.PreferredFlightLevel.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Reward</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluate the penalty for deviating from the PFL at this time step. The penalty is equal to</span>
 <span class="sd">        (abs(PFL - actual_FL) ** exp) * dt where actual_FL is the flight level at the latest trajectory control</span>
@@ -109,7 +109,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

@@ -39,14 +39,14 @@
 <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span>
 
 
-<div class="viewcode-block" id="Pos2D"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D">[docs]</a><span class="k">class</span> <span class="nc">Pos2D</span><span class="p">:</span>
+<div class="viewcode-block" id="Pos2D"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D">[docs]</a><span class="k">class</span> <span class="nc">Pos2D</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-dimensional location on the globe.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">geod</span> <span class="o">=</span> <span class="n">Geod</span><span class="p">(</span><span class="n">ellps</span><span class="o">=</span><span class="s2">&quot;WGS84&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Pos2D.__init__"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="Pos2D.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -59,7 +59,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="Pos2D.from_str"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.from_str">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Pos2D.from_str"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.from_str">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a string representation.</span>
@@ -83,7 +83,7 @@
 
         <span class="k">return</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Pos2D.from_array"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.from_array">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Pos2D.from_array"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.from_array">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_array</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a numpy array.</span>
@@ -139,7 +139,7 @@
 
         <span class="k">return</span> <span class="n">Pos2D</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">precision</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">precision</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Pos2D.pos3d"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.pos3d">[docs]</a>    <span class="k">def</span> <span class="nf">pos3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fl</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
+<div class="viewcode-block" id="Pos2D.pos3d"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.pos3d">[docs]</a>    <span class="k">def</span> <span class="nf">pos3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fl</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a three-dimensional position of the location with a given flight level [fl].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -148,7 +148,7 @@
 
         <span class="k">return</span> <span class="n">Pos3D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">fl</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Pos2D.pos4d"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.pos4d">[docs]</a>    <span class="k">def</span> <span class="nf">pos4d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos4D</span><span class="p">:</span>
+<div class="viewcode-block" id="Pos2D.pos4d"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.pos4d">[docs]</a>    <span class="k">def</span> <span class="nf">pos4d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos4D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a four-dimensional control-point of the location with a given flight level [fl] and time [sec].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -157,7 +157,7 @@
 
         <span class="k">return</span> <span class="n">Pos4D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">fl</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Pos2D.forward"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
+<div class="viewcode-block" id="Pos2D.forward"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">heading</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine the two-dimensional location</span>
 <span class="sd">        a given distance away [nmi] following a given heading [deg].</span>
@@ -167,7 +167,7 @@
 
         <span class="k">return</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">proj_lat</span><span class="p">,</span> <span class="n">proj_lon</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Pos2D.bearing_to"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.bearing_to">[docs]</a>    <span class="k">def</span> <span class="nf">bearing_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Pos2D.bearing_to"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.bearing_to">[docs]</a>    <span class="k">def</span> <span class="nf">bearing_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the bearing [deg] to another location.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -176,7 +176,7 @@
 
         <span class="k">return</span> <span class="n">back_azimuth</span> <span class="o">%</span> <span class="mf">360.0</span></div>
 
-<div class="viewcode-block" id="Pos2D.distance"><a class="viewcode-back" href="../../../autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Pos2D.distance"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the geodesic distance [nmi] to another location.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -203,7 +203,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

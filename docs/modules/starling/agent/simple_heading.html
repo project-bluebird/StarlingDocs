@@ -37,19 +37,19 @@
 <span class="kn">from</span> <span class="nn">.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
 
 
-<div class="viewcode-block" id="SimpleHeading"><a class="viewcode-back" href="../../../autosummary/starling.agent.simple_heading.SimpleHeading.html#starling.agent.simple_heading.SimpleHeading">[docs]</a><span class="k">class</span> <span class="nc">SimpleHeading</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+<div class="viewcode-block" id="SimpleHeading"><a class="viewcode-back" href="../../.././autosummary/starling.agent.simple_heading.SimpleHeading.html#starling.agent.simple_heading.SimpleHeading">[docs]</a><span class="k">class</span> <span class="nc">SimpleHeading</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Issue &quot;change_heading_*&quot; commands as two planes pass the threshold: min_horz_distance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SimpleHeading.__init__"><a class="viewcode-back" href="../../../autosummary/starling.agent.simple_heading.SimpleHeading.html#starling.agent.simple_heading.SimpleHeading.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_horz_distance</span><span class="p">):</span>
+<div class="viewcode-block" id="SimpleHeading.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.agent.simple_heading.SimpleHeading.html#starling.agent.simple_heading.SimpleHeading.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_horz_distance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">min_horz_distance</span> <span class="o">=</span> <span class="n">min_horz_distance</span></div>
 
-<div class="viewcode-block" id="SimpleHeading.generate_actions"><a class="viewcode-back" href="../../../autosummary/starling.agent.simple_heading.SimpleHeading.html#starling.agent.simple_heading.SimpleHeading.generate_actions">[docs]</a>    <span class="k">def</span> <span class="nf">generate_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">DefaultDict</span><span class="p">:</span>
+<div class="viewcode-block" id="SimpleHeading.generate_actions"><a class="viewcode-back" href="../../.././autosummary/starling.agent.simple_heading.SimpleHeading.html#starling.agent.simple_heading.SimpleHeading.generate_actions">[docs]</a>    <span class="k">def</span> <span class="nf">generate_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">DefaultDict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the distance matrix, find those that are too close, issue a &quot;change_heading_*&quot; command.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -97,7 +97,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">
