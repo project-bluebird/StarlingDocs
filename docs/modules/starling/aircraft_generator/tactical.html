@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>starling.aircraft_generator.tactical &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for starling.aircraft_generator.tactical</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">from</span> <span class="nn">.aircraft_generator</span> <span class="kn">import</span> <span class="n">AircraftGenerator</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">Contract</span><span class="p">,</span> <span class="n">FlightPlan</span><span class="p">,</span> <span class="n">Route</span>
+
+
+<div class="viewcode-block" id="Tactical"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical">[docs]</a><span class="k">class</span> <span class="nc">Tactical</span><span class="p">(</span><span class="n">AircraftGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aircraft generator for simple tactical scenarios:</span>
+<span class="sd">    - configurable number of Aircraft and balance of climbers/descenders/overfliers</span>
+<span class="sd">    - randomly selected entry and exit Contracts</span>
+<span class="sd">    - randomly generated speeds</span>
+<span class="sd">    - ensures that no two Aircraft have the same entry contract (same Fix, FL and time)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Tactical.__init__"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">num_aircraft</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">balance</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">],</span>
+        <span class="n">speed_range</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">400.0</span><span class="p">,</span> <span class="mf">400.0</span><span class="p">],</span>
+        <span class="n">time_entry_gap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        num_aircraft: float</span>
+<span class="sd">            Number of Aircraft to generate.</span>
+<span class="sd">        balance: list[float, float, float]</span>
+<span class="sd">            Probabilities of any given Aircraft being one of climber/descender/overflier.</span>
+<span class="sd">            The probabilities have to sum to 1 (Multinomial distribution parameter).</span>
+<span class="sd">        speed_range: list[float, float]</span>
+<span class="sd">            Optional range of [min,max] speeds from which to randomly generate Aircraft speed.</span>
+<span class="sd">            If not provided, speed of all Aircraft is set to 400.</span>
+<span class="sd">        time_entry_gap: float</span>
+<span class="sd">            Optional amount of time in seconds that must be maintained between two Aircraft entry Contracts if they are at the same Fix and FL.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">num_aircraft</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Number of Aircraft must be positive.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">balance</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The balance parameter must be a list of length 3.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">balance</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Balance probabilities must sum to 1.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">speed_range</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Speed range must be a list of length 2.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">time_entry_gap</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Time entry gap cannot be negative.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_aircraft</span> <span class="o">=</span> <span class="n">num_aircraft</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">=</span> <span class="n">balance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span> <span class="o">=</span> <span class="n">speed_range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_entry_gap</span> <span class="o">=</span> <span class="n">time_entry_gap</span></div>
+
+<div class="viewcode-block" id="Tactical.get_callsign"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_callsign">[docs]</a>    <span class="k">def</span> <span class="nf">get_callsign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return aircraft callsign.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;AIR</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">aircraft</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+<div class="viewcode-block" id="Tactical.get_speed"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_speed">[docs]</a>    <span class="k">def</span> <span class="nf">get_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return speed - either default or randomly generated within provided range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">speed</span></div>
+
+<div class="viewcode-block" id="Tactical.get_vertical_speed"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_vertical_speed">[docs]</a>    <span class="k">def</span> <span class="nf">get_vertical_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return vertical speed. Currently default to 0.0 for all Aircraft.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="mf">0.0</span></div>
+
+<div class="viewcode-block" id="Tactical.get_start_cond"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_start_cond">[docs]</a>    <span class="k">def</span> <span class="nf">get_start_cond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">fl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return starting position and heading.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fix1</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">heading</span> <span class="o">=</span> <span class="n">fix1</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">fix1</span><span class="o">.</span><span class="n">pos3d</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pos</span><span class="p">,</span> <span class="n">heading</span></div>
+
+<div class="viewcode-block" id="Tactical.get_times"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_times">[docs]</a>    <span class="k">def</span> <span class="nf">get_times</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">airspace</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get contract start and exit time.</span>
+<span class="sd">        This is when the Aircraft enters and exits the Sector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">start_pos</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+        <span class="n">entry_fix</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_entry_fix</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+        <span class="n">entry_fix_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">entry_fix</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">entry_fix_pos</span> <span class="o">=</span> <span class="n">entry_fix</span><span class="p">[</span><span class="n">entry_fix_name</span><span class="p">]</span>
+
+        <span class="n">exit_fix</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_exit_fix</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+        <span class="n">exit_fix_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">exit_fix</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exit_fix_pos</span> <span class="o">=</span> <span class="n">exit_fix</span><span class="p">[</span><span class="n">exit_fix_name</span><span class="p">]</span>
+
+        <span class="n">dist_to_entry</span> <span class="o">=</span> <span class="n">start_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">entry_fix_pos</span><span class="p">)</span>
+        <span class="n">dist_to_exit</span> <span class="o">=</span> <span class="n">entry_fix_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">exit_fix_pos</span><span class="p">)</span>
+
+        <span class="n">entry_time</span> <span class="o">=</span> <span class="n">dist_to_entry</span> <span class="o">/</span> <span class="n">speed</span> <span class="o">*</span> <span class="mi">3600</span>
+        <span class="n">exit_time</span> <span class="o">=</span> <span class="n">dist_to_exit</span> <span class="o">/</span> <span class="n">speed</span> <span class="o">*</span> <span class="mi">3600</span>
+
+        <span class="k">return</span> <span class="n">entry_time</span><span class="p">,</span> <span class="n">exit_time</span></div>
+
+<div class="viewcode-block" id="Tactical.check_entry_contract"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.check_entry_contract">[docs]</a>    <span class="k">def</span> <span class="nf">check_entry_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_aircraft</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">airspace</span><span class="p">,</span> <span class="n">journey</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if proposed new Aircraft has the same entry contract as any of the existing Aircraft (same entry Fix, FL and time).</span>
+<span class="sd">        If yes, increase entry time by self.time_entry_gap.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">entry_fix</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_entry_fix</span><span class="p">(</span><span class="n">new_aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">)</span>
+        <span class="n">entry_fix_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">entry_fix</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># do nothing if this is the first aircraft</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">new_aircraft</span>
+
+        <span class="c1"># do nothing if no other Aircraft is entering at this Fix</span>
+        <span class="k">if</span> <span class="n">entry_fix_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">entries</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="n">new_aircraft</span>
+
+        <span class="c1"># do nothing if no other Aircraft has the same time and FL contract at this Fix</span>
+        <span class="n">contracts_at_fix</span> <span class="o">=</span> <span class="n">entries</span><span class="p">[</span><span class="n">entry_fix_name</span><span class="p">]</span>
+        <span class="n">entry_times</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">contract</span><span class="o">.</span><span class="n">time</span> <span class="k">for</span> <span class="n">contract</span> <span class="ow">in</span> <span class="n">contracts_at_fix</span> <span class="k">if</span> <span class="n">contract</span><span class="o">.</span><span class="n">fl</span> <span class="o">==</span> <span class="n">new_aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">fl</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">new_aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">time</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">entry_times</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">new_aircraft</span>
+
+        <span class="c1"># otherwise, get the last Aircraft at Fix and FL and increase the entry time to be after</span>
+        <span class="n">new_time</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">entry_times</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_entry_gap</span>
+        <span class="n">new_aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">new_time</span>
+        <span class="n">new_aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">new_time</span>
+
+        <span class="k">return</span> <span class="n">new_aircraft</span></div>
+
+<div class="viewcode-block" id="Tactical.generate_aircraft"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.generate_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">generate_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">routes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Aircraft</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a set of Aircraft for the given Airspace.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># split aircraft into climbers, descenders and overfliers</span>
+        <span class="n">climbers</span><span class="p">,</span> <span class="n">descenders</span><span class="p">,</span> <span class="n">overfliers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_aircraft</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">balance</span><span class="p">)</span>
+        <span class="n">journey_type</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;climb&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">climbers</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;descend&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">descenders</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;overfly&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">overfliers</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">journey_type</span><span class="p">)</span>
+
+        <span class="n">aircraft</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># keep track of entry contracts to avoid clashes</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_aircraft</span><span class="p">):</span>
+
+            <span class="n">route</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">routes</span><span class="p">)</span>
+            <span class="n">entry_FLs</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">get_FLs_entry</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+            <span class="n">exit_FLs</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">get_FLs_exit</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+
+            <span class="n">journey</span> <span class="o">=</span> <span class="n">journey_type</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">journey</span> <span class="o">==</span> <span class="s2">&quot;overfly&quot;</span><span class="p">:</span>
+                <span class="c1"># FLs that are valid at both exit and entry for overfliers</span>
+                <span class="n">constant_FLs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">entry_FLs</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">exit_FLs</span><span class="p">)))</span>
+                <span class="n">fl1</span> <span class="o">=</span> <span class="n">fl2</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">constant_FLs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">journey</span> <span class="o">==</span> <span class="s2">&quot;climb&quot;</span><span class="p">:</span>
+                <span class="c1"># fl1 &lt; fl2</span>
+                <span class="c1"># choose start FL so that Aircraft has somewhere to climb to</span>
+                <span class="n">fl1</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">entry_FLs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">entry_FLs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">exit_FLs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">10</span><span class="p">))</span>
+                <span class="c1"># choose exit to be higher than fl1 AND within exit FL limits</span>
+                <span class="n">fl2</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">fl1</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">exit_FLs</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">exit_FLs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">journey</span> <span class="o">==</span> <span class="s2">&quot;descend&quot;</span><span class="p">:</span>
+                <span class="c1"># fl1 &gt; fl2</span>
+                <span class="c1"># choose start FL so that Aircraft has somewhere to descend to</span>
+                <span class="n">fl1</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">entry_FLs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">exit_FLs</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">entry_FLs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+                <span class="c1"># choose exit to be lower than fl1 AND within exit FL limits</span>
+                <span class="n">fl2</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">exit_FLs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">fl1</span><span class="p">,</span> <span class="n">exit_FLs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span> <span class="mi">10</span><span class="p">))</span>
+
+            <span class="n">callsign</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_callsign</span><span class="p">(</span><span class="n">aircraft</span><span class="p">)</span>
+            <span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_speed</span><span class="p">()</span>
+            <span class="n">vertical_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_vertical_speed</span><span class="p">()</span>
+            <span class="n">pos</span><span class="p">,</span> <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_start_cond</span><span class="p">(</span><span class="n">airspace</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">fl1</span><span class="p">)</span>
+
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_times</span><span class="p">(</span><span class="n">speed</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">airspace</span><span class="p">)</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">fl1</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+            <span class="n">exit</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">fl2</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+            <span class="n">flight_plan</span> <span class="o">=</span> <span class="n">FlightPlan</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">exit</span><span class="p">,</span> <span class="n">route</span><span class="p">)</span>
+
+            <span class="c1"># check entry contract and make sure it doesn&#39;t clash with another Aircraft entry contract</span>
+            <span class="n">proposed_aircraft</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span><span class="n">flight_plan</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">vertical_speed</span><span class="p">)</span>
+            <span class="n">checked_aircraft</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_entry_contract</span><span class="p">(</span><span class="n">proposed_aircraft</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">airspace</span><span class="p">,</span> <span class="n">journey</span><span class="p">)</span>
+            <span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="n">checked_aircraft</span>
+
+            <span class="c1"># save entry contract</span>
+            <span class="n">entry_fix</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_entry_fix</span><span class="p">(</span><span class="n">checked_aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">)</span>
+            <span class="n">entry_fix_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">entry_fix</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">entries</span><span class="p">[</span><span class="n">entry_fix_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">checked_aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">aircraft</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/starling.html">starling</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Prosperity.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
