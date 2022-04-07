@@ -6,16 +6,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>starling.aircraft_generator.tactical &#8212; Starling 0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
-  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
   
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -41,7 +41,7 @@
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">Contract</span><span class="p">,</span> <span class="n">FlightPlan</span><span class="p">,</span> <span class="n">Route</span>
 
 
-<div class="viewcode-block" id="Tactical"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical">[docs]</a><span class="k">class</span> <span class="nc">Tactical</span><span class="p">(</span><span class="n">AircraftGenerator</span><span class="p">):</span>
+<div class="viewcode-block" id="Tactical"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical">[docs]</a><span class="k">class</span> <span class="nc">Tactical</span><span class="p">(</span><span class="n">AircraftGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Aircraft generator for simple tactical scenarios:</span>
 <span class="sd">    - configurable number of Aircraft and balance of climbers/descenders/overfliers</span>
@@ -50,7 +50,7 @@
 <span class="sd">    - ensures that no two Aircraft have the same entry contract (same Fix, FL and time)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Tactical.__init__"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Tactical.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">num_aircraft</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">balance</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">],</span>
@@ -94,14 +94,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span> <span class="o">=</span> <span class="n">speed_range</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_entry_gap</span> <span class="o">=</span> <span class="n">time_entry_gap</span></div>
 
-<div class="viewcode-block" id="Tactical.get_callsign"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_callsign">[docs]</a>    <span class="k">def</span> <span class="nf">get_callsign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">):</span>
+<div class="viewcode-block" id="Tactical.get_callsign"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_callsign">[docs]</a>    <span class="k">def</span> <span class="nf">get_callsign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return aircraft callsign.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;AIR</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">aircraft</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
-<div class="viewcode-block" id="Tactical.get_speed"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_speed">[docs]</a>    <span class="k">def</span> <span class="nf">get_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Tactical.get_speed"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_speed">[docs]</a>    <span class="k">def</span> <span class="nf">get_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return speed - either default or randomly generated within provided range.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -109,14 +109,14 @@
         <span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">speed</span></div>
 
-<div class="viewcode-block" id="Tactical.get_vertical_speed"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_vertical_speed">[docs]</a>    <span class="k">def</span> <span class="nf">get_vertical_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Tactical.get_vertical_speed"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_vertical_speed">[docs]</a>    <span class="k">def</span> <span class="nf">get_vertical_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return vertical speed. Currently default to 0.0 for all Aircraft.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="mf">0.0</span></div>
 
-<div class="viewcode-block" id="Tactical.get_start_cond"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_start_cond">[docs]</a>    <span class="k">def</span> <span class="nf">get_start_cond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">fl</span><span class="p">):</span>
+<div class="viewcode-block" id="Tactical.get_start_cond"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_start_cond">[docs]</a>    <span class="k">def</span> <span class="nf">get_start_cond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">fl</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return starting position and heading.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -127,7 +127,7 @@
 
         <span class="k">return</span> <span class="n">pos</span><span class="p">,</span> <span class="n">heading</span></div>
 
-<div class="viewcode-block" id="Tactical.get_times"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_times">[docs]</a>    <span class="k">def</span> <span class="nf">get_times</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">airspace</span><span class="p">):</span>
+<div class="viewcode-block" id="Tactical.get_times"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.get_times">[docs]</a>    <span class="k">def</span> <span class="nf">get_times</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">airspace</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get contract start and exit time.</span>
 <span class="sd">        This is when the Aircraft enters and exits the Sector.</span>
@@ -151,7 +151,7 @@
 
         <span class="k">return</span> <span class="n">entry_time</span><span class="p">,</span> <span class="n">exit_time</span></div>
 
-<div class="viewcode-block" id="Tactical.check_entry_contract"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.check_entry_contract">[docs]</a>    <span class="k">def</span> <span class="nf">check_entry_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_aircraft</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">airspace</span><span class="p">,</span> <span class="n">journey</span><span class="p">):</span>
+<div class="viewcode-block" id="Tactical.check_entry_contract"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.check_entry_contract">[docs]</a>    <span class="k">def</span> <span class="nf">check_entry_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_aircraft</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">airspace</span><span class="p">,</span> <span class="n">journey</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if proposed new Aircraft has the same entry contract as any of the existing Aircraft (same entry Fix, FL and time).</span>
 <span class="sd">        If yes, increase entry time by self.time_entry_gap.</span>
@@ -183,7 +183,7 @@
 
         <span class="k">return</span> <span class="n">new_aircraft</span></div>
 
-<div class="viewcode-block" id="Tactical.generate_aircraft"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.generate_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">generate_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">routes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Aircraft</span><span class="p">]:</span>
+<div class="viewcode-block" id="Tactical.generate_aircraft"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.tactical.Tactical.html#starling.aircraft_generator.tactical.Tactical.generate_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">generate_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">routes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Aircraft</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a set of Aircraft for the given Airspace.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -261,7 +261,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

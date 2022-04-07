@@ -6,16 +6,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>starling.aircraft_generator.regular &#8212; Starling 0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
-  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
   
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -39,12 +39,12 @@
 <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span>
 
 
-<div class="viewcode-block" id="Regular"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular">[docs]</a><span class="k">class</span> <span class="nc">Regular</span><span class="p">(</span><span class="n">AircraftGenerator</span><span class="p">):</span>
+<div class="viewcode-block" id="Regular"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular">[docs]</a><span class="k">class</span> <span class="nc">Regular</span><span class="p">(</span><span class="n">AircraftGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Quasi-regularly spaced Aircraft emitted from Route starts.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Regular.__init__"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num_aircraft</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="Regular.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num_aircraft</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 
@@ -66,7 +66,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="n">total_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_aircraft</span> <span class="o">=</span> <span class="n">num_aircraft</span></div>
 
-<div class="viewcode-block" id="Regular.generate_aircraft"><a class="viewcode-back" href="../../../_autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular.generate_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">generate_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">routes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Aircraft</span><span class="p">]:</span>
+<div class="viewcode-block" id="Regular.generate_aircraft"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular.generate_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">generate_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">routes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Aircraft</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a set of Aircraft for the given Airspace.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -125,7 +125,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">

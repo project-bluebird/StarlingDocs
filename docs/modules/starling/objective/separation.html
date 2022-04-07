@@ -6,16 +6,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>starling.objective.separation &#8212; Starling 0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
-  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
   
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -38,12 +38,12 @@
 <span class="kn">from</span> <span class="nn">.objective</span> <span class="kn">import</span> <span class="n">Objective</span>
 
 
-<div class="viewcode-block" id="Separation"><a class="viewcode-back" href="../../../_autosummary/starling.objective.separation.Separation.html#starling.objective.separation.Separation">[docs]</a><span class="k">class</span> <span class="nc">Separation</span><span class="p">(</span><span class="n">Objective</span><span class="p">):</span>
+<div class="viewcode-block" id="Separation"><a class="viewcode-back" href="../../.././autosummary/starling.objective.separation.Separation.html#starling.objective.separation.Separation">[docs]</a><span class="k">class</span> <span class="nc">Separation</span><span class="p">(</span><span class="n">Objective</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check that a minimum separation distance has been maintained between trajectories.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Separation.__init__"><a class="viewcode-back" href="../../../_autosummary/starling.objective.separation.Separation.html#starling.objective.separation.Separation.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">):</span>
+<div class="viewcode-block" id="Separation.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.objective.separation.Separation.html#starling.objective.separation.Separation.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 
@@ -58,7 +58,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">distance_threshold</span> <span class="o">=</span> <span class="n">distance_threshold</span></div>
 
-<div class="viewcode-block" id="Separation.evaluate"><a class="viewcode-back" href="../../../_autosummary/starling.objective.separation.Separation.html#starling.objective.separation.Separation.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Reward</span><span class="p">:</span>
+<div class="viewcode-block" id="Separation.evaluate"><a class="viewcode-back" href="../../.././autosummary/starling.objective.separation.Separation.html#starling.objective.separation.Separation.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Reward</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluate the separation between all combinations of trajectories and return 0.0 if everything</span>
 <span class="sd">        is OK, -1.0 if any separation threshold is violated.</span>
@@ -86,13 +86,13 @@
         <span class="k">return</span> <span class="n">Reward</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="SeparationAllPairs"><a class="viewcode-back" href="../../../_autosummary/starling.objective.separation.SeparationAllPairs.html#starling.objective.separation.SeparationAllPairs">[docs]</a><span class="k">class</span> <span class="nc">SeparationAllPairs</span><span class="p">(</span><span class="n">Separation</span><span class="p">):</span>
+<div class="viewcode-block" id="SeparationAllPairs"><a class="viewcode-back" href="../../.././autosummary/starling.objective.separation.SeparationAllPairs.html#starling.objective.separation.SeparationAllPairs">[docs]</a><span class="k">class</span> <span class="nc">SeparationAllPairs</span><span class="p">(</span><span class="n">Separation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check that a minimum separation distance has been maintained between trajectories</span>
 <span class="sd">    and return objective values for all pairs of aircraft.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SeparationAllPairs.__init__"><a class="viewcode-back" href="../../../_autosummary/starling.objective.separation.SeparationAllPairs.html#starling.objective.separation.SeparationAllPairs.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">):</span>
+<div class="viewcode-block" id="SeparationAllPairs.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.objective.separation.SeparationAllPairs.html#starling.objective.separation.SeparationAllPairs.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 
@@ -104,7 +104,7 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">distance_threshold</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SeparationAllPairs.evaluate"><a class="viewcode-back" href="../../../_autosummary/starling.objective.separation.SeparationAllPairs.html#starling.objective.separation.SeparationAllPairs.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Reward</span><span class="p">]:</span>
+<div class="viewcode-block" id="SeparationAllPairs.evaluate"><a class="viewcode-back" href="../../.././autosummary/starling.objective.separation.SeparationAllPairs.html#starling.objective.separation.SeparationAllPairs.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Reward</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluate the separation between all combinations of trajectories and return a list</span>
 <span class="sd">        of floats. The list contains 0.0 for pairs that are OK and -1.0 for pairs where the</span>
@@ -153,7 +153,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/starling.html">starling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
 </ul>
 
 <div class="relations">
