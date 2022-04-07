@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>starling.airspace_generator.sector_x &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for starling.airspace_generator.sector_x</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Pos2D</span><span class="p">,</span> <span class="n">Sector</span><span class="p">,</span> <span class="n">Volume</span><span class="p">,</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">Fixes</span><span class="p">,</span> <span class="n">Route</span><span class="p">,</span> <span class="n">Area</span>
+<span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">geometry</span>
+<span class="kn">from</span> <span class="nn">.airspace_generator</span> <span class="kn">import</span> <span class="n">AirspaceGenerator</span>
+
+
+<div class="viewcode-block" id="SectorX"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.sector_x.SectorX.html#starling.airspace_generator.sector_x.SectorX">[docs]</a><span class="k">class</span> <span class="nc">SectorX</span><span class="p">(</span><span class="n">AirspaceGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sector X scenario.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SectorX.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.sector_x.SectorX.html#starling.airspace_generator.sector_x.SectorX.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fl_limits</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        width: float</span>
+<span class="sd">            The width of the airways.</span>
+<span class="sd">        height: float</span>
+<span class="sd">           The height of the Airspace (includes exterior Fixes).</span>
+<span class="sd">        fl_limits: list[float]</span>
+<span class="sd">            The [min, max] flight level limits allowed in the Sector.</span>
+<span class="sd">        alpha: float</span>
+<span class="sd">            The absolute degrees by which both branches are rotated from a vertical line (0 &lt; alpha &lt; 90).</span>
+<span class="sd">            For example, alpha=45 results in an X shape with 90 degrees between all branches.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">height</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Height must be positive.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">fl_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fl_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Flight level limits must be positive.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fl_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">fl_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Maximum flight level must exceed minimum flight level.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">alpha</span> <span class="o">&gt;=</span> <span class="mi">90</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Alpha must be positive in the range (0,90).&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fl_limits</span> <span class="o">=</span> <span class="n">fl_limits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span></div>
+
+<div class="viewcode-block" id="SectorX.generate_airspace"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.sector_x.SectorX.html#starling.airspace_generator.sector_x.SectorX.generate_airspace">[docs]</a>    <span class="k">def</span> <span class="nf">generate_airspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Airspace</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate an airspace.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="p">[</span><span class="n">min_fl</span><span class="p">,</span> <span class="n">max_fl</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fl_limits</span>
+
+        <span class="n">north_west</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">south_west</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">south_east</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">north_east</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="n">b</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">north_east</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">north_west</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">south_west</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">south_east</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">south_west</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">south_east</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">north_east</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">north_west</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">intersection</span><span class="p">((</span><span class="n">b</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span> <span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">intersection</span><span class="p">((</span><span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">),</span> <span class="n">Pos2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">intersection</span><span class="p">((</span><span class="n">f</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">),</span> <span class="n">Pos2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">intersection</span><span class="p">((</span><span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+
+        <span class="n">sectors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sector_x&quot;</span><span class="p">:</span> <span class="n">Sector</span><span class="p">([</span><span class="n">Volume</span><span class="p">(</span><span class="n">Area</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]),</span> <span class="n">min_fl</span><span class="p">,</span> <span class="n">max_fl</span><span class="p">)])}</span>
+
+        <span class="n">fixes</span> <span class="o">=</span> <span class="n">Fixes</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;ABYSS&quot;</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="s2">&quot;DEMON&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">),</span>
+                <span class="s2">&quot;SANTA&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">),</span>
+                <span class="s2">&quot;GATES&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">),</span>
+                <span class="s2">&quot;SIN&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">),</span>
+                <span class="s2">&quot;WITCH&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">),</span>
+                <span class="s2">&quot;SIREN&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">),</span>
+                <span class="s2">&quot;HAUNT&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">),</span>
+                <span class="s2">&quot;LIMBO&quot;</span><span class="p">:</span> <span class="n">geometry</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="n">routes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Route</span><span class="p">([</span><span class="s2">&quot;SIREN&quot;</span><span class="p">,</span> <span class="s2">&quot;WITCH&quot;</span><span class="p">,</span> <span class="s2">&quot;ABYSS&quot;</span><span class="p">,</span> <span class="s2">&quot;DEMON&quot;</span><span class="p">,</span> <span class="s2">&quot;SANTA&quot;</span><span class="p">]),</span>
+            <span class="n">Route</span><span class="p">([</span><span class="s2">&quot;LIMBO&quot;</span><span class="p">,</span> <span class="s2">&quot;HAUNT&quot;</span><span class="p">,</span> <span class="s2">&quot;ABYSS&quot;</span><span class="p">,</span> <span class="s2">&quot;GATES&quot;</span><span class="p">,</span> <span class="s2">&quot;SIN&quot;</span><span class="p">]),</span>
+            <span class="n">Route</span><span class="p">([</span><span class="s2">&quot;SIN&quot;</span><span class="p">,</span> <span class="s2">&quot;GATES&quot;</span><span class="p">,</span> <span class="s2">&quot;ABYSS&quot;</span><span class="p">,</span> <span class="s2">&quot;HAUNT&quot;</span><span class="p">,</span> <span class="s2">&quot;LIMBO&quot;</span><span class="p">]),</span>
+            <span class="n">Route</span><span class="p">([</span><span class="s2">&quot;SANTA&quot;</span><span class="p">,</span> <span class="s2">&quot;DEMON&quot;</span><span class="p">,</span> <span class="s2">&quot;ABYSS&quot;</span><span class="p">,</span> <span class="s2">&quot;WITCH&quot;</span><span class="p">,</span> <span class="s2">&quot;SIREN&quot;</span><span class="p">]),</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">Airspace</span><span class="p">(</span><span class="n">sectors</span><span class="p">,</span> <span class="n">fixes</span><span class="p">),</span> <span class="n">routes</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Prosperity.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
