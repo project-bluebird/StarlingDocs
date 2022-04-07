@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>starling.core.plan.Plan &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="starling.core.pos2d" href="starling.core.pos2d.html" />
+    <link rel="prev" title="starling.core.plan" href="starling.core.plan.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="starling-core-plan-plan">
+<h1>starling.core.plan.Plan<a class="headerlink" href="#starling-core-plan-plan" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="starling.core.plan.Plan">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.plan.</span></span><span class="sig-name descname"><span class="pre">Plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D"><span class="pre">Pos3D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Three-dimensional space line.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.plan.Plan.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D"><span class="pre">Pos3D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a new instance.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.plan.Plan.__init__" title="starling.core.plan.Plan.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(positions)</p></td>
+<td><p>Construct a new instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.plan.Plan.data" title="starling.core.plan.Plan.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>()</p></td>
+<td><p>Get the data as a serialisable list.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.plan.Plan.from_json" title="starling.core.plan.Plan.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(s)</p></td>
+<td><p>Construct a new instance from JSON representation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.plan.Plan.load" title="starling.core.plan.Plan.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename)</p></td>
+<td><p>Construct a new instance from a file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.plan.Plan.min_distance" title="starling.core.plan.Plan.min_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_distance</span></code></a>(other)</p></td>
+<td><p>Calculate the minimum distance [nmi] to another Plan.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.plan.Plan.save" title="starling.core.plan.Plan.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename)</p></td>
+<td><p>Write the instance to a file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.plan.Plan.segments" title="starling.core.plan.Plan.segments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segments</span></code></a>()</p></td>
+<td><p>Create an iterator of the Plan segments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.plan.Plan.to_json" title="starling.core.plan.Plan.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<td><p>Serialise the instance to JSON.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.plan.Plan.data">
+<span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the data as a serialisable list.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.plan.Plan.from_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.plan.Plan" title="starling.core.plan.Plan"><span class="pre">starling.core.plan.Plan</span></a></span></span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a new instance from JSON representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.plan.Plan.load">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.plan.Plan" title="starling.core.plan.Plan"><span class="pre">starling.core.plan.Plan</span></a></span></span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a new instance from a file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.plan.Plan.min_distance">
+<span class="sig-name descname"><span class="pre">min_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#starling.core.plan.Plan" title="starling.core.plan.Plan"><span class="pre">starling.core.plan.Plan</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan.min_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan.min_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the minimum distance [nmi] to another Plan.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.plan.Plan.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the instance to a file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.plan.Plan.segments">
+<span class="sig-name descname"><span class="pre">segments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">Pos2D</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">Pos2D</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan.segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan.segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an iterator of the Plan segments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.plan.Plan.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/starling/core/plan.html#Plan.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.plan.Plan.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialise the instance to JSON.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="starling.html">starling</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="starling.agent.html">starling.agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.aircraft_generator.html">starling.aircraft_generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.airspace_generator.html">starling.airspace_generator</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="starling.core.html">starling.core</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="starling.core.action.html">starling.core.action</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.aircraft.html">starling.core.aircraft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.airspace.html">starling.core.airspace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.area.html">starling.core.area</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.atmosphere.html">starling.core.atmosphere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.contract.html">starling.core.contract</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.environment.html">starling.core.environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.fixes.html">starling.core.fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.flight_plan.html">starling.core.flight_plan</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="starling.core.plan.html">starling.core.plan</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">starling.core.plan.Plan</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.pos2d.html">starling.core.pos2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.pos3d.html">starling.core.pos3d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.pos4d.html">starling.core.pos4d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.reward.html">starling.core.reward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.route.html">starling.core.route</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.sector.html">starling.core.sector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.trajectory.html">starling.core.trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.volume.html">starling.core.volume</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="starling.objective.html">starling.objective</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.predictor.html">starling.predictor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.render.html">starling.render</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.runner.html">starling.runner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.utility.html">starling.utility</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="starling.html">starling</a><ul>
+  <li><a href="starling.core.html">starling.core</a><ul>
+  <li><a href="starling.core.plan.html">starling.core.plan</a><ul>
+      <li>Previous: <a href="starling.core.plan.html" title="previous chapter">starling.core.plan</a></li>
+      <li>Next: <a href="starling.core.pos2d.html" title="next chapter">starling.core.pos2d</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Prosperity.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/starling.core.plan.Plan.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

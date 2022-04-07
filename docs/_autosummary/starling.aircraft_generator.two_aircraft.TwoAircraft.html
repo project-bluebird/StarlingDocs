@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>starling.aircraft_generator.two_aircraft.TwoAircraft &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="starling.aircraft_generator.two_aircraft_BC" href="starling.aircraft_generator.two_aircraft_BC.html" />
+    <link rel="prev" title="starling.aircraft_generator.two_aircraft" href="starling.aircraft_generator.two_aircraft.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="starling-aircraft-generator-two-aircraft-twoaircraft">
+<h1>starling.aircraft_generator.two_aircraft.TwoAircraft<a class="headerlink" href="#starling-aircraft-generator-two-aircraft-twoaircraft" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="starling.aircraft_generator.two_aircraft.TwoAircraft">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.aircraft_generator.two_aircraft.</span></span><span class="sig-name descname"><span class="pre">TwoAircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/starling/aircraft_generator/two_aircraft.html#TwoAircraft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.two_aircraft.TwoAircraft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="starling.aircraft_generator.aircraft_generator.AircraftGenerator.html#starling.aircraft_generator.aircraft_generator.AircraftGenerator" title="starling.aircraft_generator.aircraft_generator.AircraftGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">starling.aircraft_generator.aircraft_generator.AircraftGenerator</span></code></a></p>
+<dl class="simple">
+<dt>Two Aircraft traveling head on:</dt><dd><ul class="simple">
+<li><p>start at opposite ends of the same route</p></li>
+<li><p>first Aircraft is an overflier</p></li>
+<li><p>second Aircraft is an overflier, climber or descender</p></li>
+<li><p>the Aircraft either travel on the same FL or have crossing entry/exit FL contracts</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.aircraft_generator.two_aircraft.TwoAircraft.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/starling/aircraft_generator/two_aircraft.html#TwoAircraft.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>total_time</strong> (<em>float</em>) – The exit_contract time for both Aircraft. If speed_range is not provided, speed of both Aircraft
+is chosen such that the contracts would be satisfied.</p></li>
+<li><p><strong>speed_range</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – Optional range of [min,max] speeds from which to randomly choose Aircraft speed. If not provided,
+speed of both Aircraft is set based on the total_time parameter.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.__init__" title="starling.aircraft_generator.two_aircraft.TwoAircraft.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(total_time[, speed_range])</p></td>
+<td><p>Construct a new instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.generate_aircraft" title="starling.aircraft_generator.two_aircraft.TwoAircraft.generate_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_aircraft</span></code></a>(airspace, routes[, ...])</p></td>
+<td><p>Generate two Aircraft for the given Airspace.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.get_climber_contracts" title="starling.aircraft_generator.two_aircraft.TwoAircraft.get_climber_contracts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_climber_contracts</span></code></a>(overflier_fl, route, ...)</p></td>
+<td><p>Create entry and exit contract for climber aircraft.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.get_descender_contracts" title="starling.aircraft_generator.two_aircraft.TwoAircraft.get_descender_contracts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_descender_contracts</span></code></a>(overflier_fl, route, ...)</p></td>
+<td><p>Create entry and exit contract for descender aircraft.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.get_overflier_contracts" title="starling.aircraft_generator.two_aircraft.TwoAircraft.get_overflier_contracts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_overflier_contracts</span></code></a>(route, airspace, ...)</p></td>
+<td><p>Create entry and exit contract for the first/overflier aircraft.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.aircraft_generator.two_aircraft.TwoAircraft.generate_aircraft">
+<span class="sig-name descname"><span class="pre">generate_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">routes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'random'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><span class="pre">starling.core.aircraft.Aircraft</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/starling/aircraft_generator/two_aircraft.html#TwoAircraft.generate_aircraft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.generate_aircraft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate two Aircraft for the given Airspace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft is flying through</p></li>
+<li><p><strong>routes</strong> (<em>list</em><em>[</em><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><em>Route</em></a><em>]</em>) – The available Routes in the Airspace (choose one at random for the Aircraft Route).</p></li>
+<li><p><strong>scenario_type</strong> (<em>str</em>) – One of “random”, “overflier”, “climber” or “descender”. If “random” - choose one of [“overflier”, “climber”, “descender”].
+Describes the behaviour of the second Aircraft.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Two Aircraft travelling in opposite direction on the same Route, both either on the same FL or with paths crossing.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, <a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft">Aircraft</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.aircraft_generator.two_aircraft.TwoAircraft.get_climber_contracts">
+<span class="sig-name descname"><span class="pre">get_climber_contracts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overflier_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><span class="pre">starling.core.contract.Contract</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/starling/aircraft_generator/two_aircraft.html#TwoAircraft.get_climber_contracts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.get_climber_contracts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create entry and exit contract for climber aircraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><em>Route</em></a>) – The Route which the Aircraft is to fly</p></li>
+<li><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft is flying through</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The [entry, exit] contract for the climber aircraft</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract">Contract</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.aircraft_generator.two_aircraft.TwoAircraft.get_descender_contracts">
+<span class="sig-name descname"><span class="pre">get_descender_contracts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overflier_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><span class="pre">starling.core.contract.Contract</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/starling/aircraft_generator/two_aircraft.html#TwoAircraft.get_descender_contracts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.get_descender_contracts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create entry and exit contract for descender aircraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><em>Route</em></a>) – The Route which the Aircraft is to fly</p></li>
+<li><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft is flying through</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The [entry, exit] contract for the descender aircraft</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract">Contract</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.aircraft_generator.two_aircraft.TwoAircraft.get_overflier_contracts">
+<span class="sig-name descname"><span class="pre">get_overflier_contracts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><span class="pre">starling.core.contract.Contract</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/starling/aircraft_generator/two_aircraft.html#TwoAircraft.get_overflier_contracts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.two_aircraft.TwoAircraft.get_overflier_contracts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create entry and exit contract for the first/overflier aircraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><em>Route</em></a>) – The Route which the Aircraft is to fly</p></li>
+<li><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft is flying through</p></li>
+<li><p><strong>scenario_type</strong> (<em>str</em>) – One of “overflier”, “climber” or “descender”. Describes the behaviour of the second Aircraft.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The [entry, exit] contract for the overflier aircraft</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract">Contract</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="starling.html">starling</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="starling.agent.html">starling.agent</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="starling.aircraft_generator.html">starling.aircraft_generator</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="starling.aircraft_generator.aircraft_generator.html">starling.aircraft_generator.aircraft_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.aircraft_generator.regular.html">starling.aircraft_generator.regular</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.aircraft_generator.tactical.html">starling.aircraft_generator.tactical</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="starling.aircraft_generator.two_aircraft.html">starling.aircraft_generator.two_aircraft</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">starling.aircraft_generator.two_aircraft.TwoAircraft</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="starling.aircraft_generator.two_aircraft_BC.html">starling.aircraft_generator.two_aircraft_BC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="starling.airspace_generator.html">starling.airspace_generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.core.html">starling.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.objective.html">starling.objective</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.predictor.html">starling.predictor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.render.html">starling.render</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.runner.html">starling.runner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starling.utility.html">starling.utility</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="starling.html">starling</a><ul>
+  <li><a href="starling.aircraft_generator.html">starling.aircraft_generator</a><ul>
+  <li><a href="starling.aircraft_generator.two_aircraft.html">starling.aircraft_generator.two_aircraft</a><ul>
+      <li>Previous: <a href="starling.aircraft_generator.two_aircraft.html" title="previous chapter">starling.aircraft_generator.two_aircraft</a></li>
+      <li>Next: <a href="starling.aircraft_generator.two_aircraft_BC.html" title="next chapter">starling.aircraft_generator.two_aircraft_BC</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Prosperity.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_autosummary/starling.aircraft_generator.two_aircraft.TwoAircraft.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
