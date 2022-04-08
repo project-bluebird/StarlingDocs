@@ -80,6 +80,22 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict the Trajectory evolution of a single Aircraft within the Environment.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callsign: str</span>
+<span class="sd">            Aircraft callsign</span>
+<span class="sd">        environment : Environment</span>
+<span class="sd">            An Environment instance</span>
+<span class="sd">        dt: float</span>
+<span class="sd">            The amount of time [sec] for which to evolve the Aircraft Trajectory</span>
+<span class="sd">        actions: list[Action]</span>
+<span class="sd">            List of Actions issued to the Aircraft</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Trajectory</span>
+<span class="sd">            The Aircraft Trajectory</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">pass</span></div></div>

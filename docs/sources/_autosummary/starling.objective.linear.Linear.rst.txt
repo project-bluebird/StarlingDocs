@@ -18,7 +18,6 @@ starling.objective.linear.Linear
    
       ~Linear.__init__
       ~Linear.evaluate
-      ~Linear.score
    
    
 

@@ -18,10 +18,11 @@ starling.predictor.linear\_pilot.LinearPilot
    
       ~LinearPilot.__init__
       ~LinearPilot.future_trajectory
-      ~LinearPilot.get_bearing
       ~LinearPilot.get_target_pos
-      ~LinearPilot.update_bearing
+      ~LinearPilot.process_lateral_actions
+      ~LinearPilot.process_vertical_actions
       ~LinearPilot.update_flight_level
+      ~LinearPilot.update_heading
    
    
 

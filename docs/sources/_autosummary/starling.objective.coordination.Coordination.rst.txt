@@ -1,0 +1,26 @@
+starling.objective.coordination.Coordination
+============================================
+
+.. currentmodule:: starling.objective.coordination
+
+.. autoclass:: Coordination
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Coordination.__init__
+      ~Coordination.evaluate
+   
+   
+
+   
+   
+   

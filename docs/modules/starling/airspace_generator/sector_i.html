@@ -68,6 +68,7 @@
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Pos2D</span><span class="p">,</span> <span class="n">Route</span><span class="p">,</span> <span class="n">Sector</span><span class="p">,</span> <span class="n">Volume</span><span class="p">,</span> <span class="n">Area</span><span class="p">,</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">Fixes</span>
 <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span>
 <span class="kn">from</span> <span class="nn">.airspace_generator</span> <span class="kn">import</span> <span class="n">AirspaceGenerator</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span>
 
 
 <div class="viewcode-block" id="SectorI"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.sector_i.SectorI.html#starling.airspace_generator.sector_i.SectorI">[docs]</a><span class="k">class</span> <span class="nc">SectorI</span><span class="p">(</span><span class="n">AirspaceGenerator</span><span class="p">):</span>
@@ -75,7 +76,8 @@
 <span class="sd">    I-shaped sector Airspace generator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SectorI.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.sector_i.SectorI.html#starling.airspace_generator.sector_i.SectorI.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fl_limits</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]):</span>
+<div class="viewcode-block" id="SectorI.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.sector_i.SectorI.html#starling.airspace_generator.sector_i.SectorI.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fl_limits</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+                 <span class="n">outer_boundary_width_multiplier</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.      </span>
 
@@ -86,7 +88,11 @@
 <span class="sd">        height: float</span>
 <span class="sd">           The height of the Airspace (includes exterior Fixes). </span>
 <span class="sd">        fl_limits: list[float]</span>
-<span class="sd">            The [min, max] flight level limits allowed in the Sector.  </span>
+<span class="sd">            The [min, max] flight level limits allowed in the Sector.</span>
+<span class="sd">        outer_boundary_width_multiplier: float = 1.5</span>
+<span class="sd">            This defines how far from the centre of the airway the</span>
+<span class="sd">            outer boundary is (to the left and right), compared to the width</span>
+<span class="sd">            of the airway.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">width</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
@@ -103,11 +109,17 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fl_limits</span> <span class="o">=</span> <span class="n">fl_limits</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fl_limits</span> <span class="o">=</span> <span class="n">fl_limits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outer_boundary_width_multiplier</span> <span class="o">=</span> <span class="n">outer_boundary_width_multiplier</span></div>
 
 <div class="viewcode-block" id="SectorI.generate_airspace"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.sector_i.SectorI.html#starling.airspace_generator.sector_i.SectorI.generate_airspace">[docs]</a>    <span class="k">def</span> <span class="nf">generate_airspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Airspace</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate an airspace.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Tuple[Airspace, list[Route]]</span>
+<span class="sd">            A tuple with (Airspace, list of Routes).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="p">[</span><span class="n">min_fl</span><span class="p">,</span> <span class="n">max_fl</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fl_limits</span>
@@ -116,6 +128,18 @@
         <span class="n">south_west</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="n">south_east</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="n">north_east</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1"># create the outer boundary of the sector</span>
+
+        <span class="c1"># shift the points in the inner boundary to find the four points that define the outer boundary</span>
+        <span class="n">north_west_outer</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">north_west</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_boundary_width_multiplier</span><span class="p">)</span>
+        <span class="n">south_west_outer</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">south_west</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_boundary_width_multiplier</span><span class="p">)</span>
+        <span class="n">south_east_outer</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">south_east</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_boundary_width_multiplier</span><span class="p">)</span>
+        <span class="n">north_east_outer</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">north_east</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_boundary_width_multiplier</span><span class="p">)</span>
+        <span class="n">outer_boundary_pos2ds</span> <span class="o">=</span> <span class="p">[</span><span class="n">north_west_outer</span><span class="p">,</span> <span class="n">south_west_outer</span><span class="p">,</span> <span class="n">south_east_outer</span><span class="p">,</span> <span class="n">north_east_outer</span><span class="p">]</span>
+
+        <span class="c1"># use the new points to create a new Area, which contains a shapely Polygon defining the outer boundary</span>
+        <span class="n">outer_boundary</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="n">outer_boundary_pos2ds</span><span class="p">)</span>
 
         <span class="n">sectors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sector_i&quot;</span><span class="p">:</span> <span class="n">Sector</span><span class="p">([</span><span class="n">Volume</span><span class="p">(</span><span class="n">Area</span><span class="p">([</span><span class="n">north_west</span><span class="p">,</span> <span class="n">south_west</span><span class="p">,</span> <span class="n">south_east</span><span class="p">,</span> <span class="n">north_east</span><span class="p">]),</span> <span class="n">min_fl</span><span class="p">,</span> <span class="n">max_fl</span><span class="p">)])}</span>
 
@@ -134,7 +158,7 @@
             <span class="n">Route</span><span class="p">([</span><span class="s2">&quot;SPIRT&quot;</span><span class="p">,</span> <span class="s2">&quot;AIR&quot;</span><span class="p">,</span> <span class="s2">&quot;EARTH&quot;</span><span class="p">,</span> <span class="s2">&quot;FIYRE&quot;</span><span class="p">]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">Airspace</span><span class="p">(</span><span class="n">sectors</span><span class="p">,</span> <span class="n">fixes</span><span class="p">),</span> <span class="n">routes</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">Airspace</span><span class="p">(</span><span class="n">sectors</span><span class="p">,</span> <span class="n">fixes</span><span class="p">,</span> <span class="n">outer_boundary</span><span class="p">),</span> <span class="n">routes</span></div></div>
 </pre></div>
 
            </div>

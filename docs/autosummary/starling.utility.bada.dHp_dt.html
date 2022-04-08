@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="starling.utility.bada.energy_share_factor" href="starling.utility.bada.energy_share_factor.html" />
-    <link rel="prev" title="starling.utility.bada.bada_params" href="starling.utility.bada.bada_params.html" /> 
+    <link rel="prev" title="starling.utility.bada.change_in_pressure_height" href="starling.utility.bada.change_in_pressure_height.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,6 +50,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="starling.utility.html">starling.utility</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="starling.utility.bada.html">starling.utility.bada</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.bada_params.html">starling.utility.bada.bada_params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html">starling.utility.bada.change_in_pressure_height</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">starling.utility.bada.dHp_dt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.energy_share_factor.html">starling.utility.bada.energy_share_factor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.gs_to_tas.html">starling.utility.bada.gs_to_tas</a></li>
@@ -99,13 +100,16 @@
 <h1>starling.utility.bada.dHp_dt<a class="headerlink" href="#starling-utility-bada-dhp-dt" title="Permalink to this headline"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="starling.utility.bada.dHp_dt">
-<span class="sig-prename descclassname"><span class="pre">starling.utility.bada.</span></span><span class="sig-name descname"><span class="pre">dHp_dt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aircraft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><span class="pre">Aircraft</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">atmos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere" title="starling.core.atmosphere.Atmosphere"><span class="pre">Atmosphere</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">aircraft_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/utility/bada.html#dHp_dt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.bada.dHp_dt" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">starling.utility.bada.</span></span><span class="sig-name descname"><span class="pre">dHp_dt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aircraft_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aircraft_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atmos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere" title="starling.core.atmosphere.Atmosphere"><span class="pre">Atmosphere</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">aircraft_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/utility/bada.html#dHp_dt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.bada.dHp_dt" title="Permalink to this definition"></a></dt>
 <dd><p>For a given aircraft find its rate of climb or descent (ROCD i.e. dHp/dt).
 Here we use equation 3.2-7 in ECC Technical/Scientific Report No. 2010-003</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>aircraft</strong> (<em>Aicraft</em>) – The aircraft for which to find the rate of climb or descent.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Dummy time variable for solve_ivp algorithm</p></li>
+<li><p><strong>pressure_height</strong> (<em>float</em>) – The pressure_height level of the aircraft</p></li>
+<li><p><strong>aircraft_speed</strong> (<em>float</em>) – The aircraft speed (in knots)</p></li>
+<li><p><strong>aircraft_type</strong> (<em>str</em>) – The aircraft’s type</p></li>
 <li><p><strong>atmos</strong> (<a class="reference internal" href="starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere" title="starling.core.atmosphere.Atmosphere"><em>Atmosphere</em></a>) – The BADA atmosphere used to represent the atmosphere at lat and lon of
 the aircraft.</p></li>
 <li><p><strong>aircraft_state</strong> (<em>str</em>) – The state of the aircraft.</p></li>
@@ -126,7 +130,7 @@ the aircraft.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="starling.utility.bada.bada_params.html" class="btn btn-neutral float-left" title="starling.utility.bada.bada_params" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="starling.utility.bada.change_in_pressure_height.html" class="btn btn-neutral float-left" title="starling.utility.bada.change_in_pressure_height" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="starling.utility.bada.energy_share_factor.html" class="btn btn-neutral float-right" title="starling.utility.bada.energy_share_factor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -81,6 +81,17 @@
 <div class="viewcode-block" id="Thunderdome.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.thunderdome.Thunderdome.html#starling.airspace_generator.thunderdome.Thunderdome.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fl_limits</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">num_inner</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_outer</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        radius: float</span>
+<span class="sd">            Airspace radius [nmi].</span>
+<span class="sd">        fl_limits: list[float]</span>
+<span class="sd">            The [min, max] flight level limits allowed in the Sector.</span>
+<span class="sd">        num_inner: int</span>
+<span class="sd">            Maximum number of inner Fixes (any inner Fixes with no Route passing through them are removed).</span>
+<span class="sd">        num_outer: int</span>
+<span class="sd">            Number of outer Fixes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">radius</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -106,6 +117,11 @@
 <div class="viewcode-block" id="Thunderdome.generate_airspace"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.thunderdome.Thunderdome.html#starling.airspace_generator.thunderdome.Thunderdome.generate_airspace">[docs]</a>    <span class="k">def</span> <span class="nf">generate_airspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Airspace</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate an airspace.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Tuple[Airspace, list[Route]]</span>
+<span class="sd">            A tuple with (Airspace, list of Routes).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="p">[</span><span class="n">min_fl</span><span class="p">,</span> <span class="n">max_fl</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fl_limits</span>

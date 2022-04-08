@@ -66,6 +66,7 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.area</span> <span class="kn">import</span> <span class="n">Area</span>
@@ -81,12 +82,13 @@
 <span class="kn">from</span> <span class="nn">shapely.affinity</span> <span class="kn">import</span> <span class="n">rotate</span><span class="p">,</span> <span class="n">translate</span><span class="p">,</span> <span class="n">scale</span>
 <span class="kn">from</span> <span class="nn">shapely.geometry.collection</span> <span class="kn">import</span> <span class="n">GeometryCollection</span>
 
+
 <div class="viewcode-block" id="Airspace"><a class="viewcode-back" href="../../.././autosummary/starling.core.airspace.Airspace.html#starling.core.airspace.Airspace">[docs]</a><span class="k">class</span> <span class="nc">Airspace</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Union of adjacent Sectors and nearby Fixes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Airspace.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.airspace.Airspace.html#starling.core.airspace.Airspace.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sectors</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">Sector</span><span class="p">],</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">):</span>
+<div class="viewcode-block" id="Airspace.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.airspace.Airspace.html#starling.core.airspace.Airspace.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sectors</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">Sector</span><span class="p">],</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">,</span> <span class="n">outer_boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -95,7 +97,15 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Airspace must contain at least one Sector.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sectors</span> <span class="o">=</span> <span class="n">sectors</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fixes</span> <span class="o">=</span> <span class="n">fixes</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixes</span> <span class="o">=</span> <span class="n">fixes</span>
+
+        <span class="c1"># the outer boundary is an Area. It contains a polygon that encapsulates the 2D airspace</span>
+        <span class="c1"># as described in Starling issue #148. When the aircraft is within the</span>
+        <span class="c1"># limits of the outer boundary, it is still considered as within the sector</span>
+        <span class="c1"># and penalised for being outside the inner sector boundary. When the aircraft</span>
+        <span class="c1"># exits the outer boundary, it no longer belong to the sector and is not</span>
+        <span class="c1"># penalised.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outer_boundary</span> <span class="o">=</span> <span class="n">outer_boundary</span></div>
 
 <div class="viewcode-block" id="Airspace.from_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.airspace.Airspace.html#starling.core.airspace.Airspace.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Airspace</span><span class="p">:</span>

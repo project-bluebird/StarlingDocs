@@ -45,5 +45,6 @@ starling.core
    starling.core.route
    starling.core.sector
    starling.core.trajectory
+   starling.core.vectorised_reward
    starling.core.volume
 

@@ -1,0 +1,26 @@
+starling.objective.vectorised\_objective.VectorisedObjective
+============================================================
+
+.. currentmodule:: starling.objective.vectorised_objective
+
+.. autoclass:: VectorisedObjective
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~VectorisedObjective.__init__
+      ~VectorisedObjective.evaluate
+   
+   
+
+   
+   
+   

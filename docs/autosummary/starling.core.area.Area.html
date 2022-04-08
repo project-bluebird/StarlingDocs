@@ -63,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="starling.core.route.html">starling.core.route</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.core.sector.html">starling.core.sector</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.core.trajectory.html">starling.core.trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.core.vectorised_reward.html">starling.core.vectorised_reward</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.core.volume.html">starling.core.volume</a></li>
 </ul>
 </li>
@@ -134,16 +135,19 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.area.Area.from_json" title="starling.core.area.Area.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(s)</p></td>
 <td><p>Construct a new instance from JSON representation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.area.Area.load" title="starling.core.area.Area.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.area.Area.intersection" title="starling.core.area.Area.intersection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intersection</span></code></a>(trajectory)</p></td>
+<td><p>Find all intersections between the Area Polygon's LineString and an aircraft Trajectory (converted to LineString).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.area.Area.load" title="starling.core.area.Area.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename)</p></td>
 <td><p>Construct a new instance from a file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.area.Area.on_boundary" title="starling.core.area.Area.on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_boundary</span></code></a>(location[, epsilon])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.area.Area.on_boundary" title="starling.core.area.Area.on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_boundary</span></code></a>(location[, epsilon])</p></td>
 <td><p>Determine if the given location is on the Area boundary (within epsilon tolerance).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.area.Area.save" title="starling.core.area.Area.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.area.Area.save" title="starling.core.area.Area.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename)</p></td>
 <td><p>Write the instance to a file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.area.Area.to_json" title="starling.core.area.Area.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.area.Area.to_json" title="starling.core.area.Area.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Serialise the instance to JSON.</p></td>
 </tr>
 </tbody>
@@ -164,6 +168,25 @@
 <dt class="sig sig-object py" id="starling.core.area.Area.from_json">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.area.Area" title="starling.core.area.Area"><span class="pre">starling.core.area.Area</span></a></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.from_json" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from JSON representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.area.Area.intersection">
+<span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">shapely.geometry.point.Point</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">shapely.geometry.linestring.LineString</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.intersection" title="Permalink to this definition"></a></dt>
+<dd><p>Find all intersections between the Area Polygon’s LineString
+and an aircraft Trajectory (converted to LineString).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trajectory</strong> (<a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><em>Trajectory</em></a>) – A Trajectory of an aircraft</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>r1: A shapely Point or MultiPoint or empty LineString that define the intersection points
+r2: A shapely LineString that represents the trajectory</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple (r1, r2)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

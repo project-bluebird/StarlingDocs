@@ -50,6 +50,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="starling.utility.html">starling.utility</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">starling.utility.bada</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.bada_params.html">starling.utility.bada.bada_params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html">starling.utility.bada.change_in_pressure_height</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.dHp_dt.html">starling.utility.bada.dHp_dt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.energy_share_factor.html">starling.utility.bada.energy_share_factor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.gs_to_tas.html">starling.utility.bada.gs_to_tas</a></li>
@@ -106,16 +107,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.bada_params.html#starling.utility.bada.bada_params" title="starling.utility.bada.bada_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bada_params</span></code></a>(aircraft_type)</p></td>
 <td><p>Returns the aircraft's physical parameters: mass, thrust and drag given the aircraft type.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.dHp_dt.html#starling.utility.bada.dHp_dt" title="starling.utility.bada.dHp_dt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dHp_dt</span></code></a>(aircraft, atmos, aircraft_state)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html#starling.utility.bada.change_in_pressure_height" title="starling.utility.bada.change_in_pressure_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_in_pressure_height</span></code></a>(aircraft, atmos, ...)</p></td>
+<td><p>For a given aircraft find its change in pressure height over a given time interval using a fourth order Runge-Kutta integration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.dHp_dt.html#starling.utility.bada.dHp_dt" title="starling.utility.bada.dHp_dt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dHp_dt</span></code></a>(time, pressure_height, ...)</p></td>
 <td><p>For a given aircraft find its rate of climb or descent (ROCD i.e. dHp/dt).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.energy_share_factor.html#starling.utility.bada.energy_share_factor" title="starling.utility.bada.energy_share_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">energy_share_factor</span></code></a>(aircraft_state, mach, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.energy_share_factor.html#starling.utility.bada.energy_share_factor" title="starling.utility.bada.energy_share_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">energy_share_factor</span></code></a>(aircraft_state, mach, ...)</p></td>
 <td><p>Given a mach number calculate energy share factor.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.gs_to_tas.html#starling.utility.bada.gs_to_tas" title="starling.utility.bada.gs_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gs_to_tas</span></code></a>(ground_speed)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.gs_to_tas.html#starling.utility.bada.gs_to_tas" title="starling.utility.bada.gs_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gs_to_tas</span></code></a>(ground_speed)</p></td>
 <td><p>Convert ground speed (GS) to true air speed (TAS).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.tas_to_mach.html#starling.utility.bada.tas_to_mach" title="starling.utility.bada.tas_to_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_mach</span></code></a>(true_air_speed, temperature)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.tas_to_mach.html#starling.utility.bada.tas_to_mach" title="starling.utility.bada.tas_to_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_mach</span></code></a>(true_air_speed, temperature)</p></td>
 <td><p>Converts the true airspeed (TAS) to a mach number.</p></td>
 </tr>
 </tbody>

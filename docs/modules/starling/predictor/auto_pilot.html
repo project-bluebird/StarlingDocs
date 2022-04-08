@@ -78,6 +78,16 @@
 <div class="viewcode-block" id="AutoPilot.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.auto_pilot.AutoPilot.html#starling.predictor.auto_pilot.AutoPilot.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">step_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fix_proximity_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        environment : Environment</span>
+<span class="sd">            An Environment instance</span>
+<span class="sd">        step_time: float</span>
+<span class="sd">            The internal step time of the predictor. The time taken between each control point within the returned Trajectory is step_time.</span>
+<span class="sd">        fix_proximity_threshold: float</span>
+<span class="sd">            When an Aircraft is &lt;= fix_proximity_threshold distance from the next Fix on its Route, the Fix is considered to have been passed.</span>
+<span class="sd">            The next target Fix on Route for the Aircraft is then updated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">step_time</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
@@ -98,6 +108,22 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict the Trajectory evolution of a single Aircraft within the Environment.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callsign: str</span>
+<span class="sd">            Aircraft callsign</span>
+<span class="sd">        environment : Environment</span>
+<span class="sd">            An Environment instance</span>
+<span class="sd">        dt: float</span>
+<span class="sd">            The amount of time [sec] for which to evolve the Aircraft Trajectory</span>
+<span class="sd">        actions: list[Action]</span>
+<span class="sd">            List of Actions issued to the Aircraft</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Trajectory</span>
+<span class="sd">            The Aircraft Trajectory</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
@@ -113,7 +139,7 @@
 
             <span class="n">step</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step_time</span><span class="p">,</span> <span class="n">dt</span> <span class="o">-</span> <span class="n">time</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">time</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">start_time</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">time</span><span class="p">):</span>
 
                 <span class="n">pos</span> <span class="o">=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span>
                 <span class="n">target_pos</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span>

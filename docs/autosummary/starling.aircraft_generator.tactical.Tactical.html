@@ -99,7 +99,7 @@
 - configurable number of Aircraft and balance of climbers/descenders/overfliers
 - randomly selected entry and exit Contracts
 - randomly generated speeds
-- ensures that no two Aircraft have the same entry contract (same Fix, FL and time)</p>
+- ensures that no two Aircraft have the same entry contract (same Fix, Flight Level and time)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_aircraft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">balance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[0.3333333333333333,</span> <span class="pre">0.3333333333333333,</span> <span class="pre">0.3333333333333333]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[400.0,</span> <span class="pre">400.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_entry_gap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.__init__" title="Permalink to this definition"></a></dt>
@@ -129,70 +129,78 @@ If not provided, speed of all Aircraft is set to 400.</p></li>
 <td><p>Construct a new instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.aircraft_generator.tactical.Tactical.check_entry_contract" title="starling.aircraft_generator.tactical.Tactical.check_entry_contract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_entry_contract</span></code></a>(new_aircraft, entries, ...)</p></td>
-<td><p>Check if proposed new Aircraft has the same entry contract as any of the existing Aircraft (same entry Fix, FL and time).</p></td>
+<td><p>Check if proposed new Aircraft has the same entry Contract as any of the existing Aircraft (same entry Fix, FL and time).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.aircraft_generator.tactical.Tactical.generate_aircraft" title="starling.aircraft_generator.tactical.Tactical.generate_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_aircraft</span></code></a>(airspace, routes)</p></td>
-<td><p>Generate a set of Aircraft for the given Airspace.</p></td>
+<td><p>Generate Aircraft for the given Airspace.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.aircraft_generator.tactical.Tactical.get_callsign" title="starling.aircraft_generator.tactical.Tactical.get_callsign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_callsign</span></code></a>(aircraft)</p></td>
-<td><p>Return aircraft callsign.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.aircraft_generator.tactical.Tactical.get_speed" title="starling.aircraft_generator.tactical.Tactical.get_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_speed</span></code></a>()</p></td>
-<td><p>Return speed - either default or randomly generated within provided range.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.aircraft_generator.tactical.Tactical.get_start_cond" title="starling.aircraft_generator.tactical.Tactical.get_start_cond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_start_cond</span></code></a>(airspace, route, fl)</p></td>
-<td><p>Return starting position and heading.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.aircraft_generator.tactical.Tactical.get_times" title="starling.aircraft_generator.tactical.Tactical.get_times"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_times</span></code></a>(speed, route, airspace)</p></td>
-<td><p>Get contract start and exit time.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.aircraft_generator.tactical.Tactical.get_vertical_speed" title="starling.aircraft_generator.tactical.Tactical.get_vertical_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertical_speed</span></code></a>()</p></td>
-<td><p>Return vertical speed.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.aircraft_generator.tactical.Tactical.get_contract_times" title="starling.aircraft_generator.tactical.Tactical.get_contract_times"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_contract_times</span></code></a>(speed, route, airspace[, ...])</p></td>
+<td><p>Helper function to generate [entry, exit] Contract times for Aircraft (based on Route length and speed).</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.check_entry_contract">
-<span class="sig-name descname"><span class="pre">check_entry_contract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_aircraft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">airspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journey</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.check_entry_contract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.check_entry_contract" title="Permalink to this definition"></a></dt>
-<dd><p>Check if proposed new Aircraft has the same entry contract as any of the existing Aircraft (same entry Fix, FL and time).
+<span class="sig-name descname"><span class="pre">check_entry_contract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_aircraft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><span class="pre">starling.core.aircraft.Aircraft</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><span class="pre">starling.core.aircraft.Aircraft</span></a></span></span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.check_entry_contract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.check_entry_contract" title="Permalink to this definition"></a></dt>
+<dd><p>Check if proposed new Aircraft has the same entry Contract as any of the existing Aircraft (same entry Fix, FL and time).
 If yes, increase entry time by self.time_entry_gap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>aircraft</strong> (<a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><em>Aircraft</em></a>) – A new Aircraft with a proposed entry Contract.</p></li>
+<li><p><strong>entries</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>]</em>) – A dictionary of the already agreed entry Contracts by Fix in the format {fix_name: [Contract]}.</p></li>
+<li><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft is flying through.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An Aircraft whose entry Contract does not clash with any of the already agreed entry Contracts.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft">Aircraft</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.generate_aircraft">
 <span class="sig-name descname"><span class="pre">generate_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">routes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><span class="pre">starling.core.aircraft.Aircraft</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.generate_aircraft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.generate_aircraft" title="Permalink to this definition"></a></dt>
-<dd><p>Generate a set of Aircraft for the given Airspace.</p>
+<dd><p>Generate Aircraft for the given Airspace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft are flying through.</p></li>
+<li><p><strong>routes</strong> (<em>list</em><em>[</em><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><em>Route</em></a><em>]</em>) – The available Routes in the Airspace (choose one at random for each Aircraft Route).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with (callsign, Aircraft) items.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, <a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft">Aircraft</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.get_callsign">
-<span class="sig-name descname"><span class="pre">get_callsign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aircraft</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.get_callsign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.get_callsign" title="Permalink to this definition"></a></dt>
-<dd><p>Return aircraft callsign.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.get_speed">
-<span class="sig-name descname"><span class="pre">get_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.get_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.get_speed" title="Permalink to this definition"></a></dt>
-<dd><p>Return speed - either default or randomly generated within provided range.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.get_start_cond">
-<span class="sig-name descname"><span class="pre">get_start_cond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.get_start_cond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.get_start_cond" title="Permalink to this definition"></a></dt>
-<dd><p>Return starting position and heading.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.get_times">
-<span class="sig-name descname"><span class="pre">get_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">airspace</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.get_times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.get_times" title="Permalink to this definition"></a></dt>
-<dd><p>Get contract start and exit time.
-This is when the Aircraft enters and exits the Sector.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.get_vertical_speed">
-<span class="sig-name descname"><span class="pre">get_vertical_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/aircraft_generator/tactical.html#Tactical.get_vertical_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.get_vertical_speed" title="Permalink to this definition"></a></dt>
-<dd><p>Return vertical speed. Currently default to 0.0 for all Aircraft.</p>
+<dt class="sig sig-object py" id="starling.aircraft_generator.tactical.Tactical.get_contract_times">
+<span class="sig-name descname"><span class="pre">get_contract_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#starling.aircraft_generator.tactical.Tactical.get_contract_times" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to generate [entry, exit] Contract times for Aircraft (based on Route length and speed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>speed</strong> (<em>float</em>) – The speed the Aircraft is travelling at.</p></li>
+<li><p><strong>route</strong> (<a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><em>Route</em></a>) – The Route the Aircraft is to fly.</p></li>
+<li><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft is flying through.</p></li>
+<li><p><strong>start_time</strong> (<em>float</em>) – The time at which the Aircraft starts travelling on the Route.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Time of the [entry, exit] Contract of the Aircraft.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

@@ -19,6 +19,7 @@ starling.aircraft\_generator.two\_aircraft\_BC.TwoAircraftBC
       ~TwoAircraftBC.__init__
       ~TwoAircraftBC.gen_random_contracts
       ~TwoAircraftBC.generate_aircraft
+      ~TwoAircraftBC.get_contract_times
       ~TwoAircraftBC.level_gen
    
    

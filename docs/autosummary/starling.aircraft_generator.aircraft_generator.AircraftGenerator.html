@@ -114,12 +114,48 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.aircraft_generator.aircraft_generator.AircraftGenerator.generate_aircraft" title="starling.aircraft_generator.aircraft_generator.AircraftGenerator.generate_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_aircraft</span></code></a>(airspace)</p></td>
 <td><p>Generate a set of Aircraft for an Airspace.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.aircraft_generator.aircraft_generator.AircraftGenerator.get_contract_times" title="starling.aircraft_generator.aircraft_generator.AircraftGenerator.get_contract_times"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_contract_times</span></code></a>(speed, route, airspace[, ...])</p></td>
+<td><p>Helper function to generate [entry, exit] Contract times for Aircraft (based on Route length and speed).</p></td>
+</tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.aircraft_generator.aircraft_generator.AircraftGenerator.generate_aircraft">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><span class="pre">starling.core.aircraft.Aircraft</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/aircraft_generator/aircraft_generator.html#AircraftGenerator.generate_aircraft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.aircraft_generator.AircraftGenerator.generate_aircraft" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a set of Aircraft for an Airspace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft are flying through.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with (callsign, Aircraft) items.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, <a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft">Aircraft</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.aircraft_generator.aircraft_generator.AircraftGenerator.get_contract_times">
+<span class="sig-name descname"><span class="pre">get_contract_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">airspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><span class="pre">starling.core.airspace.Airspace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/aircraft_generator/aircraft_generator.html#AircraftGenerator.get_contract_times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.aircraft_generator.aircraft_generator.AircraftGenerator.get_contract_times" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to generate [entry, exit] Contract times for Aircraft (based on Route length and speed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>speed</strong> (<em>float</em>) – The speed the Aircraft is travelling at.</p></li>
+<li><p><strong>route</strong> (<a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><em>Route</em></a>) – The Route the Aircraft is to fly.</p></li>
+<li><p><strong>airspace</strong> (<a class="reference internal" href="starling.core.airspace.Airspace.html#starling.core.airspace.Airspace" title="starling.core.airspace.Airspace"><em>Airspace</em></a>) – The Airspace the Aircraft is flying through.</p></li>
+<li><p><strong>start_time</strong> (<em>float</em>) – The time at which the Aircraft starts travelling on the Route.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Time of the [entry, exit] Contract of the Aircraft.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

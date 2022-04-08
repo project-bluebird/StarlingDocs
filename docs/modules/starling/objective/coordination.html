@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>starling.objective.coordination &mdash; Starling 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../.././static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../.././static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../.././static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+        <script src="../../.././static/jquery.js"></script>
+        <script src="../../.././static/underscore.js"></script>
+        <script src="../../.././static/doctools.js"></script>
+    <script src="../../.././static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Starling
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Starling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>starling.objective.coordination</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for starling.objective.coordination</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">starling.core</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Reward</span><span class="p">,</span> <span class="n">Trajectory</span>
+<span class="kn">from</span> <span class="nn">starling.objective</span> <span class="kn">import</span> <span class="n">Objective</span>
+<span class="kn">from</span> <span class="nn">starling.core</span> <span class="kn">import</span> <span class="n">Pos2D</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">LineString</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry.multipoint</span> <span class="kn">import</span> <span class="n">MultiPoint</span>
+
+
+<div class="viewcode-block" id="Coordination"><a class="viewcode-back" href="../../.././autosummary/starling.objective.coordination.Coordination.html#starling.objective.coordination.Coordination">[docs]</a><span class="k">class</span> <span class="nc">Coordination</span><span class="p">(</span><span class="n">Objective</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantify how close to the coordinated exit point the aircraft exits the sector. Both</span>
+<span class="sd">    vertical (FL) and lateral distance are considered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Coordination.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.objective.coordination.Coordination.html#starling.objective.coordination.Coordination.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exponent_fl</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">exponent_lat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exponent_fl: Float = 2.0</span>
+<span class="sd">            Exponent of the flight level deviation penalty at exit</span>
+<span class="sd">        exponent_lat: Float = 2.0</span>
+<span class="sd">            Exponent for lateral deviation penalty at exit</span>
+<span class="sd">        epsilon: Float = 1e-10</span>
+<span class="sd">            Tolerance when checking if point is on boundary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">exponent_fl</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Exponent for flight level should be greater than 1.0.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exponent_lat</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Exponent for lateral deviation should be greater than 1.0.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">epsilon</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Epsilon should be greater than 0.0.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exponent_fl</span> <span class="o">=</span> <span class="n">exponent_fl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exponent_lat</span> <span class="o">=</span> <span class="n">exponent_lat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span></div>
+
+<div class="viewcode-block" id="Coordination.evaluate"><a class="viewcode-back" href="../../.././autosummary/starling.objective.coordination.Coordination.html#starling.objective.coordination.Coordination.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Reward</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the penalty for deviating from the coordinated exit point. Any vertical difference is exponentially</span>
+<span class="sd">        penalised. Any lateral difference above 5nm is exponentially penalised. This objective takes non-zero values</span>
+<span class="sd">        only when at least one aircraft has exited the &quot;outer boundary&quot; of the sector (see Starling issue #148 for</span>
+<span class="sd">        definition) and its passed trajectory intersects with the outer boundary. Any aircraft whose trajectories</span>
+<span class="sd">        do not intersect with the outer boundary are given zero penalty (with a warning issued).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        environment : Environment</span>
+<span class="sd">            An Environment instance</span>
+<span class="sd">        trajectories : Trajectory</span>
+<span class="sd">            A dictionary with (callsign, Trajectory) items</span>
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Reward</span>
+<span class="sd">            The calculated value of the objective</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">outer_boundary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The airspace in the provided environment does not have an outer boundary, &quot;</span>
+                <span class="s2">&quot;which is needed for this objective to be calculated. Outer boundaries are only &quot;</span>
+                <span class="s2">&quot;defined in X, Y and I sectors at the moment and only when the airspace contain one&quot;</span>
+                <span class="s2">&quot;of those sectors and no other sector.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">penalty</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">)</span> <span class="ow">in</span> <span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="p">:</span>
+                <span class="c1"># get intersection point(s) between outer boundary lines (LineString) and trajectory line</span>
+                <span class="n">intersections</span><span class="p">,</span> <span class="n">trajectory_line_2d</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">outer_boundary</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+                    <span class="n">trajectories</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">intersections</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+                    <span class="c1"># when trajectory is fully within boundary or fully outside</span>
+                    <span class="c1"># boundary, skip the penalty calculation for this aircraft (i.e. zero penalty)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Trajectory for aircraft </span><span class="si">{</span><span class="n">callsign</span><span class="si">}</span><span class="s2"> does not intersect with the sector&#39;s &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;outer boundary. This can happen when the aircraft trajectory is entirely &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;within the sector outer boundary (which means the aircraft has not &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;exited the sector yet) OR when the trajectory is entirely outside the &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;sector outer boundary (which means the aircraft has exited the sector &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;on a previous trajectory or has not entered the sector yet).&quot;</span><span class="p">,</span>
+                        <span class="ne">UserWarning</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">intersections</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Point</span><span class="p">,</span> <span class="n">MultiPoint</span><span class="p">]:</span>
+                    <span class="c1"># if there are intersections, check trajectory vs. boundary</span>
+                    <span class="n">p_list</span> <span class="o">=</span> <span class="n">trajectory_line_2d</span><span class="o">.</span><span class="n">coords</span>
+                    <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">outer_boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_list</span><span class="p">]):</span>
+                        <span class="c1"># if trajectory is all inside boundary and touches boundary at one or</span>
+                        <span class="c1"># more points, do not add penalty for this AC</span>
+                        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Trajectory for aircraft </span><span class="si">{</span><span class="n">callsign</span><span class="si">}</span><span class="s2"> touches the sector &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;outer boundary at one or more points but the aircraft &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;does not exit the boundary.&quot;</span><span class="p">,</span>
+                            <span class="ne">UserWarning</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># if at least one point is outside boundary, check for sequence of points where first</span>
+                        <span class="c1"># point is inside boundary and second point is outside boundary and take the intersection</span>
+                        <span class="c1"># between them as the exit point - later entry/exit points are ignored</span>
+                        <span class="c1"># this includes case where trajectory is outside boundary and only touches it at one or more</span>
+                        <span class="c1"># points without entering fully - exit point is the touch point</span>
+                        <span class="n">exit_point_2d</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="p">(</span>
+                                <span class="ow">not</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">outer_boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">p_list</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+                                <span class="ow">and</span> <span class="ow">not</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">outer_boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span>
+                                    <span class="n">Point</span><span class="p">(</span><span class="n">p_list</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                                <span class="p">)</span>
+                                <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span>
+                            <span class="p">):</span>
+                                <span class="k">if</span> <span class="p">(</span>
+                                    <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">outer_boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">p_list</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                                    <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span>
+                                <span class="p">):</span>
+                                    <span class="n">exit_point_2d</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">p_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                                    <span class="k">break</span>
+                                <span class="k">elif</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">outer_boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">p_list</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+                                    <span class="n">exit_point_2d</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">outer_boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+                                        <span class="n">LineString</span><span class="p">([</span><span class="n">Point</span><span class="p">(</span><span class="n">p_list</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">Point</span><span class="p">(</span><span class="n">p_list</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])])</span>
+                                    <span class="p">)</span>
+                                    <span class="k">break</span>
+                        <span class="k">if</span> <span class="n">exit_point_2d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="c1"># if no exit sequence is found, the intersection is an entry sequence so</span>
+                            <span class="c1"># do not calculate any penalties for this AC</span>
+                            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;During the given trajectory, aircraft </span><span class="si">{</span><span class="n">callsign</span><span class="si">}</span><span class="s2"> enters the sector &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;outer boundary but does not exit.&quot;</span><span class="p">,</span>
+                                <span class="ne">UserWarning</span><span class="p">,</span>
+                            <span class="p">)</span>
+                            <span class="k">continue</span>
+
+                <span class="c1"># find exit flight level by finding the flight level of the</span>
+                <span class="c1"># closest trajectory control point to the exit point</span>
+                <span class="n">exit_fl</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">trajectories</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span>
+                    <span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">([</span><span class="n">Point</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">exit_point_2d</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trajectory_line_2d</span><span class="o">.</span><span class="n">coords</span><span class="p">])]</span>
+                    <span class="o">.</span><span class="n">fl</span>
+                <span class="p">)</span>
+
+                <span class="c1"># calculate and add penalty for difference in flight level at exit</span>
+                <span class="n">penalty</span> <span class="o">-=</span> <span class="p">(</span>
+                    <span class="nb">abs</span><span class="p">(</span><span class="n">exit_fl</span> <span class="o">-</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit_pos3d</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="p">)</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">exponent_fl</span>
+                <span class="p">)</span>
+
+                <span class="c1"># calculate and add penalty for lateral distance at exit</span>
+                <span class="n">penalty</span> <span class="o">-=</span> <span class="p">(</span>
+                    <span class="n">Pos2D</span><span class="p">(</span><span class="n">exit_point_2d</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">exit_point_2d</span><span class="o">.</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span>
+                        <span class="n">aircraft</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit_pos3d</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="p">)</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span>
+                    <span class="p">)</span>
+                    <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">exponent_lat</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Reward</span><span class="p">(</span><span class="n">penalty</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Prosperity.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

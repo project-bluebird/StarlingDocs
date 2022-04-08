@@ -18,10 +18,11 @@ starling.predictor.bada\_pilot.BadaPilot
    
       ~BadaPilot.__init__
       ~BadaPilot.future_trajectory
-      ~BadaPilot.get_bearing
       ~BadaPilot.get_target_pos
-      ~BadaPilot.update_bearing
+      ~BadaPilot.process_lateral_actions
+      ~BadaPilot.process_vertical_actions
       ~BadaPilot.update_flight_level
+      ~BadaPilot.update_heading
    
    
 

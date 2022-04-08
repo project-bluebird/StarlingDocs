@@ -20,6 +20,7 @@ starling.core.area.Area
       ~Area.contains
       ~Area.data
       ~Area.from_json
+      ~Area.intersection
       ~Area.load
       ~Area.on_boundary
       ~Area.save

@@ -18,7 +18,7 @@ starling.render.radar.Radar
    
       ~Radar.__init__
       ~Radar.draw
-      ~Radar.draw_actions
+      ~Radar.draw_action_queue
       ~Radar.draw_aircraft
       ~Radar.draw_airspace
       ~Radar.draw_area
@@ -31,9 +31,11 @@ starling.render.radar.Radar
       ~Radar.draw_pos4d
       ~Radar.draw_route
       ~Radar.draw_sector
+      ~Radar.draw_traces
       ~Radar.draw_trajectory
       ~Radar.draw_volume
       ~Radar.save
+      ~Radar.update_traces
    
    
 

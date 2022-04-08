@@ -1,0 +1,31 @@
+starling.core.vectorised\_reward
+================================
+
+.. automodule:: starling.core.vectorised_reward
+  
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      VectorisedReward
+   
+   
+
+   
+   
+   
+
+
+

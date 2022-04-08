@@ -28,8 +28,10 @@ starling.objective
    :template: custom-module-template.rst
    :recursive:
 
+   starling.objective.coordination
    starling.objective.linear
    starling.objective.objective
    starling.objective.preferred_flight_level
    starling.objective.separation
+   starling.objective.vectorised_objective
 

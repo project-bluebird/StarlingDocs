@@ -68,20 +68,72 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">convert</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">Atmosphere</span>
 
-<div class="viewcode-block" id="dHp_dt"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.dHp_dt.html#starling.utility.bada.dHp_dt">[docs]</a><span class="k">def</span> <span class="nf">dHp_dt</span><span class="p">(</span><span class="n">aircraft</span><span class="p">:</span> <span class="n">Aircraft</span><span class="p">,</span> 
-           <span class="n">atmos</span><span class="p">:</span> <span class="n">Atmosphere</span><span class="p">,</span> 
-           <span class="n">aircraft_state</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+
+<div class="viewcode-block" id="change_in_pressure_height"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.change_in_pressure_height.html#starling.utility.bada.change_in_pressure_height">[docs]</a><span class="k">def</span> <span class="nf">change_in_pressure_height</span><span class="p">(</span>
+    <span class="n">aircraft</span><span class="p">:</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">atmos</span><span class="p">:</span> <span class="n">Atmosphere</span><span class="p">,</span> <span class="n">aircraft_state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_interval</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For a given aircraft find its change in pressure height over a given</span>
+<span class="sd">    time interval using a fourth order Runge-Kutta integration. No automatic</span>
+<span class="sd">    step size control is implemented. The integration time step is for now</span>
+<span class="sd">    set to be 1% of the provided time interval.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    aircraft : Aircraft</span>
+<span class="sd">        The aircraft for which to find the change in pressure height.</span>
+<span class="sd">    atmos : Atmosphere</span>
+<span class="sd">        The BADA atmosphere used to represent the atmosphere at lat and lon of</span>
+<span class="sd">        the aircraft.</span>
+<span class="sd">    aircraft_state : str</span>
+<span class="sd">        The state of the aircraft.</span>
+<span class="sd">    time_interval : float</span>
+<span class="sd">        The time interval in seconds</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The change in pressure height (in meters)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pressure_height_0</span> <span class="o">=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">fl</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">FL_TO_M</span>
+
+    <span class="n">solution</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">dHp_dt</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">aircraft_type</span><span class="p">,</span> <span class="n">atmos</span><span class="p">,</span> <span class="n">aircraft_state</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">time_interval</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pressure_height_0</span><span class="p">]),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">pressure_height_0</span></div>
+
+
+<div class="viewcode-block" id="dHp_dt"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.dHp_dt.html#starling.utility.bada.dHp_dt">[docs]</a><span class="k">def</span> <span class="nf">dHp_dt</span><span class="p">(</span>
+    <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">pressure_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">aircraft_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">aircraft_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">atmos</span><span class="p">:</span> <span class="n">Atmosphere</span><span class="p">,</span>
+    <span class="n">aircraft_state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    For a given aircraft find its rate of climb or descent (ROCD i.e. dHp/dt).</span>
 <span class="sd">    Here we use equation 3.2-7 in ECC Technical/Scientific Report No. 2010-003</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    aircraft : Aicraft</span>
-<span class="sd">        The aircraft for which to find the rate of climb or descent.</span>
+<span class="sd">    time : float</span>
+<span class="sd">        Dummy time variable for solve_ivp algorithm</span>
+<span class="sd">    pressure_height : float</span>
+<span class="sd">        The pressure_height level of the aircraft</span>
+<span class="sd">    aircraft_speed : float</span>
+<span class="sd">        The aircraft speed (in knots)</span>
+<span class="sd">    aircraft_type : str</span>
+<span class="sd">        The aircraft&#39;s type</span>
 <span class="sd">    atmos : Atmosphere</span>
 <span class="sd">        The BADA atmosphere used to represent the atmosphere at lat and lon of</span>
 <span class="sd">        the aircraft.</span>
@@ -94,18 +146,18 @@
 <span class="sd">        The rate of climb or descent (in m/s)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">Atmosphere</span>
-    
-    <span class="n">temperature</span> <span class="o">=</span> <span class="n">atmos</span><span class="o">.</span><span class="n">temperature_from_fl</span><span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span>
+    <span class="n">temperature</span> <span class="o">=</span> <span class="n">atmos</span><span class="o">.</span><span class="n">temperature_from_fl</span><span class="p">(</span><span class="n">pressure_height</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">M_TO_FL</span><span class="p">)</span>
     <span class="n">delta_t</span> <span class="o">=</span> <span class="n">atmos</span><span class="o">.</span><span class="n">delta_T</span>
-    <span class="n">aircraft_speed_in_m_per_sec</span> <span class="o">=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_M</span> <span class="o">/</span> <span class="mf">3600.0</span>
+    <span class="n">aircraft_speed_in_m_per_sec</span> <span class="o">=</span> <span class="n">aircraft_speed</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_M</span> <span class="o">/</span> <span class="mf">3600.0</span>
     <span class="n">true_air_speed</span> <span class="o">=</span> <span class="n">gs_to_tas</span><span class="p">(</span><span class="n">aircraft_speed_in_m_per_sec</span><span class="p">)</span>
     <span class="n">mach</span> <span class="o">=</span> <span class="n">tas_to_mach</span><span class="p">(</span><span class="n">true_air_speed</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
-    <span class="n">mass</span><span class="p">,</span> <span class="n">thrust</span><span class="p">,</span> <span class="n">drag</span> <span class="o">=</span> <span class="n">bada_params</span><span class="p">(</span><span class="n">aircraft</span><span class="o">.</span><span class="n">aircraft_type</span><span class="p">)</span>
+    <span class="n">mass</span><span class="p">,</span> <span class="n">thrust</span><span class="p">,</span> <span class="n">drag</span> <span class="o">=</span> <span class="n">bada_params</span><span class="p">(</span><span class="n">aircraft_type</span><span class="p">)</span>
 
-    <span class="n">rocd</span> <span class="o">=</span>   <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">delta_t</span><span class="o">/</span><span class="n">temperature</span><span class="p">)</span>                               \
-           <span class="o">*</span> <span class="p">((</span><span class="n">thrust</span> <span class="o">-</span> <span class="n">drag</span><span class="p">)</span> <span class="o">*</span> <span class="n">true_air_speed</span> <span class="o">/</span> <span class="p">(</span><span class="n">mass</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span><span class="p">))</span> \
-           <span class="o">*</span> <span class="n">energy_share_factor</span><span class="p">(</span><span class="n">aircraft_state</span><span class="p">,</span> <span class="n">mach</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">)</span>
+    <span class="n">rocd</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">delta_t</span> <span class="o">/</span> <span class="n">temperature</span><span class="p">)</span>
+        <span class="o">*</span> <span class="p">((</span><span class="n">thrust</span> <span class="o">-</span> <span class="n">drag</span><span class="p">)</span> <span class="o">*</span> <span class="n">true_air_speed</span> <span class="o">/</span> <span class="p">(</span><span class="n">mass</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span><span class="p">))</span>
+        <span class="o">*</span> <span class="n">energy_share_factor</span><span class="p">(</span><span class="n">aircraft_state</span><span class="p">,</span> <span class="n">mach</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">rocd</span></div>
 
@@ -113,7 +165,7 @@
 <div class="viewcode-block" id="gs_to_tas"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.gs_to_tas.html#starling.utility.bada.gs_to_tas">[docs]</a><span class="k">def</span> <span class="nf">gs_to_tas</span><span class="p">(</span><span class="n">ground_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert ground speed (GS) to true air speed (TAS).</span>
-<span class="sd">    This is merey a holding routine. For the moment the airspeed and</span>
+<span class="sd">    This is merely a holding routine. For the moment the airspeed and</span>
 <span class="sd">    ground speed are set to be equal. I.e. we are ignoring any</span>
 <span class="sd">    correction due to windspeed at the location of the aircraft.</span>
 
@@ -125,7 +177,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    float</span>
-<span class="sd">        The true air speed of the aircraft (in m/s)   </span>
+<span class="sd">        The true air speed of the aircraft (in m/s)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">true_air_speed</span> <span class="o">=</span> <span class="n">ground_speed</span>
     <span class="k">return</span> <span class="n">true_air_speed</span></div>
@@ -148,70 +200,75 @@
 <span class="sd">    float</span>
 <span class="sd">        The aircrafts speed as a mach number (dimensionless)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mach</span> <span class="o">=</span> <span class="n">true_air_speed</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span><span class="o">*</span><span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span><span class="o">*</span><span class="n">temperature</span><span class="p">)</span>
+    <span class="n">mach</span> <span class="o">=</span> <span class="n">true_air_speed</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mach</span></div>
 
 
-<div class="viewcode-block" id="energy_share_factor"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.energy_share_factor.html#starling.utility.bada.energy_share_factor">[docs]</a><span class="k">def</span> <span class="nf">energy_share_factor</span><span class="p">(</span><span class="n">aircraft_state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                        <span class="n">mach</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                        <span class="n">delta_t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="energy_share_factor"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.energy_share_factor.html#starling.utility.bada.energy_share_factor">[docs]</a><span class="k">def</span> <span class="nf">energy_share_factor</span><span class="p">(</span><span class="n">aircraft_state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Given a mach number calculate energy share factor. See equations </span>
+<span class="sd">    Given a mach number calculate energy share factor. See equations</span>
 <span class="sd">    3.2-8 to 3.2-11 in ECC Technical/Scientific Report No. 2010-003.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    aircraft_state : str</span>
 <span class="sd">        The state of the aircraft</span>
-<span class="sd">    mach : float </span>
+<span class="sd">    mach : float</span>
 <span class="sd">        The aircrafts speed as a mach number (dimensionless)</span>
 <span class="sd">    temperature: float</span>
 <span class="sd">        The atmospheric temperature at height of the aircraft (in K)</span>
 <span class="sd">    delta_t : float</span>
-<span class="sd">        The BADA atmosphere temperature differential at a pressure </span>
+<span class="sd">        The BADA atmosphere temperature differential at a pressure</span>
 <span class="sd">        altitude of zero (in K)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    float</span>
-<span class="sd">        The energy share factor in bada ROCD equation (dimensionless)</span>
+<span class="sd">        The energy share factor in BADA ROCD equation (dimensionless)</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If the aircraft state is not recognised</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s1">&#39;constant mach above tropopause&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s2">&quot;constant mach above tropopause&quot;</span><span class="p">:</span>
         <span class="n">f_m</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s1">&#39;constant mach below tropopause&#39;</span><span class="p">:</span>
-        <span class="n">f_a</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">/</span> \
-                       <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span><span class="p">)</span> \
-                    <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">delta_t</span><span class="o">/</span><span class="n">temperature</span><span class="p">)</span> <span class="o">*</span> <span class="n">mach</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s2">&quot;constant mach below tropopause&quot;</span><span class="p">:</span>
+        <span class="n">f_a</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">1</span>
+            <span class="o">+</span> <span class="mf">0.5</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">delta_t</span> <span class="o">/</span> <span class="n">temperature</span><span class="p">)</span>
+            <span class="o">*</span> <span class="n">mach</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="p">)</span>
         <span class="n">f_m</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">f_a</span>
 
-    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s1">&#39;constant cas above tropopause&#39;</span><span class="p">:</span>
-        <span class="n">f_b</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">mach</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s2">&quot;constant cas above tropopause&quot;</span><span class="p">:</span>
+        <span class="n">f_b</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">mach</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="n">f_m</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">f_b</span> <span class="o">-</span> <span class="n">f_b</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)))</span>
 
-    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s1">&#39;constant cas below tropopause&#39;</span><span class="p">:</span>
-        <span class="n">f_a</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">/</span> \
-                       <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span><span class="p">)</span> \
-                    <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">delta_t</span><span class="o">/</span><span class="n">temperature</span><span class="p">)</span> <span class="o">*</span> <span class="n">mach</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s2">&quot;constant cas below tropopause&quot;</span><span class="p">:</span>
+        <span class="n">f_a</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">1</span>
+            <span class="o">+</span> <span class="mf">0.5</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">delta_t</span> <span class="o">/</span> <span class="n">temperature</span><span class="p">)</span>
+            <span class="o">*</span> <span class="n">mach</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="p">)</span>
         <span class="n">f_b</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">mach</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="n">f_m</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">f_a</span> <span class="o">+</span> <span class="n">f_b</span> <span class="o">-</span> <span class="n">f_b</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)))</span>
 
-    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s1">&#39;acceleration in climb&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s2">&quot;acceleration in climb&quot;</span><span class="p">:</span>
         <span class="n">f_m</span> <span class="o">=</span> <span class="mf">0.3</span>
 
-    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s1">&#39;deceleration in climb&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s2">&quot;deceleration in climb&quot;</span><span class="p">:</span>
         <span class="n">f_m</span> <span class="o">=</span> <span class="mf">1.7</span>
 
-    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s1">&#39;acceleration in descent&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s2">&quot;acceleration in descent&quot;</span><span class="p">:</span>
         <span class="n">f_m</span> <span class="o">=</span> <span class="mf">1.7</span>
 
-    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s1">&#39;deceleration in descent&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">aircraft_state</span> <span class="o">==</span> <span class="s2">&quot;deceleration in descent&quot;</span><span class="p">:</span>
         <span class="n">f_m</span> <span class="o">=</span> <span class="mf">0.3</span>
 
     <span class="k">else</span><span class="p">:</span>
@@ -229,22 +286,23 @@
 <span class="sd">    ----------</span>
 <span class="sd">    aircraft_type : str</span>
 <span class="sd">        The aircraft type</span>
-<span class="sd">    </span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Tuple</span>
-<span class="sd">        Tuple of three floats containing in order the mass (in kg), the </span>
+<span class="sd">        Tuple of three floats containing in order the mass (in kg), the</span>
 <span class="sd">        thrust (in N) and the drag (in N)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">aircraft_type</span> <span class="o">==</span> <span class="s2">&quot;NULL&quot;</span><span class="p">:</span>
-        <span class="n">mass</span> <span class="o">=</span> <span class="mf">4.0e+5</span>
-        <span class="n">thrust</span> <span class="o">=</span> <span class="mf">1.1e+6</span>
-        <span class="n">drag</span> <span class="o">=</span> <span class="mf">1.3e+6</span>
+    <span class="k">if</span> <span class="n">aircraft_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="mf">4.0e5</span>
+        <span class="n">thrust</span> <span class="o">=</span> <span class="mf">1.1e6</span>
+        <span class="n">drag</span> <span class="o">=</span> <span class="mf">1.3e6</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">mass</span> <span class="o">=</span> <span class="mf">4.0e+5</span>
-        <span class="n">thrust</span> <span class="o">=</span> <span class="mf">1.1e+6</span>
-        <span class="n">drag</span> <span class="o">=</span> <span class="mf">1.3e+6</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">thrust</span><span class="p">,</span> <span class="n">drag</span><span class="p">)</span></div>
+        <span class="n">mass</span> <span class="o">=</span> <span class="mf">4.0e5</span>
+        <span class="n">thrust</span> <span class="o">=</span> <span class="mf">1.1e6</span>
+        <span class="n">drag</span> <span class="o">=</span> <span class="mf">1.3e6</span>
+
+    <span class="k">return</span> <span class="n">mass</span><span class="p">,</span> <span class="n">thrust</span><span class="p">,</span> <span class="n">drag</span></div>
 </pre></div>
 
            </div>

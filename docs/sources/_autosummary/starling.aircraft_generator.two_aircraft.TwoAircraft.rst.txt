@@ -18,9 +18,10 @@ starling.aircraft\_generator.two\_aircraft.TwoAircraft
    
       ~TwoAircraft.__init__
       ~TwoAircraft.generate_aircraft
-      ~TwoAircraft.get_climber_contracts
-      ~TwoAircraft.get_descender_contracts
-      ~TwoAircraft.get_overflier_contracts
+      ~TwoAircraft.get_climber_contract_FLs
+      ~TwoAircraft.get_contract_times
+      ~TwoAircraft.get_descender_contract_FLs
+      ~TwoAircraft.get_overflier_contract_FLs
    
    
 

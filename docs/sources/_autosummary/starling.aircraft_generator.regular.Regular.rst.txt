@@ -18,6 +18,7 @@ starling.aircraft\_generator.regular.Regular
    
       ~Regular.__init__
       ~Regular.generate_aircraft
+      ~Regular.get_contract_times
    
    
 

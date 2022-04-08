@@ -15,6 +15,7 @@ starling.utility.bada
       :toctree:
    
       bada_params
+      change_in_pressure_height
       dHp_dt
       energy_share_factor
       gs_to_tas

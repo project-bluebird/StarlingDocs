@@ -44,6 +44,7 @@
 <li class="toctree-l2"><a class="reference internal" href="starling.airspace_generator.html">starling.airspace_generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="starling.core.html">starling.core</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="starling.objective.html">starling.objective</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="starling.objective.coordination.html">starling.objective.coordination</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="starling.objective.linear.html">starling.objective.linear</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">starling.objective.linear.Linear</a></li>
 </ul>
@@ -51,6 +52,7 @@
 <li class="toctree-l3"><a class="reference internal" href="starling.objective.objective.html">starling.objective.objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.objective.preferred_flight_level.html">starling.objective.preferred_flight_level</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.objective.separation.html">starling.objective.separation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="starling.objective.vectorised_objective.html">starling.objective.vectorised_objective</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="starling.predictor.html">starling.predictor</a></li>
@@ -117,37 +119,13 @@
 <td><p>Construct a new instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.objective.linear.Linear.evaluate" title="starling.objective.linear.Linear.evaluate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code></a>(environment, trajectories)</p></td>
-<td><p>Evaluate a dictionary of Trajectories, given the Environment state.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.objective.linear.Linear.score" title="starling.objective.linear.Linear.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(environment, trajectories)</p></td>
 <td><p>Evaluate a dictionary of Trajectories, given the Environment state, and determine an overall Reward to return.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.objective.linear.Linear.evaluate">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.reward.Reward.html#starling.core.reward.Reward" title="starling.core.reward.Reward"><span class="pre">starling.core.reward.Reward</span></a></span></span><a class="headerlink" href="#starling.objective.linear.Linear.evaluate" title="Permalink to this definition"></a></dt>
-<dd><p>Evaluate a dictionary of Trajectories, given the Environment state.
-The score value must be in the range [-inf, inf].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>environment</strong> (<a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><em>Environment</em></a>) – An Environment instance</p></li>
-<li><p><strong>trajectories</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><em>Trajectory</em></a><em>]</em>) – A dictionary with (callsign, Trajectory) items</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The calculated value of the objective</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="starling.core.reward.Reward.html#starling.core.reward.Reward" title="starling.core.reward.Reward">Reward</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.objective.linear.Linear.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.reward.Reward.html#starling.core.reward.Reward" title="starling.core.reward.Reward"><span class="pre">starling.core.reward.Reward</span></a></span></span><a class="reference internal" href=".././modules/starling/objective/linear.html#Linear.score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.objective.linear.Linear.score" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.reward.Reward.html#starling.core.reward.Reward" title="starling.core.reward.Reward"><span class="pre">starling.core.reward.Reward</span></a></span></span><a class="reference internal" href=".././modules/starling/objective/linear.html#Linear.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.objective.linear.Linear.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate a dictionary of Trajectories, given the Environment state,
 and determine an overall Reward to return.</p>
 <dl class="field-list simple">
