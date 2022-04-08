@@ -1,0 +1,86 @@
+starling.agent.policy\_gradient.PolicyGradient
+==============================================
+
+.. currentmodule:: starling.agent.policy_gradient
+
+.. autoclass:: PolicyGradient
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PolicyGradient.__init__
+      ~PolicyGradient.action_decoder
+      ~PolicyGradient.add_module
+      ~PolicyGradient.add_optimizer
+      ~PolicyGradient.add_reward
+      ~PolicyGradient.add_scheduler
+      ~PolicyGradient.apply
+      ~PolicyGradient.bfloat16
+      ~PolicyGradient.buffers
+      ~PolicyGradient.children
+      ~PolicyGradient.cpu
+      ~PolicyGradient.cuda
+      ~PolicyGradient.double
+      ~PolicyGradient.eval
+      ~PolicyGradient.extra_repr
+      ~PolicyGradient.find_closest_pair
+      ~PolicyGradient.float
+      ~PolicyGradient.forward
+      ~PolicyGradient.generate_actions
+      ~PolicyGradient.generate_actions_two_planes
+      ~PolicyGradient.get_buffer
+      ~PolicyGradient.get_extra_state
+      ~PolicyGradient.get_parameter
+      ~PolicyGradient.get_submodule
+      ~PolicyGradient.half
+      ~PolicyGradient.load
+      ~PolicyGradient.load_state_dict
+      ~PolicyGradient.model_train
+      ~PolicyGradient.modules
+      ~PolicyGradient.named_buffers
+      ~PolicyGradient.named_children
+      ~PolicyGradient.named./modules
+      ~PolicyGradient.named_parameters
+      ~PolicyGradient.onpolicy_reset
+      ~PolicyGradient.parameters
+      ~PolicyGradient.register_backward_hook
+      ~PolicyGradient.register_buffer
+      ~PolicyGradient.register_forward_hook
+      ~PolicyGradient.register_forward_pre_hook
+      ~PolicyGradient.register_full_backward_hook
+      ~PolicyGradient.register_parameter
+      ~PolicyGradient.requires_grad_
+      ~PolicyGradient.save
+      ~PolicyGradient.set_extra_state
+      ~PolicyGradient.share_memory
+      ~PolicyGradient.state_dict
+      ~PolicyGradient.state_encoder
+      ~PolicyGradient.state_reader
+      ~PolicyGradient.to
+      ~PolicyGradient.to_empty
+      ~PolicyGradient.train
+      ~PolicyGradient.type
+      ~PolicyGradient.xpu
+      ~PolicyGradient.zero_grad
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PolicyGradient.T_destination
+      ~PolicyGradient.dump_patches
+      ~PolicyGradient.training
+   
+   

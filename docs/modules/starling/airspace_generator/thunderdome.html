@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>starling.airspace_generator.thunderdome &#8212; Starling 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../.././static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../.././static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+    <script src="../../.././static/jquery.js"></script>
+    <script src="../../.././static/underscore.js"></script>
+    <script src="../../.././static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../.././static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for starling.airspace_generator.thunderdome</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Delaunay</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">Area</span><span class="p">,</span> <span class="n">Fixes</span><span class="p">,</span> <span class="n">Pos2D</span><span class="p">,</span> <span class="n">Route</span><span class="p">,</span> <span class="n">Sector</span><span class="p">,</span> <span class="n">Volume</span>
+<span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">graph</span>
+<span class="kn">from</span> <span class="nn">.airspace_generator</span> <span class="kn">import</span> <span class="n">AirspaceGenerator</span>
+
+
+<div class="viewcode-block" id="Thunderdome"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.thunderdome.Thunderdome.html#starling.airspace_generator.thunderdome.Thunderdome">[docs]</a><span class="k">class</span> <span class="nc">Thunderdome</span><span class="p">(</span><span class="n">AirspaceGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Thunderdome scenario.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Thunderdome.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.thunderdome.Thunderdome.html#starling.airspace_generator.thunderdome.Thunderdome.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fl_limits</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">num_inner</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_outer</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">radius</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radius must be positive.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">fl_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fl_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Flight level limits must be positive.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fl_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">fl_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Maximum flight level must exceed minimum flight level.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_inner</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;There must be at least four inner fixes.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_outer</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;There must be at least two outer fixes.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fl_limits</span> <span class="o">=</span> <span class="n">fl_limits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_inner</span> <span class="o">=</span> <span class="n">num_inner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_outer</span> <span class="o">=</span> <span class="n">num_outer</span></div>
+
+<div class="viewcode-block" id="Thunderdome.generate_airspace"><a class="viewcode-back" href="../../.././autosummary/starling.airspace_generator.thunderdome.Thunderdome.html#starling.airspace_generator.thunderdome.Thunderdome.generate_airspace">[docs]</a>    <span class="k">def</span> <span class="nf">generate_airspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Airspace</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate an airspace.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="p">[</span><span class="n">min_fl</span><span class="p">,</span> <span class="n">max_fl</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fl_limits</span>
+
+        <span class="c1"># Generate the Sector.</span>
+        <span class="n">boundary</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">boundary_edges</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_outer</span>
+        <span class="n">d_theta</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="n">boundary_edges</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">boundary_edges</span><span class="p">):</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">d_theta</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+            <span class="n">boundary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Pos2D</span><span class="p">(</span><span class="n">rho</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)))</span>
+        <span class="n">sectors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;thunderdome&quot;</span><span class="p">:</span> <span class="n">Sector</span><span class="p">([</span><span class="n">Volume</span><span class="p">(</span><span class="n">Area</span><span class="p">(</span><span class="n">boundary</span><span class="p">),</span> <span class="n">min_fl</span><span class="p">,</span> <span class="n">max_fl</span><span class="p">)])}</span>
+
+        <span class="c1"># Generate the Fixes.</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">inner_fixes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d_theta</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inner</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inner</span><span class="p">):</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">d_theta</span><span class="p">)</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+            <span class="n">inner_fixes</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;IN</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="n">rho</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+
+        <span class="n">boundary_fixes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">airport_fixes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d_theta</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_outer</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_outer</span><span class="p">):</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">d_theta</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">boundary</span><span class="p">[(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">boundary</span><span class="p">[(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">airport_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;PORT</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">boundary_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BOND</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">airport_fixes</span><span class="p">[</span><span class="n">airport_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+            <span class="n">boundary_fixes</span><span class="p">[</span><span class="n">boundary_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">lat</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">lon</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">airport_name</span><span class="p">,</span> <span class="n">boundary_name</span><span class="p">])</span>
+
+        <span class="c1"># Generate the Routes.</span>
+        <span class="n">non_airport_fixes</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">inner_fixes</span><span class="p">,</span> <span class="o">**</span><span class="n">boundary_fixes</span><span class="p">}</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fix</span> <span class="ow">in</span> <span class="n">non_airport_fixes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">fix</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">fix</span><span class="o">.</span><span class="n">lon</span><span class="p">])</span>
+        <span class="n">non_airport_fix_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">non_airport_fixes</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">simplices</span><span class="p">:</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">non_airport_fix_names</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">non_airport_fix_names</span><span class="p">[</span><span class="n">b</span><span class="p">]])</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">non_airport_fix_names</span><span class="p">[</span><span class="n">b</span><span class="p">],</span> <span class="n">non_airport_fix_names</span><span class="p">[</span><span class="n">c</span><span class="p">]])</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">non_airport_fix_names</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">non_airport_fix_names</span><span class="p">[</span><span class="n">a</span><span class="p">]])</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">edges</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">boundary_fixes</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">boundary_fixes</span><span class="p">):</span>
+                <span class="n">edges</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+
+        <span class="n">network</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">build_from_edges</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+        <span class="n">routes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">airport</span> <span class="ow">in</span> <span class="n">airport_fixes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">destination</span> <span class="ow">in</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">airport_fixes</span><span class="o">.</span><span class="n">keys</span><span class="p">()))]:</span>
+                <span class="k">if</span> <span class="n">airport</span> <span class="o">==</span> <span class="n">destination</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">route</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">airport</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+                    <span class="n">routes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Route</span><span class="p">(</span><span class="n">route</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">inner_fixes</span><span class="p">):</span>
+            <span class="n">used</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+                    <span class="n">used</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">used</span><span class="p">:</span>
+                <span class="n">inner_fixes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">fixes</span> <span class="o">=</span> <span class="n">Fixes</span><span class="p">({</span><span class="o">**</span><span class="n">inner_fixes</span><span class="p">,</span> <span class="o">**</span><span class="n">boundary_fixes</span><span class="p">,</span> <span class="o">**</span><span class="n">airport_fixes</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">Airspace</span><span class="p">(</span><span class="n">sectors</span><span class="p">,</span> <span class="n">fixes</span><span class="p">),</span> <span class="n">routes</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Starling</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Prosperity.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
