@@ -18,8 +18,6 @@ starling.core.flight\_plan.FlightPlan
    
       ~FlightPlan.__init__
       ~FlightPlan.data
-      ~FlightPlan.entry_pos3d
-      ~FlightPlan.exit_pos3d
       ~FlightPlan.from_json
       ~FlightPlan.load
       ~FlightPlan.save

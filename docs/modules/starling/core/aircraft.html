@@ -67,6 +67,7 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
+<span class="kn">from</span> <span class="nn">.airspace</span> <span class="kn">import</span> <span class="n">Airspace</span>
 <span class="kn">from</span> <span class="nn">.fixes</span> <span class="kn">import</span> <span class="n">Fixes</span>
 <span class="kn">from</span> <span class="nn">.flight_plan</span> <span class="kn">import</span> <span class="n">FlightPlan</span>
 <span class="kn">from</span> <span class="nn">.pos2d</span> <span class="kn">import</span> <span class="n">Pos2D</span>
@@ -104,6 +105,9 @@
         <span class="k">if</span> <span class="n">speed</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Aircraft speed must be non-negative.&quot;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">start_time</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Start time must be non-negative.&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">flight_plan</span> <span class="o">=</span> <span class="n">flight_plan</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span>
@@ -113,7 +117,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">start_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertical_speed</span> <span class="o">=</span> <span class="n">vertical_speed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_type</span> <span class="o">=</span> <span class="n">aircraft_type</span>
-        
+
         <span class="k">if</span> <span class="n">requested_heading</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">requested_heading</span> <span class="o">=</span> <span class="n">heading</span> <span class="o">%</span> <span class="mi">360</span>
         <span class="k">else</span><span class="p">:</span>
@@ -148,7 +152,19 @@
         <span class="n">requested_heading</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;requested_heading&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">requested_fl</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;requested_fl&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">Aircraft</span><span class="p">(</span><span class="n">flight_plan</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">fl</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">vertical_speed</span><span class="p">,</span> <span class="n">aircraft_type</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">requested_heading</span><span class="p">,</span> <span class="n">requested_fl</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Aircraft</span><span class="p">(</span>
+            <span class="n">flight_plan</span><span class="p">,</span>
+            <span class="n">lat</span><span class="p">,</span>
+            <span class="n">lon</span><span class="p">,</span>
+            <span class="n">fl</span><span class="p">,</span>
+            <span class="n">heading</span><span class="p">,</span>
+            <span class="n">speed</span><span class="p">,</span>
+            <span class="n">vertical_speed</span><span class="p">,</span>
+            <span class="n">aircraft_type</span><span class="p">,</span>
+            <span class="n">start_time</span><span class="p">,</span>
+            <span class="n">requested_heading</span><span class="p">,</span>
+            <span class="n">requested_fl</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Aircraft.load"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.load">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Aircraft</span><span class="p">:</span>
@@ -173,7 +189,7 @@
             <span class="s2">&quot;aircraft_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_type</span><span class="p">,</span>
             <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span>
             <span class="s2">&quot;requested_heading&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">requested_heading</span><span class="p">,</span>
-            <span class="s2">&quot;requested_fl&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">requested_fl</span>
+            <span class="s2">&quot;requested_fl&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">requested_fl</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="Aircraft.to_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -231,13 +247,14 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos3d</span><span class="p">()</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Aircraft.distance_to_exit"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.distance_to_exit">[docs]</a>    <span class="k">def</span> <span class="nf">distance_to_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Aircraft.distance_to_exit"><a class="viewcode-back" href="../../.././autosummary/starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft.distance_to_exit">[docs]</a>    <span class="k">def</span> <span class="nf">distance_to_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate Aircraft distance [nmi] to the contracted exit Pos3D.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">exit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit_pos3d</span><span class="p">(</span><span class="n">fixes</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">exit</span><span class="p">)</span></div></div>
+        <span class="n">exit_2d</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_exit_fix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="p">)</span>
+        <span class="n">exit_3d</span> <span class="o">=</span> <span class="n">exit_2d</span><span class="o">.</span><span class="n">pos3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">exit_3d</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

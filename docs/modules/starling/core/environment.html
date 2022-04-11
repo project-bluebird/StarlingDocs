@@ -258,7 +258,7 @@
         <span class="k">for</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">active</span> <span class="ow">in</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">active</span><span class="p">:</span>
                 <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span>
-                <span class="n">distances</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">distance_to_exit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="p">)</span>
+                <span class="n">distances</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">distance_to_exit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">airspace</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">distances</span></div></div>
 </pre></div>
 

@@ -144,31 +144,7 @@
 <span class="sd">        Create a human readable representation of the instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="si">}</span><span class="s2">] &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="si">}</span><span class="s2"> &gt; [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exit</span><span class="si">}</span><span class="s2">]&quot;</span>
-
-<div class="viewcode-block" id="FlightPlan.exit_pos3d"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan.exit_pos3d">[docs]</a>    <span class="k">def</span> <span class="nf">exit_pos3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the exit Contract as Pos3D.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Boundary exit fix is the 2nd to last fix on Route</span>
-        <span class="n">fix_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">fix_pos</span> <span class="o">=</span> <span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">fix_name</span><span class="p">]</span>
-        <span class="n">fl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exit</span><span class="o">.</span><span class="n">fl</span>
-
-        <span class="k">return</span> <span class="n">fix_pos</span><span class="o">.</span><span class="n">pos3d</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="FlightPlan.entry_pos3d"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan.entry_pos3d">[docs]</a>    <span class="k">def</span> <span class="nf">entry_pos3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixes</span><span class="p">:</span> <span class="n">Fixes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the entry Contract as Pos3D.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Boundary entry fix is the 2nd fix on Route</span>
-        <span class="n">fix_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">fix_pos</span> <span class="o">=</span> <span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">fix_name</span><span class="p">]</span>
-        <span class="n">fl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">fl</span>
-
-        <span class="k">return</span> <span class="n">fix_pos</span><span class="o">.</span><span class="n">pos3d</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="si">}</span><span class="s2">] &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="si">}</span><span class="s2"> &gt; [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exit</span><span class="si">}</span><span class="s2">]&quot;</span></div>
 </pre></div>
 
            </div>

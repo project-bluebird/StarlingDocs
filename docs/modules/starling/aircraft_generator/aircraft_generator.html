@@ -117,11 +117,8 @@
 
         <span class="n">start_pos</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
-        <span class="n">entry_fix</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_entry_fix</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
-        <span class="n">entry_fix_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">entry_fix</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="n">exit_fix</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_exit_fix</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
-        <span class="n">exit_fix_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">exit_fix</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">entry_fix_pos</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_entry_fix</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+        <span class="n">exit_fix_pos</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">route_exit_fix</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
 
         <span class="n">dist_to_entry</span> <span class="o">=</span> <span class="n">start_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">entry_fix_pos</span><span class="p">)</span>
         <span class="n">dist_to_exit</span> <span class="o">=</span> <span class="n">dist_to_entry</span> <span class="o">+</span> <span class="n">entry_fix_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">exit_fix_pos</span><span class="p">)</span>
