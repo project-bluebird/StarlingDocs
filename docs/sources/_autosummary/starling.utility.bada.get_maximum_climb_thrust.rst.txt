@@ -1,0 +1,6 @@
+starling.utility.bada.get\_maximum\_climb\_thrust
+=================================================
+
+.. currentmodule:: starling.utility.bada
+
+.. autofunction:: get_maximum_climb_thrust

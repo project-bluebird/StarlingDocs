@@ -1,0 +1,6 @@
+starling.utility.bada.get\_banking\_angle
+=========================================
+
+.. currentmodule:: starling.utility.bada
+
+.. autofunction:: get_banking_angle

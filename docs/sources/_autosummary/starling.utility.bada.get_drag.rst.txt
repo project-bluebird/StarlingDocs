@@ -1,0 +1,6 @@
+starling.utility.bada.get\_drag
+===============================
+
+.. currentmodule:: starling.utility.bada
+
+.. autofunction:: get_drag

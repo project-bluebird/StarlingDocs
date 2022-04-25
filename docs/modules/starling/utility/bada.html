@@ -66,12 +66,15 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">convert</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
 
-<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">Atmosphere</span>
+<span class="kn">import</span> <span class="nn">starling.core</span> <span class="k">as</span> <span class="nn">core</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">convert</span>
+
+<span class="n">DEFAULT_MASS</span> <span class="o">=</span> <span class="mf">4.0e5</span>
+<span class="n">DEFAULT_THRUST</span> <span class="o">=</span> <span class="mf">1.1e6</span>
+<span class="n">DEFAULT_DRAG</span> <span class="o">=</span> <span class="mf">1.3e6</span>
 
 
 <div class="viewcode-block" id="change_in_pressure_height"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.change_in_pressure_height.html#starling.utility.bada.change_in_pressure_height">[docs]</a><span class="k">def</span> <span class="nf">change_in_pressure_height</span><span class="p">(</span>
@@ -104,7 +107,7 @@
     <span class="n">pressure_height_0</span> <span class="o">=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">fl</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">FL_TO_M</span>
 
     <span class="n">solution</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">dHp_dt</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">aircraft_type</span><span class="p">,</span> <span class="n">atmos</span><span class="p">,</span> <span class="n">aircraft_state</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">dHp_dt</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">atmos</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">,</span> <span class="n">aircraft_state</span><span class="p">),</span>
         <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">time_interval</span><span class="p">),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pressure_height_0</span><span class="p">]),</span>
     <span class="p">)</span>
@@ -115,9 +118,8 @@
 <div class="viewcode-block" id="dHp_dt"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.dHp_dt.html#starling.utility.bada.dHp_dt">[docs]</a><span class="k">def</span> <span class="nf">dHp_dt</span><span class="p">(</span>
     <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">pressure_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">aircraft_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">aircraft_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">atmos</span><span class="p">:</span> <span class="n">Atmosphere</span><span class="p">,</span>
+    <span class="n">aircraft</span><span class="p">:</span> <span class="n">Aircraft</span><span class="p">,</span>
     <span class="n">aircraft_state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -130,13 +132,11 @@
 <span class="sd">        Dummy time variable for solve_ivp algorithm</span>
 <span class="sd">    pressure_height : float</span>
 <span class="sd">        The pressure_height level of the aircraft</span>
-<span class="sd">    aircraft_speed : float</span>
-<span class="sd">        The aircraft speed (in knots)</span>
-<span class="sd">    aircraft_type : str</span>
-<span class="sd">        The aircraft&#39;s type</span>
 <span class="sd">    atmos : Atmosphere</span>
 <span class="sd">        The BADA atmosphere used to represent the atmosphere at lat and lon of</span>
 <span class="sd">        the aircraft.</span>
+<span class="sd">    aircraft : Aircraft or BadaAircraft</span>
+<span class="sd">        An Aircraft or BadaAircraft instance.</span>
 <span class="sd">    aircraft_state : str</span>
 <span class="sd">        The state of the aircraft.</span>
 
@@ -146,12 +146,23 @@
 <span class="sd">        The rate of climb or descent (in m/s)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">aircraft</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">BadaAircraft</span><span class="p">):</span>
+        <span class="n">bada_parameters</span> <span class="o">=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">bada_parameters</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bada_parameters</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="n">temperature</span> <span class="o">=</span> <span class="n">atmos</span><span class="o">.</span><span class="n">temperature_from_fl</span><span class="p">(</span><span class="n">pressure_height</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">M_TO_FL</span><span class="p">)</span>
+    <span class="n">density</span> <span class="o">=</span> <span class="n">atmos</span><span class="o">.</span><span class="n">density_from_fl</span><span class="p">(</span><span class="n">pressure_height</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">M_TO_FL</span><span class="p">)</span>
     <span class="n">delta_t</span> <span class="o">=</span> <span class="n">atmos</span><span class="o">.</span><span class="n">delta_T</span>
-    <span class="n">aircraft_speed_in_m_per_sec</span> <span class="o">=</span> <span class="n">aircraft_speed</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_M</span> <span class="o">/</span> <span class="mf">3600.0</span>
+
+    <span class="n">aircraft_speed_in_m_per_sec</span> <span class="o">=</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">KT_TO_MPS</span>
     <span class="n">true_air_speed</span> <span class="o">=</span> <span class="n">gs_to_tas</span><span class="p">(</span><span class="n">aircraft_speed_in_m_per_sec</span><span class="p">)</span>
+
     <span class="n">mach</span> <span class="o">=</span> <span class="n">tas_to_mach</span><span class="p">(</span><span class="n">true_air_speed</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
-    <span class="n">mass</span><span class="p">,</span> <span class="n">thrust</span><span class="p">,</span> <span class="n">drag</span> <span class="o">=</span> <span class="n">bada_params</span><span class="p">(</span><span class="n">aircraft_type</span><span class="p">)</span>
+
+    <span class="n">mass</span> <span class="o">=</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;m_ref&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="k">if</span> <span class="n">bada_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">DEFAULT_MASS</span>
+
+    <span class="n">thrust</span><span class="p">,</span> <span class="n">drag</span> <span class="o">=</span> <span class="n">get_thrust_and_drag</span><span class="p">(</span><span class="n">bada_parameters</span><span class="p">,</span> <span class="n">pressure_height</span><span class="p">,</span> <span class="n">true_air_speed</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">,</span> <span class="n">density</span><span class="p">)</span>
 
     <span class="n">rocd</span> <span class="o">=</span> <span class="p">(</span>
         <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">delta_t</span> <span class="o">/</span> <span class="n">temperature</span><span class="p">)</span>
@@ -277,32 +288,151 @@
     <span class="k">return</span> <span class="n">f_m</span></div>
 
 
-<div class="viewcode-block" id="bada_params"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.bada_params.html#starling.utility.bada.bada_params">[docs]</a><span class="k">def</span> <span class="nf">bada_params</span><span class="p">(</span><span class="n">aircraft_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_thrust_and_drag"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.get_thrust_and_drag.html#starling.utility.bada.get_thrust_and_drag">[docs]</a><span class="k">def</span> <span class="nf">get_thrust_and_drag</span><span class="p">(</span>
+    <span class="n">bada_parameters</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="n">pressure_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">true_air_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">delta_t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the aircraft&#39;s physical parameters: mass, thrust and drag given the</span>
 <span class="sd">    aircraft type. Purely a dummy routine for now.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    aircraft_type : str</span>
-<span class="sd">        The aircraft type</span>
+<span class="sd">    bada_parameters : dict or None</span>
+<span class="sd">        The aircraft parameters from the BADA database.</span>
+<span class="sd">    pressure_height : float</span>
+<span class="sd">        The pressure_height level of the aircraft</span>
+<span class="sd">    true_air_speed : float</span>
+<span class="sd">        The true air speed of the aircraft (in m/s)</span>
+<span class="sd">    delta_t : float</span>
+<span class="sd">        The BADA atmosphere temperature differential at a pressure</span>
+<span class="sd">        altitude of zero (in K)</span>
+<span class="sd">    density : float</span>
+<span class="sd">        The density of the air</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Tuple</span>
-<span class="sd">        Tuple of three floats containing in order the mass (in kg), the</span>
-<span class="sd">        thrust (in N) and the drag (in N)</span>
+<span class="sd">        Tuple of two floats containing in order, the thrust (in N) and the drag (in N)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">aircraft_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">mass</span> <span class="o">=</span> <span class="mf">4.0e5</span>
-        <span class="n">thrust</span> <span class="o">=</span> <span class="mf">1.1e6</span>
-        <span class="n">drag</span> <span class="o">=</span> <span class="mf">1.3e6</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mass</span> <span class="o">=</span> <span class="mf">4.0e5</span>
-        <span class="n">thrust</span> <span class="o">=</span> <span class="mf">1.1e6</span>
-        <span class="n">drag</span> <span class="o">=</span> <span class="mf">1.3e6</span>
 
-    <span class="k">return</span> <span class="n">mass</span><span class="p">,</span> <span class="n">thrust</span><span class="p">,</span> <span class="n">drag</span></div>
+    <span class="k">if</span> <span class="n">bada_parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">thrust</span> <span class="o">=</span> <span class="n">DEFAULT_THRUST</span>
+        <span class="n">drag</span> <span class="o">=</span> <span class="n">DEFAULT_DRAG</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">maximum_climb_thrust</span> <span class="o">=</span> <span class="n">get_maximum_climb_thrust</span><span class="p">(</span><span class="n">bada_parameters</span><span class="p">,</span> <span class="n">pressure_height</span><span class="p">,</span> <span class="n">true_air_speed</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">)</span>
+        <span class="n">thrust</span> <span class="o">=</span> <span class="n">get_thrust</span><span class="p">(</span><span class="n">maximum_climb_thrust</span><span class="p">)</span>
+
+        <span class="n">banking_angle</span> <span class="o">=</span> <span class="n">get_banking_angle</span><span class="p">()</span>
+        <span class="n">drag</span> <span class="o">=</span> <span class="n">get_drag</span><span class="p">(</span><span class="n">bada_parameters</span><span class="p">,</span> <span class="n">true_air_speed</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">banking_angle</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">thrust</span><span class="p">,</span> <span class="n">drag</span></div>
+
+
+<div class="viewcode-block" id="get_maximum_climb_thrust"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.get_maximum_climb_thrust.html#starling.utility.bada.get_maximum_climb_thrust">[docs]</a><span class="k">def</span> <span class="nf">get_maximum_climb_thrust</span><span class="p">(</span><span class="n">bada_parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pressure_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">true_air_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function computes the maximum climb thrust as described in </span>
+<span class="sd">    the BADA manual.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bada_parameters : dict</span>
+<span class="sd">        Dictionary or aircraft parameters from the BADA database.</span>
+<span class="sd">    pressure_height : float</span>
+<span class="sd">        The pressure height (in m)</span>
+<span class="sd">    true_air_speed : float</span>
+<span class="sd">        The true air speed (in m/s)</span>
+<span class="sd">    delta_t : float</span>
+<span class="sd">        The BADA atmosphere temperature differential at a pressure</span>
+<span class="sd">        altitude of zero (in K)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The maximum climb thrust (in N)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pressure_height</span> <span class="o">=</span> <span class="n">pressure_height</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">M_TO_FT</span>
+    <span class="n">true_air_speed</span> <span class="o">=</span> <span class="n">true_air_speed</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">MPS_TO_KT</span>
+    
+    <span class="k">if</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;engtype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Jet&quot;</span><span class="p">:</span>
+        <span class="n">T_climb_max_isa</span> <span class="o">=</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="mi">1</span> <span class="o">-</span> <span class="n">pressure_height</span> <span class="o">/</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">pressure_height</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;engtype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Turboprop&quot;</span><span class="p">:</span>
+        <span class="n">T_climb_max_isa</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pressure_height</span> <span class="o">/</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">true_air_speed</span>
+            <span class="o">+</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;engtype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Piston&quot;</span><span class="p">:</span>
+        <span class="n">T_climb_max_isa</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pressure_height</span> <span class="o">/</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="o">+</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">true_air_speed</span>
+        <span class="p">)</span>
+
+    <span class="n">delta_t_eff</span> <span class="o">=</span> <span class="n">delta_t</span> <span class="o">-</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">delta_t_eff</span> <span class="o">*</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">non_isa_thrust_correction</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">delta_t_eff</span> <span class="o">*</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.4</span><span class="p">:</span>
+        <span class="n">non_isa_thrust_correction</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.4</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">non_isa_thrust_correction</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">delta_t_eff</span> <span class="o">*</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CTC&quot;</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">T_climb_max_isa</span> <span class="o">*</span> <span class="n">non_isa_thrust_correction</span></div>
+
+
+<div class="viewcode-block" id="get_thrust"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.get_thrust.html#starling.utility.bada.get_thrust">[docs]</a><span class="k">def</span> <span class="nf">get_thrust</span><span class="p">(</span><span class="n">maximum_climb_thrust</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dummy function to compute the thrust from the maximum climb thrust.</span>
+<span class="sd">    The thrust must be provided to use the BADA model to compute the</span>
+<span class="sd">    change in pressure height.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">maximum_climb_thrust</span></div>
+
+
+<div class="viewcode-block" id="get_banking_angle"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.get_banking_angle.html#starling.utility.bada.get_banking_angle">[docs]</a><span class="k">def</span> <span class="nf">get_banking_angle</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dummy function to get the banking angle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="get_drag"><a class="viewcode-back" href="../../.././autosummary/starling.utility.bada.get_drag.html#starling.utility.bada.get_drag">[docs]</a><span class="k">def</span> <span class="nf">get_drag</span><span class="p">(</span><span class="n">bada_parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">true_air_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">banking_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function computes the drag on an aircraft as described in the BADA manual.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bada_parameters : dict</span>
+<span class="sd">        Dictionary or aircraft parameters from the BADA database.</span>
+<span class="sd">    true_air_speed : float</span>
+<span class="sd">        The true air speed (in m/s)</span>
+<span class="sd">    density : float</span>
+<span class="sd">        The density of the air.</span>
+<span class="sd">    banking angle : float</span>
+<span class="sd">        The abnking angle of the airplane.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The drag on the airplane (in N)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">C_L</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="mi">2</span>
+        <span class="o">*</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;m_ref&quot;</span><span class="p">]</span>
+        <span class="o">*</span> <span class="mi">1000</span>
+        <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span>
+        <span class="o">/</span> <span class="p">(</span><span class="n">density</span> <span class="o">*</span> <span class="n">true_air_speed</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">banking_angle</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">C_D</span> <span class="o">=</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CD0_cr&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;CD2_cr&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">C_L</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="k">return</span> <span class="n">C_D</span> <span class="o">*</span> <span class="n">density</span> <span class="o">*</span> <span class="n">true_air_speed</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">bada_parameters</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span></div>
 </pre></div>
 
            </div>

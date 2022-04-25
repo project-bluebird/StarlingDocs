@@ -18,7 +18,7 @@
     <script src=".././static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="starling.utility.bada.bada_params" href="starling.utility.bada.bada_params.html" />
+    <link rel="next" title="starling.utility.bada.change_in_pressure_height" href="starling.utility.bada.change_in_pressure_height.html" />
     <link rel="prev" title="starling.utility" href="starling.utility.html" /> 
 </head>
 
@@ -49,10 +49,14 @@
 <li class="toctree-l2"><a class="reference internal" href="starling.runner.html">starling.runner</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="starling.utility.html">starling.utility</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">starling.utility.bada</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.bada_params.html">starling.utility.bada.bada_params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html">starling.utility.bada.change_in_pressure_height</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.dHp_dt.html">starling.utility.bada.dHp_dt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.energy_share_factor.html">starling.utility.bada.energy_share_factor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_banking_angle.html">starling.utility.bada.get_banking_angle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_drag.html">starling.utility.bada.get_drag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_maximum_climb_thrust.html">starling.utility.bada.get_maximum_climb_thrust</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_thrust.html">starling.utility.bada.get_thrust</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_thrust_and_drag.html">starling.utility.bada.get_thrust_and_drag</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.gs_to_tas.html">starling.utility.bada.gs_to_tas</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.tas_to_mach.html">starling.utility.bada.tas_to_mach</a></li>
 </ul>
@@ -104,17 +108,29 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.bada_params.html#starling.utility.bada.bada_params" title="starling.utility.bada.bada_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bada_params</span></code></a>(aircraft_type)</p></td>
-<td><p>Returns the aircraft's physical parameters: mass, thrust and drag given the aircraft type.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html#starling.utility.bada.change_in_pressure_height" title="starling.utility.bada.change_in_pressure_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_in_pressure_height</span></code></a>(aircraft, atmos, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html#starling.utility.bada.change_in_pressure_height" title="starling.utility.bada.change_in_pressure_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_in_pressure_height</span></code></a>(aircraft, atmos, ...)</p></td>
 <td><p>For a given aircraft find its change in pressure height over a given time interval using a fourth order Runge-Kutta integration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.dHp_dt.html#starling.utility.bada.dHp_dt" title="starling.utility.bada.dHp_dt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dHp_dt</span></code></a>(time, pressure_height, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.dHp_dt.html#starling.utility.bada.dHp_dt" title="starling.utility.bada.dHp_dt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dHp_dt</span></code></a>(time, pressure_height, atmos, ...)</p></td>
 <td><p>For a given aircraft find its rate of climb or descent (ROCD i.e. dHp/dt).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.energy_share_factor.html#starling.utility.bada.energy_share_factor" title="starling.utility.bada.energy_share_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">energy_share_factor</span></code></a>(aircraft_state, mach, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.energy_share_factor.html#starling.utility.bada.energy_share_factor" title="starling.utility.bada.energy_share_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">energy_share_factor</span></code></a>(aircraft_state, mach, ...)</p></td>
 <td><p>Given a mach number calculate energy share factor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.get_banking_angle.html#starling.utility.bada.get_banking_angle" title="starling.utility.bada.get_banking_angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_banking_angle</span></code></a>()</p></td>
+<td><p>Dummy function to get the banking angle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.get_drag.html#starling.utility.bada.get_drag" title="starling.utility.bada.get_drag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_drag</span></code></a>(bada_parameters, true_air_speed, ...)</p></td>
+<td><p>This function computes the drag on an aircraft as described in the BADA manual.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.get_maximum_climb_thrust.html#starling.utility.bada.get_maximum_climb_thrust" title="starling.utility.bada.get_maximum_climb_thrust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_maximum_climb_thrust</span></code></a>(bada_parameters, ...)</p></td>
+<td><p>This function computes the maximum climb thrust as described in the BADA manual.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.get_thrust.html#starling.utility.bada.get_thrust" title="starling.utility.bada.get_thrust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_thrust</span></code></a>(maximum_climb_thrust)</p></td>
+<td><p>Dummy function to compute the thrust from the maximum climb thrust.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="starling.utility.bada.get_thrust_and_drag.html#starling.utility.bada.get_thrust_and_drag" title="starling.utility.bada.get_thrust_and_drag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_thrust_and_drag</span></code></a>(bada_parameters, ...)</p></td>
+<td><p>Returns the aircraft's physical parameters: mass, thrust and drag given the aircraft type.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="starling.utility.bada.gs_to_tas.html#starling.utility.bada.gs_to_tas" title="starling.utility.bada.gs_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gs_to_tas</span></code></a>(ground_speed)</p></td>
 <td><p>Convert ground speed (GS) to true air speed (TAS).</p></td>
@@ -131,7 +147,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="starling.utility.html" class="btn btn-neutral float-left" title="starling.utility" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="starling.utility.bada.bada_params.html" class="btn btn-neutral float-right" title="starling.utility.bada.bada_params" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="starling.utility.bada.change_in_pressure_height.html" class="btn btn-neutral float-right" title="starling.utility.bada.change_in_pressure_height" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

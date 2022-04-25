@@ -1,0 +1,6 @@
+starling.utility.bada.get\_thrust\_and\_drag
+============================================
+
+.. currentmodule:: starling.utility.bada
+
+.. autofunction:: get_thrust_and_drag
