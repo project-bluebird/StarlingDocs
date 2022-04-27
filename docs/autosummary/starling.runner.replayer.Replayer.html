@@ -90,12 +90,12 @@
 <h1>starling.runner.replayer.Replayer<a class="headerlink" href="#starling-runner-replayer-replayer" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="starling.runner.replayer.Replayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.runner.replayer.</span></span><span class="sig-name descname"><span class="pre">Replayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_log_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="starling.runner.stepper.Stepper.html#starling.runner.stepper.Stepper" title="starling.runner.stepper.Stepper"><code class="xref py py-class docutils literal notranslate"><span class="pre">starling.runner.stepper.Stepper</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.runner.replayer.</span></span><span class="sig-name descname"><span class="pre">Replayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for replaying a simulation from disk log files.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.runner.replayer.Replayer.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_log_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a Replayer instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -104,6 +104,8 @@
 <li><p><strong>environment_log_path</strong> (<em>String</em>) – Path of environment log from simulation</p></li>
 <li><p><strong>reward_log_path</strong> (<em>String</em>) – Path of rewards log from simulation</p></li>
 <li><p><strong>action_log_path</strong> (<em>String</em>) – Path of actions log from simulation</p></li>
+<li><p><strong>aspect_ratio</strong> (<em>float</em>) – Aspect ratio for all images produced - default = 1</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – Scale factor for all images produced - default = 150</p></li>
 </ul>
 </dd>
 </dl>
@@ -116,93 +118,36 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.__init__" title="starling.runner.replayer.Replayer.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(environment_path, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.__init__" title="starling.runner.replayer.Replayer.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(environment_path, ...[, ...])</p></td>
 <td><p>Construct a Replayer instance.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_fig</span></code>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.get_actions" title="starling.runner.replayer.Replayer.get_actions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_actions</span></code></a>(step)</p></td>
+<td><p>Extracts actions at given timestep, returns a list of strings</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.compute_dist_matrix" title="starling.runner.replayer.Replayer.compute_dist_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_dist_matrix</span></code></a>()</p></td>
-<td><p>Calculate distance matrix between all aircraft.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.compute_reward" title="starling.runner.replayer.Replayer.compute_reward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_reward</span></code></a>(aircraft, dist_matrix[, ...])</p></td>
-<td><p>Calculates reward for PG agent - will be moved to agent class</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.compute_state" title="starling.runner.replayer.Replayer.compute_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_state</span></code></a>(**kwds)</p></td>
-<td><p>Adds extra variables to state</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.git_params" title="starling.runner.replayer.Replayer.git_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_params</span></code></a>()</p></td>
-<td><p>Gets the current git commit hash and author</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_done</span></code>(aircraft[, min_steps])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.load_data" title="starling.runner.replayer.Replayer.load_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_data</span></code></a>(environment_path, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.load_data" title="starling.runner.replayer.Replayer.load_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_data</span></code></a>(environment_path, ...)</p></td>
 <td><p>Loads data from disk logs</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.log_action" title="starling.runner.replayer.Replayer.log_action"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_action</span></code></a>(actions)</p></td>
-<td><p>Logs current environment actions to internal class dictionaries and to external .csv files.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.make_aircraft" title="starling.runner.replayer.Replayer.make_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_aircraft</span></code></a>(callsign, indx[, fp])</p></td>
+<td><p>Recieves the index of the time step Extracts the flight plan, lat, lon, fl, heading, speed, vspeed from the env_log_list (a class variable) Returns an Aircraft object</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.log_environment" title="starling.runner.replayer.Replayer.log_environment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_environment</span></code></a>()</p></td>
-<td><p>Logs current environment data to internal class dictionaries and to external .csv files.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.make_gif" title="starling.runner.replayer.Replayer.make_gif"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_gif</span></code></a>([burn_in, end_frame, basename, ...])</p></td>
+<td><p>Stitches together sequential pngs into a gif if no initial and final frames are given, the entire history is produced default values for visualisation options</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.log_metadata" title="starling.runner.replayer.Replayer.log_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_metadata</span></code></a>()</p></td>
-<td><p>Logs the metadata to internal memory and csv</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.regenerate_environment" title="starling.runner.replayer.Replayer.regenerate_environment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regenerate_environment</span></code></a>(step)</p></td>
+<td><p>Takes in a step number from the program Has access to the original airspace and list of all callsigns in the environment from the class variable Uses the step to identify the datetime and the aircraft information Returns a new environment that can then be rendered</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.log_reward" title="starling.runner.replayer.Replayer.log_reward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_reward</span></code></a>(reward)</p></td>
-<td><p>Logs current reward to internal class dictionaries and to external .csv files.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.save_png" title="starling.runner.replayer.Replayer.save_png"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_png</span></code></a>(step[, basename, leading_zeros, ...])</p></td>
+<td><p>If SVG is present, converts the svg to a png If no SVG present, then one is produced, then converted to png</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.log_to_json" title="starling.runner.replayer.Replayer.log_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_to_json</span></code></a>()</p></td>
-<td><p>Writes the internal logs to .json files</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.next_trajectory" title="starling.runner.replayer.Replayer.next_trajectory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">next_trajectory</span></code></a>(actions)</p></td>
-<td><p>Uses the simulator (predictor) to calculate new trajectories and moves aircraft on these trajectories.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.plot_history" title="starling.runner.replayer.Replayer.plot_history"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_history</span></code></a>([istep, new_axes])</p></td>
-<td><p>Plot 2D aircraft trajectories starting from a given step in the simulation (istep) or from the current step if istep=None.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.plot_history_complete" title="starling.runner.replayer.Replayer.plot_history_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_history_complete</span></code></a>([istep, new_axes])</p></td>
-<td><p>Plot 2D aircraft trajectories and flight level starting from a given step in the simulation (istep) or from the current step if istep=None.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.render" title="starling.runner.replayer.Replayer.render"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render</span></code></a>([mode])</p></td>
-<td><p>Visualise the environment</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.replay" title="starling.runner.replayer.Replayer.replay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replay</span></code></a>([burnin, mode])</p></td>
-<td><p>Replays the simulation visualisation, skipping the first burnin steps.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.reset" title="starling.runner.replayer.Replayer.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
-<td><p>Reset internal variables</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.setup_logger" title="starling.runner.replayer.Replayer.setup_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logger</span></code></a>(name, filename[, overwrite])</p></td>
-<td><p>Setup an INFO-level logger object which logs a message, as well as a handler and formatter</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.step" title="starling.runner.replayer.Replayer.step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></a>()</p></td>
-<td><p>Advances time by one step.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.runner.replayer.Replayer.save_svg" title="starling.runner.replayer.Replayer.save_svg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_svg</span></code></a>(step[, basename, leading_zeros, ...])</p></td>
+<td><p>Takes the environment object and outputs an svg</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.compute_dist_matrix">
-<span class="sig-name descname"><span class="pre">compute_dist_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.compute_dist_matrix" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate distance matrix between all aircraft.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.compute_reward">
-<span class="sig-name descname"><span class="pre">compute_reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aircraft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approx_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_reward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_pair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.compute_reward" title="Permalink to this definition"></a></dt>
-<dd><p>Calculates reward for PG agent - will be moved to agent class</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.compute_state">
-<span class="sig-name descname"><span class="pre">compute_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.compute_state" title="Permalink to this definition"></a></dt>
-<dd><p>Adds extra variables to state</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.git_params">
-<span class="sig-name descname"><span class="pre">git_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.git_params" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the current git commit hash and author</p>
+<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.get_actions">
+<span class="sig-name descname"><span class="pre">get_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.get_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.get_actions" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts actions at given timestep, returns a list of strings</p>
 </dd></dl>
 
 <dl class="py method">
@@ -212,90 +157,79 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.log_action">
-<span class="sig-name descname"><span class="pre">log_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.log_action" title="Permalink to this definition"></a></dt>
-<dd><p>Logs current environment actions to internal class dictionaries
-and to external .csv files.</p>
+<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.make_aircraft">
+<span class="sig-name descname"><span class="pre">make_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callsign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.make_aircraft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.make_aircraft" title="Permalink to this definition"></a></dt>
+<dd><p>Recieves the index of the time step
+Extracts the flight plan, lat, lon, fl, heading,
+speed, vspeed from the env_log_list (a class variable)
+Returns an Aircraft object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>callsign</strong> (<em>str</em>) – Required parameter, Callsign (or name) of particular aircraft</p></li>
+<li><p><strong>indx</strong> (<em>int</em>) – Required parameter, index correspinding to current step</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.log_environment">
-<span class="sig-name descname"><span class="pre">log_environment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.log_environment" title="Permalink to this definition"></a></dt>
-<dd><p>Logs current environment data to internal class dictionaries
-and to external .csv files.</p>
+<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.make_gif">
+<span class="sig-name descname"><span class="pre">make_gif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">burn_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'replayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leading_zeros</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blip_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gif_output_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.make_gif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.make_gif" title="Permalink to this definition"></a></dt>
+<dd><p>Stitches together sequential pngs into a gif
+if no initial and final frames are given, the entire history is produced
+default values for visualisation options</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>burn_in</strong> (<em>int</em>) – Optional parameter, step that will be the first frame of the gif.
+Default = first frame with aircraft in it (self.min_step_received)</p></li>
+<li><p><strong>end_frame</strong> (<em>int</em>) – Optional parameter, step that will be the final frame of the gif
+Default = last frame with aircraft in it (self.max_step_received)</p></li>
+<li><p><strong>gif_output_name</strong> (<em>str</em>) – Optional parameter, name of the output gif.
+Default = tmp/basename_step_first-step_to_end-step</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.log_metadata">
-<span class="sig-name descname"><span class="pre">log_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.log_metadata" title="Permalink to this definition"></a></dt>
-<dd><p>Logs the metadata to internal memory and csv</p>
+<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.regenerate_environment">
+<span class="sig-name descname"><span class="pre">regenerate_environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.regenerate_environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.regenerate_environment" title="Permalink to this definition"></a></dt>
+<dd><p>Takes in a step number from the program
+Has access to the original airspace and list of all callsigns
+in the environment from the class variable
+Uses the step to identify the datetime and the aircraft information
+Returns a new environment that can then be rendered</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>step</strong> (<em>int</em>) – Required parameter, step number of simulation</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.log_reward">
-<span class="sig-name descname"><span class="pre">log_reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reward</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.log_reward" title="Permalink to this definition"></a></dt>
-<dd><p>Logs current reward to internal class dictionaries
-and to external .csv files.</p>
+<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.save_png">
+<span class="sig-name descname"><span class="pre">save_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'replayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leading_zeros</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blip_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.save_png"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.save_png" title="Permalink to this definition"></a></dt>
+<dd><p>If SVG is present, converts the svg to a png
+If no SVG present, then one is produced, then converted to png</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.log_to_json">
-<span class="sig-name descname"><span class="pre">log_to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.log_to_json" title="Permalink to this definition"></a></dt>
-<dd><p>Writes the internal logs to .json files</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.next_trajectory">
-<span class="sig-name descname"><span class="pre">next_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.next_trajectory" title="Permalink to this definition"></a></dt>
-<dd><p>Uses the simulator (predictor) to calculate new trajectories
-and moves aircraft on these trajectories.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.plot_history">
-<span class="sig-name descname"><span class="pre">plot_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">istep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.plot_history" title="Permalink to this definition"></a></dt>
-<dd><p>Plot 2D aircraft trajectories starting from a given step in the
-simulation (istep) or from the current step if istep=None.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.plot_history_complete">
-<span class="sig-name descname"><span class="pre">plot_history_complete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">istep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.plot_history_complete" title="Permalink to this definition"></a></dt>
-<dd><p>Plot 2D aircraft trajectories and flight level starting from a given step in the
-simulation (istep) or from the current step if istep=None.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'history'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.render" title="Permalink to this definition"></a></dt>
-<dd><p>Visualise the environment</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.replay">
-<span class="sig-name descname"><span class="pre">replay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">burnin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'history'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.replay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.replay" title="Permalink to this definition"></a></dt>
-<dd><p>Replays the simulation visualisation, skipping the first burnin steps.
-When mode is set to ‘history’, a 2D viosualisation is produced. When mode is
-set to ‘history_complete’ a richer 3D visualisation is produced.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.reset" title="Permalink to this definition"></a></dt>
-<dd><p>Reset internal variables</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.setup_logger">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setup_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#starling.runner.replayer.Replayer.setup_logger" title="Permalink to this definition"></a></dt>
-<dd><p>Setup an INFO-level logger object which logs a message,
-as well as a handler and formatter</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.step" title="Permalink to this definition"></a></dt>
-<dd><p>Advances time by one step.</p>
+<dt class="sig sig-object py" id="starling.runner.replayer.Replayer.save_svg">
+<span class="sig-name descname"><span class="pre">save_svg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'replayer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leading_zeros</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blip_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/runner/replayer.html#Replayer.save_svg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.runner.replayer.Replayer.save_svg" title="Permalink to this definition"></a></dt>
+<dd><p>Takes the environment object and outputs an svg</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>basename</strong> (<em>str</em>) – Optional parameter, filename for output svg. Default = replayer</p></li>
+<li><p><strong>leading_zeros</strong> (<em>int</em>) – Optional parameter, number of leading zeros. Default = 0</p></li>
+<li><p><strong>blips</strong> (<em>int</em>) – Optional parameter, number of circles (blips) following the aircraft
+emulating real-world radar features. Default = 6</p></li>
+<li><p><strong>blip_color</strong> (<em>str</em>) – Optional parameter, named colour for radar blips. Default = gray</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

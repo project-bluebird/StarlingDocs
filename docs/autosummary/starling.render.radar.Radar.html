@@ -97,6 +97,15 @@
 <dt class="sig sig-object py" id="starling.render.radar.Radar.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the Radar to observe a central location and a given width scale [nmi] with a given aspect-ratio (=width/height).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>centre</strong> (<a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><em>Pos2D</em></a>) – Required parameter, centre of the environment</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – Required parameter, width scale for the images in nautical miles [nmi]</p></li>
+<li><p><strong>aspect_ratio</strong> (<em>float</em>) – Required parameter, width/height for output image</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <p class="rubric">Methods</p>
@@ -113,7 +122,7 @@
 <td><p>Draw the Environment.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.render.radar.Radar.draw_action_queue" title="starling.render.radar.Radar.draw_action_queue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_action_queue</span></code></a>(action, environment)</p></td>
-<td><p>Displays a list of the most recent actions and the time they were taken</p></td>
+<td><p>Displays a list of the most recent actions and the time they were taken :param actions: Required parameter, list of actions at given step :type actions: list(Action)</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.render.radar.Radar.draw_aircraft" title="starling.render.radar.Radar.draw_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_aircraft</span></code></a>(aircraft[, labels])</p></td>
 <td><p>Draw an aircraft.</p></td>
@@ -125,10 +134,10 @@
 <td><p>Draw an area.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.render.radar.Radar.draw_environment" title="starling.render.radar.Radar.draw_environment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_environment</span></code></a>(environment[, blips, ...])</p></td>
-<td><p>Draw the environment.</p></td>
+<td><p>Draw the environment. :param blips: Required parameter, number of blips trailing the aircraft :type blips: int :param blip_color: Required parameter, named colour ie red, green, blue, pink. Default = gray :type blip_color: str.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.render.radar.Radar.draw_environment_time" title="starling.render.radar.Radar.draw_environment_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_environment_time</span></code></a>(environment)</p></td>
-<td><p>Add environment time and step count to visualisation</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.render.radar.Radar.draw_environment_time" title="starling.render.radar.Radar.draw_environment_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_environment_time</span></code></a>(environment, ...)</p></td>
+<td><p>Add environment time and step count to visualisation radar_sweep_period: used to determine simulation step via environment time/sweep period :param radar_sweep_period: Required parameter, infers the simulation step via the environment time/radar sweep period :type radar_sweep_period: float</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.render.radar.Radar.draw_fixes" title="starling.render.radar.Radar.draw_fixes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_fixes</span></code></a>(fixes)</p></td>
 <td><p>Draw a set of fixes.</p></td>
@@ -171,13 +180,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.render.radar.Radar.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw" title="Permalink to this definition"></a></dt>
-<dd><p>Draw the Environment.</p>
+<dd><p>Draw the Environment.
+:param environment: Required parameter, the environment
+:type environment: Environment</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.render.radar.Radar.draw_action_queue">
 <span class="sig-name descname"><span class="pre">draw_action_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw_action_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw_action_queue" title="Permalink to this definition"></a></dt>
-<dd><p>Displays a list of the most recent actions and the time they were taken</p>
+<dd><p>Displays a list of the most recent actions and the time they were taken
+:param actions: Required parameter, list of actions at given step
+:type actions: list(Action)</p>
 </dd></dl>
 
 <dl class="py method">
@@ -200,14 +213,25 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.render.radar.Radar.draw_environment">
-<span class="sig-name descname"><span class="pre">draw_environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blip_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gray'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw_environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw_environment" title="Permalink to this definition"></a></dt>
-<dd><p>Draw the environment.</p>
+<span class="sig-name descname"><span class="pre">draw_environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blip_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gray'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radar_sweep_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw_environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw_environment" title="Permalink to this definition"></a></dt>
+<dd><p>Draw the environment.
+:param blips: Required parameter, number of blips trailing the aircraft
+:type blips: int
+:param blip_color: Required parameter, named colour ie red, green, blue, pink.</p>
+<blockquote>
+<div><p>Default = gray</p>
+</div></blockquote>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.render.radar.Radar.draw_environment_time">
-<span class="sig-name descname"><span class="pre">draw_environment_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw_environment_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw_environment_time" title="Permalink to this definition"></a></dt>
-<dd><p>Add environment time and step count to visualisation</p>
+<span class="sig-name descname"><span class="pre">draw_environment_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">radar_sweep_period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw_environment_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw_environment_time" title="Permalink to this definition"></a></dt>
+<dd><p>Add environment time and step count to visualisation
+radar_sweep_period: used to determine simulation step via environment time/sweep period
+:param radar_sweep_period: Required parameter, infers the simulation step via the environment time/radar sweep period
+:type radar_sweep_period: float</p>
 </dd></dl>
 
 <dl class="py method">
@@ -225,7 +249,11 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.render.radar.Radar.draw_pos2d">
 <span class="sig-name descname"><span class="pre">draw_pos2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw_pos2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw_pos2d" title="Permalink to this definition"></a></dt>
-<dd><p>Draw a location.</p>
+<dd><p>Draw a location.
+:param location: Required parameter, the position (longitude and latitude) to draw the item
+:type location: Pos2D
+:param label: Required parameter, text label present
+:type label: str</p>
 </dd></dl>
 
 <dl class="py method">
@@ -254,7 +282,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.render.radar.Radar.draw_traces">
-<span class="sig-name descname"><span class="pre">draw_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blip_color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw_traces" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blip_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.draw_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.draw_traces" title="Permalink to this definition"></a></dt>
 <dd><p>Draw the last blips positions of the aircraft based on timestep as grey circles</p>
 </dd></dl>
 
@@ -274,11 +302,16 @@
 <dt class="sig sig-object py" id="starling.render.radar.Radar.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.save" title="Permalink to this definition"></a></dt>
 <dd><p>Save the drawing to an SVG image then clear the buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Required parameter, filename for output svg</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.render.radar.Radar.update_traces">
-<span class="sig-name descname"><span class="pre">update_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.update_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.update_traces" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">blips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/render/radar.html#Radar.update_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.render.radar.Radar.update_traces" title="Permalink to this definition"></a></dt>
 <dd><p>Update the dictionary of radar trace positions with current aircraft position or
 clear it stepwise if aircraft has left the environment</p>
 </dd></dl>

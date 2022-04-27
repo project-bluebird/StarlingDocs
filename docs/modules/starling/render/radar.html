@@ -98,6 +98,15 @@
 <div class="viewcode-block" id="Radar.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centre</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">aspect_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the Radar to observe a central location and a given width scale [nmi] with a given aspect-ratio (=width/height).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        centre: Pos2D</span>
+<span class="sd">            Required parameter, centre of the environment</span>
+<span class="sd">        scale: float</span>
+<span class="sd">            Required parameter, width scale for the images in nautical miles [nmi]</span>
+<span class="sd">        aspect_ratio: float</span>
+<span class="sd">            Required parameter, width/height for output image</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">aspect_ratio</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
@@ -113,6 +122,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
+
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span>
 
@@ -123,6 +133,11 @@
 <div class="viewcode-block" id="Radar.save"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the drawing to an SVG image then clear the buffer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Required parameter, filename for output svg</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">NMI_TO_DEG</span>
@@ -141,6 +156,10 @@
 <div class="viewcode-block" id="Radar.draw"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the Environment.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        environment: Environment</span>
+<span class="sd">            Required parameter, the environment</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_environment</span><span class="p">(</span><span class="n">environment</span><span class="p">)</span></div>
@@ -149,6 +168,12 @@
 <div class="viewcode-block" id="Radar.draw_pos2d"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_pos2d">[docs]</a>    <span class="k">def</span> <span class="nf">draw_pos2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw a location.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        location: Pos2D</span>
+<span class="sd">            Required parameter, the position (longitude and latitude) to draw the item</span>
+<span class="sd">        label: str</span>
+<span class="sd">            Required parameter, text label present</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span>
@@ -221,9 +246,14 @@
                 <span class="n">label</span><span class="p">,</span> <span class="n">control_point</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">control_point</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">4e-4</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Radar.draw_environment_time"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_environment_time">[docs]</a>    <span class="k">def</span> <span class="nf">draw_environment_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">):</span>
+<div class="viewcode-block" id="Radar.draw_environment_time"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_environment_time">[docs]</a>    <span class="k">def</span> <span class="nf">draw_environment_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">radar_sweep_period</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add environment time and step count to visualisation</span>
+<span class="sd">        radar_sweep_period: used to determine simulation step via environment time/sweep period </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        radar_sweep_period: float</span>
+<span class="sd">            Required parameter, infers the simulation step via the environment time/radar sweep period</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span>
         
@@ -241,7 +271,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mf">8.0</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="n">step_label</span> <span class="o">=</span> <span class="s2">&quot;Step:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">radar_based_step</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">radar_based_step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span><span class="o">/</span><span class="n">radar_sweep_period</span><span class="p">)</span>
+
+        <span class="n">step_label</span> <span class="o">=</span> <span class="s2">&quot;Step:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">radar_based_step</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">step_label</span><span class="p">,</span> <span class="n">step_location</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">step_location</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
 
@@ -413,7 +448,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">lon</span> <span class="o">+</span> <span class="n">lon_diff</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">lat_diff</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Radar.update_traces"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.update_traces">[docs]</a>    <span class="k">def</span> <span class="nf">update_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span><span class="n">Environment</span><span class="p">,</span> <span class="n">blips</span><span class="p">):</span>
+<div class="viewcode-block" id="Radar.update_traces"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.update_traces">[docs]</a>    <span class="k">def</span> <span class="nf">update_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span><span class="n">Environment</span><span class="p">,</span> <span class="n">blips</span><span class="p">:</span><span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the dictionary of radar trace positions with current aircraft position or </span>
 <span class="sd">        clear it stepwise if aircraft has left the environment</span>
@@ -427,7 +462,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">traces_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">traces_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Radar.draw_traces"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_traces">[docs]</a>    <span class="k">def</span> <span class="nf">draw_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">blips</span><span class="p">,</span> <span class="n">blip_color</span><span class="p">):</span>
+<div class="viewcode-block" id="Radar.draw_traces"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_traces">[docs]</a>    <span class="k">def</span> <span class="nf">draw_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">blips</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">blip_color</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the last blips positions of the aircraft based on timestep as grey circles</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -436,12 +471,19 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+=</span> <span class="n">svg</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">blip</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">blip</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">0.5e-4</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">blip_color</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Radar.draw_environment"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_environment">[docs]</a>    <span class="k">def</span> <span class="nf">draw_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">blips</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">blip_color</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="Radar.draw_environment"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_environment">[docs]</a>    <span class="k">def</span> <span class="nf">draw_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">blips</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">blip_color</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">radar_sweep_period</span> <span class="o">=</span> <span class="mi">6</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the environment.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        blips: int</span>
+<span class="sd">            Required parameter, number of blips trailing the aircraft </span>
+<span class="sd">        blip_color: str</span>
+<span class="sd">            Required parameter, named colour ie red, green, blue, pink.</span>
+<span class="sd">            Default = gray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_environment_time</span><span class="p">(</span><span class="n">environment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_environment_time</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">radar_sweep_period</span><span class="p">)</span>
         
         <span class="k">for</span> <span class="n">sector</span> <span class="ow">in</span> <span class="n">environment</span><span class="o">.</span><span class="n">airspace</span><span class="o">.</span><span class="n">sectors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">volume</span> <span class="ow">in</span> <span class="n">sector</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
@@ -480,6 +522,10 @@
 <div class="viewcode-block" id="Radar.draw_action_queue"><a class="viewcode-back" href="../../.././autosummary/starling.render.radar.Radar.html#starling.render.radar.Radar.draw_action_queue">[docs]</a>    <span class="k">def</span> <span class="nf">draw_action_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a list of the most recent actions and the time they were taken</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        actions: list(Action)</span>
+<span class="sd">            Required parameter, list of actions at given step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">2e-4</span>
         <span class="n">lat_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="mf">4e-4</span>

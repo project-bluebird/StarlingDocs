@@ -64,15 +64,26 @@
              
   <h1>Source code for starling.runner.replayer</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">cairosvg</span>
+<span class="kn">import</span> <span class="nn">imageio</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">starling.core</span> <span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">FlightPlan</span>
+<span class="kn">from</span> <span class="nn">starling.render</span> <span class="kn">import</span> <span class="n">Radar</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">.stepper</span> <span class="kn">import</span> <span class="n">Stepper</span>
-<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Environment</span>
 
-
-<div class="viewcode-block" id="Replayer"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer">[docs]</a><span class="k">class</span> <span class="nc">Replayer</span><span class="p">(</span><span class="n">Stepper</span><span class="p">):</span>
+<div class="viewcode-block" id="Replayer"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer">[docs]</a><span class="k">class</span> <span class="nc">Replayer</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class for replaying a simulation from disk log files.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Replayer.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment_path</span><span class="p">,</span> <span class="n">environment_log_path</span><span class="p">,</span> <span class="n">reward_log_path</span><span class="p">,</span> <span class="n">action_log_path</span><span class="p">):</span>
+<div class="viewcode-block" id="Replayer.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">environment_path</span><span class="p">,</span>
+        <span class="n">environment_log_path</span><span class="p">,</span>
+        <span class="n">reward_log_path</span><span class="p">,</span>
+        <span class="n">action_log_path</span><span class="p">,</span>
+        <span class="n">aspect_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">scale</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a Replayer instance.</span>
 
@@ -86,16 +97,34 @@
 <span class="sd">            Path of rewards log from simulation</span>
 <span class="sd">        action_log_path: String</span>
 <span class="sd">            Path of actions log from simulation</span>
+<span class="sd">        aspect_ratio: float</span>
+<span class="sd">            Aspect ratio for all images produced - default = 1</span>
+<span class="sd">        scale: float</span>
+<span class="sd">            Scale factor for all images produced - default = 150</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">axs</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">istep</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">environment_log_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">reward_log_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">action_log_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">environment_path</span><span class="p">,</span> <span class="n">environment_log_path</span><span class="p">,</span> <span class="n">reward_log_path</span><span class="p">,</span> <span class="n">action_log_path</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You need to provide environment_log_path, &quot;</span> <span class="s2">&quot;reward_log_path, action_log_path.&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You need to provide environment_log_path, &quot;</span> <span class="s2">&quot;reward_log_path, action_log_path.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">orig_airspace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">airspace</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">callsign_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">aircraft</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callsign_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callsign</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_step_received</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_step_received</span> <span class="o">=</span> <span class="mf">1e8</span>
+        <span class="k">for</span> <span class="n">callsign</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callsign_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_step_received</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_step_received</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;step&quot;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_step_received</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_step_received</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;step&quot;</span><span class="p">]))</span>
+
+        <span class="c1"># Rendering options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">aspect_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orig_airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">centre</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radar</span> <span class="o">=</span> <span class="n">Radar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centre</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Replayer.load_data"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment_path</span><span class="p">,</span> <span class="n">environment_log_path</span><span class="p">,</span> <span class="n">reward_log_path</span><span class="p">,</span> <span class="n">action_log_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Loads data from disk logs&quot;&quot;&quot;</span>
@@ -107,26 +136,199 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">action_log_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">action_log</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radar_sweep_period</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="s2">&quot;radar_sweep_period&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">total_steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="s2">&quot;total_steps&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="n">Environment</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">environment_path</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="s2">&quot;total_steps&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Replayer.replay"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.replay">[docs]</a>    <span class="k">def</span> <span class="nf">replay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;history&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Replays the simulation visualisation, skipping the first burnin steps.</span>
-<span class="sd">        When mode is set to &#39;history&#39;, a 2D viosualisation is produced. When mode is</span>
-<span class="sd">        set to &#39;history_complete&#39; a richer 3D visualisation is produced.&quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_steps</span><span class="p">):</span>
-            <span class="c1"># Move time indexes by one step</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<div class="viewcode-block" id="Replayer.regenerate_environment"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.regenerate_environment">[docs]</a>    <span class="k">def</span> <span class="nf">regenerate_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes in a step number from the program</span>
+<span class="sd">        Has access to the original airspace and list of all callsigns</span>
+<span class="sd">        in the environment from the class variable</span>
+<span class="sd">        Uses the step to identify the datetime and the aircraft information</span>
+<span class="sd">        Returns a new environment that can then be rendered</span>
 
-            <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;=</span> <span class="n">burnin</span><span class="p">:</span>
-                <span class="c1"># Stepper visualises the aircraft trajectories</span>
-                <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        step: int</span>
+<span class="sd">            Required parameter, step number of simulation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_step_received</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The highest step in the environment log file is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_step_received</span><span class="si">}</span><span class="s2">, the requested step was </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
-<div class="viewcode-block" id="Replayer.step"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Advances time by one step.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radar_sweep_period</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">istep</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span></div></div>
+        <span class="n">time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">aircraft</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">callsign</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callsign_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;step&quot;</span><span class="p">]:</span>
+                <span class="n">indx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;step&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+                <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;datetime&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+                <span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_aircraft</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="n">indx</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Infer time from radar_sweep_period</span>
+                <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radar_sweep_period</span> <span class="o">*</span> <span class="n">step</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Warning: Time is inferred from requested step and radar_sweep_period&quot;</span><span class="p">)</span>
+            <span class="n">environment</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">orig_airspace</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">environment</span></div>
+
+<div class="viewcode-block" id="Replayer.get_actions"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.get_actions">[docs]</a>    <span class="k">def</span> <span class="nf">get_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts actions at given timestep, returns a list of strings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_step_received</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The highest step in the environment log file is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_step_received</span><span class="si">}</span><span class="s2">, the requested step was </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">callsign</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callsign_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">callsign</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_log</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;step&quot;</span><span class="p">]:</span>
+                    <span class="n">indx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;step&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+                    <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span>
+                        <span class="n">callsign</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;kind&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">actions</span></div>
+
+<div class="viewcode-block" id="Replayer.make_aircraft"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.make_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">make_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">,</span> <span class="n">indx</span><span class="p">,</span> <span class="n">fp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recieves the index of the time step</span>
+<span class="sd">        Extracts the flight plan, lat, lon, fl, heading,</span>
+<span class="sd">        speed, vspeed from the env_log_list (a class variable)</span>
+<span class="sd">        Returns an Aircraft object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callsign: str</span>
+<span class="sd">            Required parameter, Callsign (or name) of particular aircraft</span>
+<span class="sd">        indx: int</span>
+<span class="sd">            Required parameter, index correspinding to current step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fp_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;flight_plan&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+        <span class="n">flight_plan</span> <span class="o">=</span> <span class="n">FlightPlan</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">fp_str</span><span class="p">)</span>
+        <span class="n">latitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;latitude&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+        <span class="n">longitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;longitude&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+        <span class="n">flight_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;flight_level&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+        <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;heading&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+        <span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;calculated_ground_speed&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+        <span class="n">vertical_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_log</span><span class="p">[</span><span class="n">callsign</span><span class="p">][</span><span class="s2">&quot;vertical_speed&quot;</span><span class="p">][</span><span class="n">indx</span><span class="p">]</span>
+        <span class="n">aircraft</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span><span class="n">flight_plan</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">flight_level</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">vertical_speed</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">aircraft</span></div>
+
+<div class="viewcode-block" id="Replayer.save_svg"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.save_svg">[docs]</a>    <span class="k">def</span> <span class="nf">save_svg</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">step</span><span class="p">,</span>
+        <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;replayer&quot;</span><span class="p">,</span>
+        <span class="n">leading_zeros</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">blips</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+        <span class="n">blip_color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes the environment object and outputs an svg</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        basename: str</span>
+<span class="sd">            Optional parameter, filename for output svg. Default = replayer</span>
+<span class="sd">        leading_zeros: int</span>
+<span class="sd">            Optional parameter, number of leading zeros. Default = 0</span>
+<span class="sd">        blips: int</span>
+<span class="sd">            Optional parameter, number of circles (blips) following the aircraft</span>
+<span class="sd">            emulating real-world radar features. Default = 6</span>
+<span class="sd">        blip_color: str</span>
+<span class="sd">            Optional parameter, named colour for radar blips. Default = gray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tmp/</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">_step_</span><span class="si">{</span><span class="n">step</span><span class="si">:</span><span class="s2">0</span><span class="si">{</span><span class="n">leading_zeros</span><span class="si">}}</span><span class="s2">&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regenerate_environment</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_actions</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radar</span><span class="o">.</span><span class="n">draw_environment</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">radar_sweep_period</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radar_sweep_period</span><span class="p">,</span> <span class="n">blips</span><span class="o">=</span><span class="n">blips</span><span class="p">,</span> <span class="n">blip_color</span><span class="o">=</span><span class="n">blip_color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radar</span><span class="o">.</span><span class="n">draw_action_queue</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radar</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Replayer.save_png"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.save_png">[docs]</a>    <span class="k">def</span> <span class="nf">save_png</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">step</span><span class="p">,</span>
+        <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;replayer&quot;</span><span class="p">,</span>
+        <span class="n">leading_zeros</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">blips</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+        <span class="n">blip_color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If SVG is present, converts the svg to a png</span>
+<span class="sd">        If no SVG present, then one is produced, then converted to png</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tmp/</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">_step_</span><span class="si">{</span><span class="n">step</span><span class="si">:</span><span class="s2">0</span><span class="si">{</span><span class="n">leading_zeros</span><span class="si">}}</span><span class="s2">&quot;</span>
+        <span class="n">chk_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">chk_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">cairosvg</span><span class="o">.</span><span class="n">svg2png</span><span class="p">(</span>
+                <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">,</span> <span class="n">write_to</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">output_width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_svg</span><span class="p">(</span>
+                <span class="n">step</span><span class="p">,</span>
+                <span class="n">basename</span><span class="p">,</span>
+                <span class="n">leading_zeros</span><span class="p">,</span>
+                <span class="n">blips</span><span class="p">,</span>
+                <span class="n">blip_color</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">cairosvg</span><span class="o">.</span><span class="n">svg2png</span><span class="p">(</span>
+                <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">,</span> <span class="n">write_to</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">output_width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Replayer.make_gif"><a class="viewcode-back" href="../../.././autosummary/starling.runner.replayer.Replayer.html#starling.runner.replayer.Replayer.make_gif">[docs]</a>    <span class="k">def</span> <span class="nf">make_gif</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">burn_in</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">end_frame</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;replayer&quot;</span><span class="p">,</span>
+        <span class="n">leading_zeros</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">blips</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+        <span class="n">blip_color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+        <span class="n">gif_output_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stitches together sequential pngs into a gif</span>
+<span class="sd">        if no initial and final frames are given, the entire history is produced</span>
+<span class="sd">        default values for visualisation options</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        burn_in: int</span>
+<span class="sd">            Optional parameter, step that will be the first frame of the gif.</span>
+<span class="sd">            Default = first frame with aircraft in it (self.min_step_received)</span>
+<span class="sd">        end_frame: int</span>
+<span class="sd">            Optional parameter, step that will be the final frame of the gif</span>
+<span class="sd">            Default = last frame with aircraft in it (self.max_step_received)</span>
+<span class="sd">        gif_output_name: str</span>
+<span class="sd">            Optional parameter, name of the output gif.</span>
+<span class="sd">            Default = tmp/basename_step_first-step_to_end-step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">burn_in</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">burn_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_step_received</span>
+        <span class="k">if</span> <span class="n">end_frame</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">end_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_step_received</span>
+
+        <span class="n">for_gif_images</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">current_frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">burn_in</span><span class="p">,</span> <span class="n">end_frame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tmp/</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">_step_</span><span class="si">{</span><span class="n">current_frame</span><span class="si">:</span><span class="s2">0</span><span class="si">{</span><span class="n">leading_zeros</span><span class="si">}}</span><span class="s2">&quot;</span>
+            <span class="n">chk_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">chk_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_png</span><span class="p">(</span>
+                    <span class="n">step</span><span class="o">=</span><span class="n">current_frame</span><span class="p">,</span>
+                    <span class="n">basename</span><span class="o">=</span><span class="n">basename</span><span class="p">,</span>
+                    <span class="n">leading_zeros</span><span class="o">=</span><span class="n">leading_zeros</span><span class="p">,</span>
+                    <span class="n">blips</span><span class="o">=</span><span class="n">blips</span><span class="p">,</span>
+                    <span class="n">blip_color</span><span class="o">=</span><span class="n">blip_color</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="n">for_gif_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imageio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">gif_output_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">gif_output_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tmp/</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">_step_</span><span class="si">{</span><span class="n">burn_in</span><span class="si">:</span><span class="s2">0</span><span class="si">{</span><span class="n">leading_zeros</span><span class="si">}}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">end_frame</span><span class="si">:</span><span class="s2">0</span><span class="si">{</span><span class="n">leading_zeros</span><span class="si">}}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gif_output_name</span> <span class="o">=</span> <span class="n">gif_output_name</span>
+
+        <span class="n">imageio</span><span class="o">.</span><span class="n">mimsave</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gif_output_name</span><span class="si">}</span><span class="s2">.gif&quot;</span><span class="p">,</span> <span class="n">for_gif_images</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

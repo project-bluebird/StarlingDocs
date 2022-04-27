@@ -19,6 +19,7 @@ starling.core.flight\_plan.FlightPlan
       ~FlightPlan.__init__
       ~FlightPlan.data
       ~FlightPlan.from_json
+      ~FlightPlan.from_str
       ~FlightPlan.load
       ~FlightPlan.save
       ~FlightPlan.to_json

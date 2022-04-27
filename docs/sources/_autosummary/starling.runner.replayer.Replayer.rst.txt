@@ -17,26 +17,13 @@ starling.runner.replayer.Replayer
    .. autosummary::
    
       ~Replayer.__init__
-      ~Replayer.close_fig
-      ~Replayer.compute_dist_matrix
-      ~Replayer.compute_reward
-      ~Replayer.compute_state
-      ~Replayer.git_params
-      ~Replayer.is_done
+      ~Replayer.get_actions
       ~Replayer.load_data
-      ~Replayer.log_action
-      ~Replayer.log_environment
-      ~Replayer.log_metadata
-      ~Replayer.log_reward
-      ~Replayer.log_to_json
-      ~Replayer.next_trajectory
-      ~Replayer.plot_history
-      ~Replayer.plot_history_complete
-      ~Replayer.render
-      ~Replayer.replay
-      ~Replayer.reset
-      ~Replayer.setup_logger
-      ~Replayer.step
+      ~Replayer.make_aircraft
+      ~Replayer.make_gif
+      ~Replayer.regenerate_environment
+      ~Replayer.save_png
+      ~Replayer.save_svg
    
    
 
