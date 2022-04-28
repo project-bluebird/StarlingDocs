@@ -126,7 +126,7 @@ The next target Fix on Route for the Aircraft is then updated.</p></li>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.predictor.linear_pilot.LinearPilot.future_trajectory" title="starling.predictor.linear_pilot.LinearPilot.future_trajectory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">future_trajectory</span></code></a>(callsign, environment, dt, ...)</p></td>
 <td><p>Predict the Trajectory evolution of a single Aircraft within the Environment for dt amount of time.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.predictor.linear_pilot.LinearPilot.get_target_pos" title="starling.predictor.linear_pilot.LinearPilot.get_target_pos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_target_pos</span></code></a>(callsign, environment)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.predictor.linear_pilot.LinearPilot.get_target_pos" title="starling.predictor.linear_pilot.LinearPilot.get_target_pos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_target_pos</span></code></a>(callsign)</p></td>
 <td><p>Get Pos2D of next Fix on Route.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.predictor.linear_pilot.LinearPilot.process_lateral_actions" title="starling.predictor.linear_pilot.LinearPilot.process_lateral_actions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_lateral_actions</span></code></a>(callsign, action)</p></td>
@@ -179,14 +179,11 @@ Change heading or flight level if requested in Actions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.predictor.linear_pilot.LinearPilot.get_target_pos">
-<span class="sig-name descname"><span class="pre">get_target_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callsign</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a></span></span><a class="reference internal" href=".././modules/starling/predictor/linear_pilot.html#LinearPilot.get_target_pos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.predictor.linear_pilot.LinearPilot.get_target_pos" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_target_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callsign</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a></span></span><a class="reference internal" href=".././modules/starling/predictor/linear_pilot.html#LinearPilot.get_target_pos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.predictor.linear_pilot.LinearPilot.get_target_pos" title="Permalink to this definition"></a></dt>
 <dd><p>Get Pos2D of next Fix on Route.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>callsign</strong> (<em>str</em>) – An Aircraft callsign</p></li>
-<li><p><strong>environment</strong> (<a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><em>Environment</em></a>) – An Environment instance that contains an Aircraft with the given callsign</p></li>
-</ul>
+<dd class="field-odd"><p><strong>callsign</strong> (<em>str</em>) – An Aircraft callsign</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Position of the next Fix on the Aircraft Route</p>
