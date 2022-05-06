@@ -17,6 +17,7 @@ starling.objective.vectorised\_objective.VectorisedObjective
    .. autosummary::
    
       ~VectorisedObjective.__init__
+      ~VectorisedObjective.align_rewards
       ~VectorisedObjective.evaluate
    
    

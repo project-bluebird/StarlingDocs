@@ -34,4 +34,5 @@ starling.objective
    starling.objective.preferred_flight_level
    starling.objective.separation
    starling.objective.vectorised_objective
+   starling.objective.vectorised_preferred_flight_level
 

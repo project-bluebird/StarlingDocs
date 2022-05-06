@@ -1,0 +1,27 @@
+starling.objective.vectorised\_preferred\_flight\_level.VectorisedPreferredFlightLevel
+======================================================================================
+
+.. currentmodule:: starling.objective.vectorised_preferred_flight_level
+
+.. autoclass:: VectorisedPreferredFlightLevel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~VectorisedPreferredFlightLevel.__init__
+      ~VectorisedPreferredFlightLevel.align_rewards
+      ~VectorisedPreferredFlightLevel.evaluate
+   
+   
+
+   
+   
+   

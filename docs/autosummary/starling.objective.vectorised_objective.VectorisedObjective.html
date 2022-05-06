@@ -18,7 +18,7 @@
     <script src=".././static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="starling.predictor" href="starling.predictor.html" />
+    <link rel="next" title="starling.objective.vectorised_preferred_flight_level" href="starling.objective.vectorised_preferred_flight_level.html" />
     <link rel="prev" title="starling.objective.vectorised_objective" href="starling.objective.vectorised_objective.html" /> 
 </head>
 
@@ -53,6 +53,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">starling.objective.vectorised_objective.VectorisedObjective</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="starling.objective.vectorised_preferred_flight_level.html">starling.objective.vectorised_preferred_flight_level</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="starling.predictor.html">starling.predictor</a></li>
@@ -113,24 +114,55 @@ If possible, an Objective should also be created.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.objective.vectorised_objective.VectorisedObjective.__init__" title="starling.objective.vectorised_objective.VectorisedObjective.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.objective.vectorised_objective.VectorisedObjective.evaluate" title="starling.objective.vectorised_objective.VectorisedObjective.evaluate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code></a>(environment, trajectories)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.objective.vectorised_objective.VectorisedObjective.align_rewards" title="starling.objective.vectorised_objective.VectorisedObjective.align_rewards"><code class="xref py py-obj docutils literal notranslate"><span class="pre">align_rewards</span></code></a>(time_values, reward_values, ...)</p></td>
+<td><p>Align the reward vectors for individual aircraft to create a global reward vector, spanning the total time these aircraft are active within the given Environment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.objective.vectorised_objective.VectorisedObjective.evaluate" title="starling.objective.vectorised_objective.VectorisedObjective.evaluate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code></a>(environment, trajectories[, resolution])</p></td>
 <td><p>Evaluate a dictionary of Trajectories, given the Environment state.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
+<dt class="sig sig-object py" id="starling.objective.vectorised_objective.VectorisedObjective.align_rewards">
+<span class="sig-name descname"><span class="pre">align_rewards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href=".././modules/starling/objective/vectorised_objective.html#VectorisedObjective.align_rewards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.objective.vectorised_objective.VectorisedObjective.align_rewards" title="Permalink to this definition"></a></dt>
+<dd><p>Align the reward vectors for individual aircraft to create a global reward vector,
+spanning the total time these aircraft are active within the given Environment.
+It is assumed the fractional component of every time value is zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_values</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – A list of numpy arrays providing the times of trajectory control points
+for various aircraft.</p></li>
+<li><p><strong>reward_values</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – A list of numpy arrays providing the reward values calculated by
+the objective, one for each time-step (or control point), for various aircraft.</p></li>
+<li><p><strong>resolution</strong> (<em>float</em>) – A float providing the resolution of the global reward vector in seconds.
+The resolution should be chosen such that all relevant time values are captured.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A global vector of reward values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="starling.objective.vectorised_objective.VectorisedObjective.evaluate">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.vectorised_reward.VectorisedReward.html#starling.core.vectorised_reward.VectorisedReward" title="starling.core.vectorised_reward.VectorisedReward"><span class="pre">starling.core.vectorised_reward.VectorisedReward</span></a></span></span><a class="reference internal" href=".././modules/starling/objective/vectorised_objective.html#VectorisedObjective.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.objective.vectorised_objective.VectorisedObjective.evaluate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">starling.core.environment.Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.vectorised_reward.VectorisedReward.html#starling.core.vectorised_reward.VectorisedReward" title="starling.core.vectorised_reward.VectorisedReward"><span class="pre">starling.core.vectorised_reward.VectorisedReward</span></a></span></span><a class="reference internal" href=".././modules/starling/objective/vectorised_objective.html#VectorisedObjective.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.objective.vectorised_objective.VectorisedObjective.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluate a dictionary of Trajectories, given the Environment state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>environment</strong> (<a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><em>Environment</em></a>) – An Environment instance</p></li>
-<li><p><strong>trajectories</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><em>Trajectory</em></a><em>]</em>) – A dictionary with (callsign, Trajectory) items</p></li>
+<li><p><strong>environment</strong> (<a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><em>Environment</em></a>) – An Environment instance.</p></li>
+<li><p><strong>trajectories</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><em>Trajectory</em></a><em>]</em>) – A dictionary with (callsign, Trajectory) items.</p></li>
+<li><p><strong>resolution</strong> (<em>float</em><em> (</em><em>default=1.0</em><em>)</em>) – A float providing the resolution of the global reward vector in seconds.
+The resolution should be chosen such that all relevant time values are captured.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A vector of values, one for each time-step, calculated by the objective</p>
+<dd class="field-even"><p>A vector of values, one for each (simulator) time-step, calculated by the objective.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="starling.core.vectorised_reward.VectorisedReward.html#starling.core.vectorised_reward.VectorisedReward" title="starling.core.vectorised_reward.VectorisedReward">VectorisedReward</a></p>
@@ -147,7 +179,7 @@ If possible, an Objective should also be created.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="starling.objective.vectorised_objective.html" class="btn btn-neutral float-left" title="starling.objective.vectorised_objective" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="starling.predictor.html" class="btn btn-neutral float-right" title="starling.predictor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="starling.objective.vectorised_preferred_flight_level.html" class="btn btn-neutral float-right" title="starling.objective.vectorised_preferred_flight_level" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

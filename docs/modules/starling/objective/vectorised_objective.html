@@ -63,8 +63,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for starling.objective.vectorised_objective</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">,</span> <span class="n">VectorisedReward</span>
 
@@ -76,24 +79,78 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="VectorisedObjective.evaluate"><a class="viewcode-back" href="../../.././autosummary/starling.objective.vectorised_objective.VectorisedObjective.html#starling.objective.vectorised_objective.VectorisedObjective.evaluate">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">VectorisedReward</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">],</span> <span class="n">resolution</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VectorisedReward</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluate a dictionary of Trajectories, given the Environment state.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        environment : Environment</span>
-<span class="sd">            An Environment instance</span>
+<span class="sd">            An Environment instance.</span>
 <span class="sd">        trajectories : Dict[str, Trajectory]</span>
-<span class="sd">            A dictionary with (callsign, Trajectory) items</span>
+<span class="sd">            A dictionary with (callsign, Trajectory) items.</span>
+<span class="sd">        resolution : float (default=1.0)</span>
+<span class="sd">            A float providing the resolution of the global reward vector in seconds.</span>
+<span class="sd">            The resolution should be chosen such that all relevant time values are captured.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        VectorisedReward</span>
-<span class="sd">            A vector of values, one for each time-step, calculated by the objective</span>
+<span class="sd">            A vector of values, one for each (simulator) time-step, calculated by the objective.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">pass</span></div></div>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="VectorisedObjective.align_rewards"><a class="viewcode-back" href="../../.././autosummary/starling.objective.vectorised_objective.VectorisedObjective.html#starling.objective.vectorised_objective.VectorisedObjective.align_rewards">[docs]</a>    <span class="k">def</span> <span class="nf">align_rewards</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">time_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">reward_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">resolution</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Align the reward vectors for individual aircraft to create a global reward vector,</span>
+<span class="sd">        spanning the total time these aircraft are active within the given Environment.</span>
+<span class="sd">        It is assumed the fractional component of every time value is zero.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time_values : List[np.ndarray]</span>
+<span class="sd">            A list of numpy arrays providing the times of trajectory control points</span>
+<span class="sd">            for various aircraft.</span>
+<span class="sd">        reward_values : List[np.ndarray]</span>
+<span class="sd">            A list of numpy arrays providing the reward values calculated by</span>
+<span class="sd">            the objective, one for each time-step (or control point), for various aircraft.</span>
+<span class="sd">        resolution : float</span>
+<span class="sd">            A float providing the resolution of the global reward vector in seconds.</span>
+<span class="sd">            The resolution should be chosen such that all relevant time values are captured.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            A global vector of reward values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Determine the global minimum and maximum times.</span>
+        <span class="n">min_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_values</span><span class="p">])</span>
+        <span class="n">max_time</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_values</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">min_time</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="ow">and</span> <span class="n">max_time</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="ow">and</span> <span class="n">resolution</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Fractional component of min_time, max_time and/or resolution is not zero.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create global time and reward vectors.</span>
+        <span class="n">time_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">min_time</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_time</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">reward_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_vector</span><span class="p">))</span>
+
+        <span class="c1"># Add the reward values calculated for individual aircraft to the global</span>
+        <span class="c1"># reward vector at the times for which they were calculated.</span>
+        <span class="k">for</span> <span class="n">t_vals</span><span class="p">,</span> <span class="n">r_vals</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">time_values</span><span class="p">,</span> <span class="n">reward_values</span><span class="p">):</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">time_vector</span> <span class="o">==</span> <span class="n">t_vals</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_vals</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Resolution chosen does not include all relevant time values.&quot;</span><span class="p">)</span>
+
+            <span class="n">reward_vector</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">+=</span> <span class="n">r_vals</span>
+
+        <span class="k">return</span> <span class="n">reward_vector</span></div></div>
 </pre></div>
 
            </div>

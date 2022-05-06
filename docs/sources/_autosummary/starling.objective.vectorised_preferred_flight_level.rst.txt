@@ -1,0 +1,31 @@
+starling.objective.vectorised\_preferred\_flight\_level
+=======================================================
+
+.. automodule:: starling.objective.vectorised_preferred_flight_level
+  
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      VectorisedPreferredFlightLevel
+   
+   
+
+   
+   
+   
+
+
+
