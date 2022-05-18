@@ -233,46 +233,49 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.register_full_backward_hook" title="starling.agent.policy_gradient.PolicyGradient.register_full_backward_hook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_full_backward_hook</span></code></a>(hook)</p></td>
 <td><p>Registers a backward hook on the module.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.register_parameter" title="starling.agent.policy_gradient.PolicyGradient.register_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_parameter</span></code></a>(name, param)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.register_module" title="starling.agent.policy_gradient.PolicyGradient.register_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_module</span></code></a>(name, module)</p></td>
+<td><p>Alias for <a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.add_module" title="starling.agent.policy_gradient.PolicyGradient.add_module"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_module()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.register_parameter" title="starling.agent.policy_gradient.PolicyGradient.register_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_parameter</span></code></a>(name, param)</p></td>
 <td><p>Adds a parameter to the module.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.requires_grad_" title="starling.agent.policy_gradient.PolicyGradient.requires_grad_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">requires_grad_</span></code></a>([requires_grad])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.requires_grad_" title="starling.agent.policy_gradient.PolicyGradient.requires_grad_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">requires_grad_</span></code></a>([requires_grad])</p></td>
 <td><p>Change if autograd should record operations on parameters in this module.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code>(path)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code>(path)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.set_extra_state" title="starling.agent.policy_gradient.PolicyGradient.set_extra_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_extra_state</span></code></a>(state)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.set_extra_state" title="starling.agent.policy_gradient.PolicyGradient.set_extra_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_extra_state</span></code></a>(state)</p></td>
 <td><p>This function is called from <a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.load_state_dict" title="starling.agent.policy_gradient.PolicyGradient.load_state_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_state_dict()</span></code></a> to handle any extra state found within the <cite>state_dict</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.share_memory" title="starling.agent.policy_gradient.PolicyGradient.share_memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">share_memory</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.share_memory" title="starling.agent.policy_gradient.PolicyGradient.share_memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">share_memory</span></code></a>()</p></td>
 <td><p>See <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.share_memory_()</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.state_dict" title="starling.agent.policy_gradient.PolicyGradient.state_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_dict</span></code></a>([destination, prefix, keep_vars])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.state_dict" title="starling.agent.policy_gradient.PolicyGradient.state_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_dict</span></code></a>([destination, prefix, keep_vars])</p></td>
 <td><p>Returns a dictionary containing a whole state of the module.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_encoder</span></code>(state[, plane_list])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_encoder</span></code>(state[, plane_list])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_reader</span></code>(state[, plane_list])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_reader</span></code>(state[, plane_list])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.to" title="starling.agent.policy_gradient.PolicyGradient.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.to" title="starling.agent.policy_gradient.PolicyGradient.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Moves and/or casts the parameters and buffers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.to_empty" title="starling.agent.policy_gradient.PolicyGradient.to_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_empty</span></code></a>(*, device)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.to_empty" title="starling.agent.policy_gradient.PolicyGradient.to_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_empty</span></code></a>(*, device)</p></td>
 <td><p>Moves the parameters and buffers to the specified device without copying storage.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.train" title="starling.agent.policy_gradient.PolicyGradient.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>([mode])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.train" title="starling.agent.policy_gradient.PolicyGradient.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>([mode])</p></td>
 <td><p>Sets the module in training mode.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.type" title="starling.agent.policy_gradient.PolicyGradient.type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a>(dst_type)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.type" title="starling.agent.policy_gradient.PolicyGradient.type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a>(dst_type)</p></td>
 <td><p>Casts all parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dst_type</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.xpu" title="starling.agent.policy_gradient.PolicyGradient.xpu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">xpu</span></code></a>([device])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.xpu" title="starling.agent.policy_gradient.PolicyGradient.xpu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">xpu</span></code></a>([device])</p></td>
 <td><p>Moves all model parameters and buffers to the XPU.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.zero_grad" title="starling.agent.policy_gradient.PolicyGradient.zero_grad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_grad</span></code></a>([set_to_none])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.zero_grad" title="starling.agent.policy_gradient.PolicyGradient.zero_grad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_grad</span></code></a>([set_to_none])</p></td>
 <td><p>Sets gradients of all model parameters to zero.</p></td>
 </tr>
 </tbody>
@@ -781,8 +784,8 @@ both the name of the module as well as the module itself.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>memo</strong> – a memo to store the set of modules already added to the result</p></li>
 <li><p><strong>prefix</strong> – a prefix that will be added to the name of the module</p></li>
-<li><p><strong>remove_duplicate</strong> – whether to remove the duplicated module instances in the result</p></li>
-<li><p><strong>not</strong> (<em>or</em>) – </p></li>
+<li><p><strong>remove_duplicate</strong> – whether to remove the duplicated module instances in the result
+or not</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
@@ -992,6 +995,12 @@ will raise an error.</p>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.hooks.RemovableHandle</span></code></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.agent.policy_gradient.PolicyGradient.register_module">
+<span class="sig-name descname"><span class="pre">register_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.modules.module.Module</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#starling.agent.policy_gradient.PolicyGradient.register_module" title="Permalink to this definition"></a></dt>
+<dd><p>Alias for <a class="reference internal" href="#starling.agent.policy_gradient.PolicyGradient.add_module" title="starling.agent.policy_gradient.PolicyGradient.add_module"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_module()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">

@@ -56,6 +56,7 @@ starling.agent.policy\_gradient.PolicyGradient
       ~PolicyGradient.register_forward_hook
       ~PolicyGradient.register_forward_pre_hook
       ~PolicyGradient.register_full_backward_hook
+      ~PolicyGradient.register_module
       ~PolicyGradient.register_parameter
       ~PolicyGradient.requires_grad_
       ~PolicyGradient.save

@@ -63,8 +63,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for starling.utility.convert</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
-
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># Lengths</span>
 <span class="c1"># Multiply to convert meters [m] to feet [ft]</span>
@@ -102,7 +101,7 @@
 
 <span class="c1"># Angles</span>
 <span class="c1"># Multiply to convert degrees [deg] to radians [rad]</span>
-<span class="n">DEG_TO_RAD</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+<span class="n">DEG_TO_RAD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
 <span class="c1"># Multiply to convert radians [rad] to degrees [deg]</span>
 <span class="n">RAD_TO_DEG</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">DEG_TO_RAD</span>
 

@@ -64,7 +64,6 @@
              
   <h1>Source code for starling.utility.planner</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">math</span>
 
 
 <div class="viewcode-block" id="Planner"><a class="viewcode-back" href="../../.././autosummary/starling.utility.planner.Planner.html#starling.utility.planner.Planner">[docs]</a><span class="k">class</span> <span class="nc">Planner</span><span class="p">:</span>
@@ -163,7 +162,7 @@
 
         <span class="n">cps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_control_points</span><span class="p">(</span><span class="n">deltas</span><span class="p">,</span> <span class="n">speed</span><span class="p">)</span>
         <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">last_bearing</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">last_bearing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="k">for</span> <span class="n">cp_a</span><span class="p">,</span> <span class="n">cp_b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cps</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">cps</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
             <span class="n">bearing</span> <span class="o">=</span> <span class="n">cp_a</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">cp_b</span><span class="p">)</span>
 
