@@ -107,13 +107,22 @@
 <h1>starling.core.fixes.Fixes<a class="headerlink" href="#starling-core-fixes-fixes" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.fixes.</span></span><span class="sig-name descname"><span class="pre">Fixes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">places</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">Pos2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.fixes.</span></span><span class="sig-name descname"><span class="pre">Fixes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">places</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">Pos2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Dictionary of named location on the globe.</p>
+<p>Dictionary of named locations (2D positions) on the globe.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">places</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">Pos2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">places</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">Pos2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>places</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><em>Pos2D</em></a><em>]</em>) – A dictionary containing names and 2D positions of fixes.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fixes</span> <span class="o">=</span> <span class="n">Fixes</span><span class="p">({</span><span class="s2">&quot;STHPN&quot;</span><span class="p">:</span> <span class="n">Pos2D</span><span class="p">(</span><span class="mf">50.9515</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.3577</span><span class="p">)})</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <p class="rubric">Methods</p>
@@ -127,19 +136,19 @@
 <td><p>Construct a new instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.fixes.Fixes.centre" title="starling.core.fixes.Fixes.centre"><code class="xref py py-obj docutils literal notranslate"><span class="pre">centre</span></code></a>()</p></td>
-<td><p>Get the geometric centre of the Fixes.</p></td>
+<td><p>Get the geometric centre of the Fixes 2D positions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.fixes.Fixes.data" title="starling.core.fixes.Fixes.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>()</p></td>
-<td><p>Get the data as a serialisable dictionary.</p></td>
+<td><p>Create a dictionary with key/value pairs representing the Fixes data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.fixes.Fixes.delta_lat" title="starling.core.fixes.Fixes.delta_lat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delta_lat</span></code></a>()</p></td>
-<td><p>Get the latitudinal delta of the Fixes.</p></td>
+<td><p>Get the latitudinal delta of the Fixes, i.e. the range between minimum and maximum latitude among all Pos2D positions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.fixes.Fixes.delta_lon" title="starling.core.fixes.Fixes.delta_lon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delta_lon</span></code></a>()</p></td>
-<td><p>Get the longitudinal delta of the Fixes.</p></td>
+<td><p>Get the longitudinal delta of the Fixes, i.e. the range between minimum and maximum longitude among all Pos2D positions.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.fixes.Fixes.from_json" title="starling.core.fixes.Fixes.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(s)</p></td>
-<td><p>Construct a new instance from JSON representation.</p></td>
+<td><p>Construct a new instance from a string in JSON format.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.fixes.Fixes.load" title="starling.core.fixes.Fixes.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename)</p></td>
 <td><p>Construct a new instance from a file.</p></td>
@@ -148,56 +157,117 @@
 <td><p>Write the instance to a file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.fixes.Fixes.to_json" title="starling.core.fixes.Fixes.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
-<td><p>Serialise the instance to JSON.</p></td>
+<td><p>Serialise the instance to JSON string.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.centre">
 <span class="sig-name descname"><span class="pre">centre</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a></span></span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.centre"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.centre" title="Permalink to this definition"></a></dt>
-<dd><p>Get the geometric centre of the Fixes.</p>
+<dd><p>Get the geometric centre of the Fixes 2D positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D">Pos2D</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.data">
 <span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.data" title="Permalink to this definition"></a></dt>
-<dd><p>Get the data as a serialisable dictionary.</p>
+<dd><p>Create a dictionary with key/value pairs representing the Fixes data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.delta_lat">
 <span class="sig-name descname"><span class="pre">delta_lat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.delta_lat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.delta_lat" title="Permalink to this definition"></a></dt>
-<dd><p>Get the latitudinal delta of the Fixes.</p>
+<dd><p>Get the latitudinal delta of the Fixes, i.e. the range between minimum and maximum
+latitude among all Pos2D positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.delta_lon">
 <span class="sig-name descname"><span class="pre">delta_lon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.delta_lon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.delta_lon" title="Permalink to this definition"></a></dt>
-<dd><p>Get the longitudinal delta of the Fixes.</p>
+<dd><p>Get the longitudinal delta of the Fixes, i.e. the range between minimum and maximum
+longitude among all Pos2D positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.from_json">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.fixes.Fixes" title="starling.core.fixes.Fixes"><span class="pre">starling.core.fixes.Fixes</span></a></span></span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.from_json" title="Permalink to this definition"></a></dt>
-<dd><p>Construct a new instance from JSON representation.</p>
+<dd><p>Construct a new instance from a string in JSON format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – A string representation of Fixes in JSON/dictionary format.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="starling.core.action.Action.html#starling.core.action.Action" title="starling.core.action.Action">Action</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Fixes</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="sd">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    {</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    &quot;CAMBG&quot;: &quot;52.2069N 0.1713E&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    &quot;EXTER&quot;: &quot;50.7350N 3.4153W&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    &quot;HTHRW&quot;: &quot;51.4700N 0.4543W&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    &quot;STHPN&quot;: &quot;50.9515N 1.3577W&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    }</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    &#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.load">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.fixes.Fixes" title="starling.core.fixes.Fixes"><span class="pre">starling.core.fixes.Fixes</span></a></span></span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.load" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to a JSON file with a Fixes definition.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.fixes.Fixes" title="starling.core.fixes.Fixes">Fixes</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.save" title="Permalink to this definition"></a></dt>
 <dd><p>Write the instance to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.fixes.Fixes.to_json">
 <span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href=".././modules/starling/core/fixes.html#Fixes.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.fixes.Fixes.to_json" title="Permalink to this definition"></a></dt>
-<dd><p>Serialise the instance to JSON.</p>
+<dd><p>Serialise the instance to JSON string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

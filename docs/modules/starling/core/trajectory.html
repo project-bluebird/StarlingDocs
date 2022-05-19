@@ -70,7 +70,6 @@
 
 <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">geometry</span>
 <span class="kn">from</span> <span class="nn">.pos4d</span> <span class="kn">import</span> <span class="n">Pos4D</span>
-<span class="kn">from</span> <span class="nn">.route</span> <span class="kn">import</span> <span class="n">Route</span>
 
 
 <div class="viewcode-block" id="Trajectory"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory">[docs]</a><span class="k">class</span> <span class="nc">Trajectory</span><span class="p">:</span>
@@ -81,6 +80,12 @@
 <div class="viewcode-block" id="Trajectory.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_points</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Pos4D</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        control_points: Union[List[Pos4D], np.ndarray]</span>
+<span class="sd">            A list or array of latitude, longitude, flight level, time points (at least length 2).</span>
+<span class="sd">            The Trajectory is a line connecting these points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># allow for a Trajectory to be created from a list of Pos4D objects or a numpy array</span>
@@ -113,6 +118,25 @@
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from JSON representation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s: str</span>
+<span class="sd">            A string representation of the Trajectory in a JSON structure.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Trajectory</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">            &gt;&gt;&gt; Trajectory.from_json(&#39;&#39;&#39;</span>
+<span class="sd">            &gt;&gt;&gt;  [</span>
+<span class="sd">            &gt;&gt;&gt;     &quot;50.7351N 3.4153W 120.0FL 00:05:00&quot;,</span>
+<span class="sd">            &gt;&gt;&gt;     &quot;50.9515N 1.3577W 160.0FL 00:35:00&quot;,</span>
+<span class="sd">            &gt;&gt;&gt;     &quot;51.4701N 0.4543W 180.0FL 01:30:25&quot;,</span>
+<span class="sd">            &gt;&gt;&gt;     &quot;52.2069N 0.1713E 120.0FL 02:15:45&quot;</span>
+<span class="sd">            &gt;&gt;&gt; ]&#39;&#39;&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">control_points</span> <span class="o">=</span> <span class="p">[]</span>
@@ -125,6 +149,15 @@
     <span class="k">def</span> <span class="nf">from_array</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a numpy array.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        a: np.ndarray</span>
+<span class="sd">            A numpy array representation of the Trajectory.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Trajectory</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
@@ -133,6 +166,15 @@
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Path to a JSON file with a Trajectory definition.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Trajectory</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -141,7 +183,13 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">control_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pos4D</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the Trajectory as a list of Pos4D.</span>
+<span class="sd">        Returns the Trajectory as a list of Pos4D objects.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        List[Pos4D]</span>
+<span class="sd">            A list of the latitude, longitude, flight level, time points</span>
+<span class="sd">            that make up the Trajectory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">Pos4D</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">]</span>
@@ -149,13 +197,22 @@
 <div class="viewcode-block" id="Trajectory.data"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the data as a serialisable list.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        List[str]</span>
+<span class="sd">            A list of strings, each representing a latitude, longitude, flight level, time point.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">cp</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Trajectory.to_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Serialise the instance to JSON.</span>
+<span class="sd">        Serialise the instance to JSON string.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
@@ -163,28 +220,41 @@
 <div class="viewcode-block" id="Trajectory.save"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the instance to a file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Path to file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Trajectory.route"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.route">[docs]</a>    <span class="k">def</span> <span class="nf">route</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Route</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Route of the Trajectory.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="n">Route</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">pos3d</span><span class="p">())</span> <span class="k">for</span> <span class="n">cp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">])</span></div>
-
 <div class="viewcode-block" id="Trajectory.segments"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.segments">[docs]</a>    <span class="k">def</span> <span class="nf">segments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Pos4D</span><span class="p">,</span> <span class="n">Pos4D</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create an iterator of the Trajectory segments.</span>
+<span class="sd">        Create an iterator of the Trajectory segments (segment is a line</span>
+<span class="sd">        connecting two consecutive 4D points).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Iterator[tuple[Pos4D, Pos4d]]</span>
+<span class="sd">            The Trajectory segments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span></div>
 
 <div class="viewcode-block" id="Trajectory.min_distance"><a class="viewcode-back" href="../../.././autosummary/starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory.min_distance">[docs]</a>    <span class="k">def</span> <span class="nf">min_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate the minimum distance [nmi] to another Trajectory.</span>
+<span class="sd">        Calculate the 3D/volumetric minimum distance [nmi] to another Trajectory.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other: Trajectory</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float</span>
+<span class="sd">            The 3D/volumetric minimum distance in nautical miles between the two Trajectories.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># extract both trajectories (lat,lon,fl) and convert fl to height in nmi</span>

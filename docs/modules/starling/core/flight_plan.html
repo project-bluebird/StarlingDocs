@@ -68,17 +68,29 @@
 
 <span class="kn">from</span> <span class="nn">.contract</span> <span class="kn">import</span> <span class="n">Contract</span>
 <span class="kn">from</span> <span class="nn">.route</span> <span class="kn">import</span> <span class="n">Route</span>
-<span class="kn">from</span> <span class="nn">.fixes</span> <span class="kn">import</span> <span class="n">Fixes</span>
 
 
 <div class="viewcode-block" id="FlightPlan"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan">[docs]</a><span class="k">class</span> <span class="nc">FlightPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A static record of the flight plan.</span>
+<span class="sd">    A static record of a flight plan, which contains entry and exit Contracts and a Route.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FlightPlan.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">Contract</span><span class="p">,</span> <span class="n">exit</span><span class="p">:</span> <span class="n">Contract</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entry: Contract</span>
+<span class="sd">            A contract defining the flight level and time [sec] of entry.</span>
+<span class="sd">        exit: Contract</span>
+<span class="sd">            A contract defining the flight level and time [sec] of exit.</span>
+<span class="sd">        route: Route</span>
+<span class="sd">            The route to be followed.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; flight_plan = FlightPlan(Contract(160, 0.0), Contract(200, 900.0), Route([&quot;ALFA&quot;, &quot;BRAVO&quot;, &quot;CHAR&quot;]))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
@@ -95,7 +107,32 @@
 <div class="viewcode-block" id="FlightPlan.from_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlightPlan</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Construct a new instance from JSON representation.</span>
+<span class="sd">        Construct a new instance from string in JSON format.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s: str</span>
+<span class="sd">            A string representation of a FlightPlan in JSON/dictionary format.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        FlightPlan</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+<span class="sd">        &gt;&gt;&gt; FlightPlan.from_json(</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     {</span>
+<span class="sd">        &gt;&gt;&gt;         &quot;route&quot;: [</span>
+<span class="sd">        &gt;&gt;&gt;             &quot;ALFA&quot;,</span>
+<span class="sd">        &gt;&gt;&gt;             &quot;BRAVO&quot;,</span>
+<span class="sd">        &gt;&gt;&gt;             &quot;CHAR&quot;</span>
+<span class="sd">        &gt;&gt;&gt;         ],</span>
+<span class="sd">        &gt;&gt;&gt;         &quot;entry&quot;: &quot;160FL 00:00:00&quot;,</span>
+<span class="sd">        &gt;&gt;&gt;         &quot;exit&quot;: &quot;200FL 00:15:00&quot;</span>
+<span class="sd">        &gt;&gt;&gt;     }</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt; )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -110,6 +147,15 @@
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlightPlan</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Path to a JSON file with a FlightPlan definition in a dictionary format.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        FlightPlan</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -118,20 +164,42 @@
 <div class="viewcode-block" id="FlightPlan.from_str"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan.from_str">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlightPlan</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Construct a new instance from a string representation.</span>
+<span class="sd">        Construct a new instance from a string representation. This is different to</span>
+<span class="sd">        the from_json method above.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s: str</span>
+<span class="sd">            A string representation of a flight plan.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        FlightPlan</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+<span class="sd">        &gt;&gt;&gt; FlightPlan.from_str(</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     [190.0FL 00:12:00] &gt; FIYRE &gt; EARTH &gt; AIR &gt; SPIRT &gt; [190.0FL 01:47:59]</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt; )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">entry</span> <span class="o">=</span> <span class="n">Contract</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)])</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">Contract</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)])</span>
 
-        <span class="n">exit</span> <span class="o">=</span> <span class="n">Contract</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)])</span>
+        <span class="n">exit</span> <span class="o">=</span> <span class="n">Contract</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)])</span>
 
-        <span class="n">route_str</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">route_str</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
         <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="p">(</span><span class="n">route_str</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="n">FlightPlan</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">exit</span><span class="p">,</span> <span class="n">route</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlightPlan.data"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Serialise the instance to JSON.</span>
+<span class="sd">        Create a dictionary with key/value pairs representing the FlightPlan data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;entry&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;exit&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exit</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;route&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="o">.</span><span class="n">data</span><span class="p">()}</span>
@@ -140,7 +208,11 @@
 
 <div class="viewcode-block" id="FlightPlan.to_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Serialise the instance to JSON.</span>
+<span class="sd">        Serialise the instance to JSON string.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
@@ -148,6 +220,11 @@
 <div class="viewcode-block" id="FlightPlan.save"><a class="viewcode-back" href="../../.././autosummary/starling.core.flight_plan.FlightPlan.html#starling.core.flight_plan.FlightPlan.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the instance to a file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Path to file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -156,6 +233,12 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a human readable representation of the instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        str</span>
+<span class="sd">            A string representation of FlightPlan</span>
+<span class="sd">            (e.g., &quot;[190.0FL 00:12:00] &gt; FIYRE &gt; EARTH &gt; AIR &gt; SPIRT &gt; [190.0FL 01:47:59]&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="si">}</span><span class="s2">] &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="si">}</span><span class="s2"> &gt; [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exit</span><span class="si">}</span><span class="s2">]&quot;</span></div>

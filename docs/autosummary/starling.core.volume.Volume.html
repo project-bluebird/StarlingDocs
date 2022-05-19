@@ -107,13 +107,22 @@
 <h1>starling.core.volume.Volume<a class="headerlink" href="#starling-core-volume-volume" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="starling.core.volume.Volume">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.volume.</span></span><span class="sig-name descname"><span class="pre">Volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.area.Area.html#starling.core.area.Area" title="starling.core.area.Area"><span class="pre">starling.core.area.Area</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.volume.</span></span><span class="sig-name descname"><span class="pre">Volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.area.Area.html#starling.core.area.Area" title="starling.core.area.Area"><span class="pre">starling.core.area.Area</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fundamental unit of three-dimensional space.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.volume.Volume.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.area.Area.html#starling.core.area.Area" title="starling.core.area.Area"><span class="pre">starling.core.area.Area</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.area.Area.html#starling.core.area.Area" title="starling.core.area.Area"><span class="pre">starling.core.area.Area</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>area</strong> (<a class="reference internal" href="starling.core.area.Area.html#starling.core.area.Area" title="starling.core.area.Area"><em>Area</em></a>) – The horizontal cross-section of the Volume (2D).</p></li>
+<li><p><strong>min_fl</strong> (<em>int</em>) – Minimum flight level at which Aircraft are allowed to fly within the Volume.</p></li>
+<li><p><strong>max_fl</strong> (<em>int</em>) – Maximum flight level at which Aircraft are allowed to fly within the Volume.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <p class="rubric">Methods</p>
@@ -130,7 +139,7 @@
 <td><p>Determine if a given position is contained within the Volume.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.volume.Volume.data" title="starling.core.volume.Volume.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>()</p></td>
-<td><p>Get the data as a serialisable dictionary.</p></td>
+<td><p>Create a dictionary with key/value pairs representing the Volume data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.volume.Volume.from_json" title="starling.core.volume.Volume.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(s)</p></td>
 <td><p>Construct a new instance from JSON representation.</p></td>
@@ -142,7 +151,7 @@
 <td><p>Write the instance to a file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.volume.Volume.to_json" title="starling.core.volume.Volume.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
-<td><p>Serialise the instance to JSON.</p></td>
+<td><p>Serialise the instance to JSON string.</p></td>
 </tr>
 </tbody>
 </table>
@@ -150,36 +159,89 @@
 <dt class="sig sig-object py" id="starling.core.volume.Volume.contains">
 <span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D"><span class="pre">starling.core.pos3d.Pos3D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume.contains" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if a given position is contained within the Volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>position</strong> (<a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D"><em>Pos3D</em></a>) – A latitude, longitude, altitude position.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.volume.Volume.data">
 <span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume.data" title="Permalink to this definition"></a></dt>
-<dd><p>Get the data as a serialisable dictionary.</p>
+<dd><p>Create a dictionary with key/value pairs representing the Volume data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.volume.Volume.from_json">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.volume.Volume" title="starling.core.volume.Volume"><span class="pre">starling.core.volume.Volume</span></a></span></span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume.from_json" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from JSON representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – A string representation of the Volume in a JSON structure.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.volume.Volume" title="starling.core.volume.Volume">Volume</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Volume</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="go">    &gt;&gt;&gt;  {</span>
+<span class="go">    &gt;&gt;&gt;    &quot;area&quot;: [</span>
+<span class="go">    &gt;&gt;&gt;        &quot;50.0N 4.0W&quot;,</span>
+<span class="go">    &gt;&gt;&gt;        &quot;50.0N 3.0W&quot;,</span>
+<span class="go">    &gt;&gt;&gt;        &quot;51.0N 3.0W&quot;,</span>
+<span class="go">    &gt;&gt;&gt;        &quot;51.0N 4.0W&quot;</span>
+<span class="go">    &gt;&gt;&gt;    ],</span>
+<span class="go">    &gt;&gt;&gt;    &quot;min_fl&quot;: 0.0,</span>
+<span class="go">    &gt;&gt;&gt;    &quot;max_fl&quot;: 200.0</span>
+<span class="go">    &gt;&gt;&gt; }&#39;&#39;&#39;)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.volume.Volume.load">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.volume.Volume" title="starling.core.volume.Volume"><span class="pre">starling.core.volume.Volume</span></a></span></span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume.load" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>definition.</strong> (<em>Path to a JSON file with a Volume</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.volume.Volume" title="starling.core.volume.Volume">Volume</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.volume.Volume.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume.save" title="Permalink to this definition"></a></dt>
 <dd><p>Write the instance to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.volume.Volume.to_json">
 <span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href=".././modules/starling/core/volume.html#Volume.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.volume.Volume.to_json" title="Permalink to this definition"></a></dt>
-<dd><p>Serialise the instance to JSON.</p>
+<dd><p>Serialise the instance to JSON string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

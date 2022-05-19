@@ -107,13 +107,18 @@
 <h1>starling.core.area.Area<a class="headerlink" href="#starling-core-area-area" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="starling.core.area.Area">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.area.</span></span><span class="sig-name descname"><span class="pre">Area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">Pos2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/area.html#Area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.area.</span></span><span class="sig-name descname"><span class="pre">Area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/area.html#Area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fundamental unit of two-dimensional space.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.area.Area.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">Pos2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/area.html#Area.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/area.html#Area.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>boundary</strong> – The list of 2D points that define the Area boundary.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p class="rubric">Methods</p>
@@ -127,13 +132,13 @@
 <td><p>Construct a new instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.area.Area.contains" title="starling.core.area.Area.contains"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contains</span></code></a>(location[, epsilon])</p></td>
-<td><p>Determine if the given location is contained within the Area including the boundary (within epsilon tolerance).</p></td>
+<td><p>Determine if a given 2D location is contained within the Area including the boundary (within epsilon tolerance).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.area.Area.data" title="starling.core.area.Area.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>()</p></td>
-<td><p>Get the data as a serialisable list.</p></td>
+<td><p>Create a list of strings representing the Area data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.area.Area.from_json" title="starling.core.area.Area.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(s)</p></td>
-<td><p>Construct a new instance from JSON representation.</p></td>
+<td><p>Construct a new instance from a string in JSON format.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.area.Area.intersection" title="starling.core.area.Area.intersection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intersection</span></code></a>(trajectory)</p></td>
 <td><p>Find all intersections between the Area Polygon's LineString and an aircraft Trajectory (converted to LineString).</p></td>
@@ -148,26 +153,64 @@
 <td><p>Write the instance to a file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.area.Area.to_json" title="starling.core.area.Area.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
-<td><p>Serialise the instance to JSON.</p></td>
+<td><p>Serialise the instance to a JSON string.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.area.Area.contains">
 <span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.contains" title="Permalink to this definition"></a></dt>
-<dd><p>Determine if the given location is contained within the Area including the boundary (within epsilon tolerance).</p>
+<dd><p>Determine if a given 2D location is contained within the Area
+including the boundary (within epsilon tolerance).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> (<a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><em>Pos2D</em></a>) – 2D position to use.</p></li>
+<li><p><strong>epsilon</strong> (<em>float = 1e-10</em>) – The tolerance value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.area.Area.data">
-<span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.data" title="Permalink to this definition"></a></dt>
-<dd><p>Get the data as a serialisable list.</p>
+<span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.data" title="Permalink to this definition"></a></dt>
+<dd><p>Create a list of strings representing the Area data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.area.Area.from_json">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.area.Area" title="starling.core.area.Area"><span class="pre">starling.core.area.Area</span></a></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.from_json" title="Permalink to this definition"></a></dt>
-<dd><p>Construct a new instance from JSON representation.</p>
+<dd><p>Construct a new instance from a string in JSON format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – A string representation of an Area in JSON/list format.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.area.Area" title="starling.core.area.Area">Area</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Area</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="sd">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    [</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">   &quot;52.2069N 0.1713E&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">   &quot;50.7350N 3.4153W&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">   &quot;51.4700N 0.4543W&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">   &quot;50.9515N 1.3577W&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    ]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    &#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -193,24 +236,53 @@ r2: A shapely LineString that represents the trajectory</p>
 <dt class="sig sig-object py" id="starling.core.area.Area.load">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.area.Area" title="starling.core.area.Area"><span class="pre">starling.core.area.Area</span></a></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.load" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to a JSON file with an Area definition in a list format.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.area.Area" title="starling.core.area.Area">Area</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.area.Area.on_boundary">
 <span class="sig-name descname"><span class="pre">on_boundary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.on_boundary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.on_boundary" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the given location is on the Area boundary (within epsilon tolerance).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> (<a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><em>Pos2D</em></a>) – 2D position to use.</p></li>
+<li><p><strong>epsilon</strong> (<em>float = 1e-10</em>) – The tolerance value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.area.Area.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/area.html#Area.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.save" title="Permalink to this definition"></a></dt>
 <dd><p>Write the instance to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.area.Area.to_json">
 <span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href=".././modules/starling/core/area.html#Area.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.area.Area.to_json" title="Permalink to this definition"></a></dt>
-<dd><p>Serialise the instance to JSON.</p>
+<dd><p>Serialise the instance to a JSON string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

@@ -109,11 +109,24 @@
 <dt class="sig sig-object py" id="starling.core.flight_plan.FlightPlan">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.flight_plan.</span></span><span class="sig-name descname"><span class="pre">FlightPlan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><span class="pre">starling.core.contract.Contract</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><span class="pre">starling.core.contract.Contract</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/flight_plan.html#FlightPlan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.flight_plan.FlightPlan" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A static record of the flight plan.</p>
+<p>A static record of a flight plan, which contains entry and exit Contracts and a Route.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.flight_plan.FlightPlan.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><span class="pre">starling.core.contract.Contract</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><span class="pre">starling.core.contract.Contract</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/flight_plan.html#FlightPlan.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.flight_plan.FlightPlan.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entry</strong> (<a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><em>Contract</em></a>) – A contract defining the flight level and time [sec] of entry.</p></li>
+<li><p><strong>exit</strong> (<a class="reference internal" href="starling.core.contract.Contract.html#starling.core.contract.Contract" title="starling.core.contract.Contract"><em>Contract</em></a>) – A contract defining the flight level and time [sec] of exit.</p></li>
+<li><p><strong>route</strong> (<a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><em>Route</em></a>) – The route to be followed.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">flight_plan</span> <span class="o">=</span> <span class="n">FlightPlan</span><span class="p">(</span><span class="n">Contract</span><span class="p">(</span><span class="mi">160</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">Contract</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">),</span> <span class="n">Route</span><span class="p">([</span><span class="s2">&quot;ALFA&quot;</span><span class="p">,</span> <span class="s2">&quot;BRAVO&quot;</span><span class="p">,</span> <span class="s2">&quot;CHAR&quot;</span><span class="p">]))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <p class="rubric">Methods</p>
@@ -127,10 +140,10 @@
 <td><p>Construct a new instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.flight_plan.FlightPlan.data" title="starling.core.flight_plan.FlightPlan.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>()</p></td>
-<td><p>Serialise the instance to JSON.</p></td>
+<td><p>Create a dictionary with key/value pairs representing the FlightPlan data.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.flight_plan.FlightPlan.from_json" title="starling.core.flight_plan.FlightPlan.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(s)</p></td>
-<td><p>Construct a new instance from JSON representation.</p></td>
+<td><p>Construct a new instance from string in JSON format.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.flight_plan.FlightPlan.from_str" title="starling.core.flight_plan.FlightPlan.from_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_str</span></code></a>(s)</p></td>
 <td><p>Construct a new instance from a string representation.</p></td>
@@ -142,44 +155,108 @@
 <td><p>Write the instance to a file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.flight_plan.FlightPlan.to_json" title="starling.core.flight_plan.FlightPlan.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
-<td><p>Serialise the instance to JSON.</p></td>
+<td><p>Serialise the instance to JSON string.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.flight_plan.FlightPlan.data">
 <span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href=".././modules/starling/core/flight_plan.html#FlightPlan.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.flight_plan.FlightPlan.data" title="Permalink to this definition"></a></dt>
-<dd><p>Serialise the instance to JSON.</p>
+<dd><p>Create a dictionary with key/value pairs representing the FlightPlan data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.flight_plan.FlightPlan.from_json">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.flight_plan.FlightPlan" title="starling.core.flight_plan.FlightPlan"><span class="pre">starling.core.flight_plan.FlightPlan</span></a></span></span><a class="reference internal" href=".././modules/starling/core/flight_plan.html#FlightPlan.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.flight_plan.FlightPlan.from_json" title="Permalink to this definition"></a></dt>
-<dd><p>Construct a new instance from JSON representation.</p>
+<dd><p>Construct a new instance from string in JSON format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – A string representation of a FlightPlan in JSON/dictionary format.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.flight_plan.FlightPlan" title="starling.core.flight_plan.FlightPlan">FlightPlan</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">FlightPlan</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="sd">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    {</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">        &quot;route&quot;: [</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">            &quot;ALFA&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">            &quot;BRAVO&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">            &quot;CHAR&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">        ],</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">        &quot;entry&quot;: &quot;160FL 00:00:00&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">        &quot;exit&quot;: &quot;200FL 00:15:00&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    }</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    &#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.flight_plan.FlightPlan.from_str">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.flight_plan.FlightPlan" title="starling.core.flight_plan.FlightPlan"><span class="pre">starling.core.flight_plan.FlightPlan</span></a></span></span><a class="reference internal" href=".././modules/starling/core/flight_plan.html#FlightPlan.from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.flight_plan.FlightPlan.from_str" title="Permalink to this definition"></a></dt>
-<dd><p>Construct a new instance from a string representation.</p>
+<dd><p>Construct a new instance from a string representation. This is different to
+the from_json method above.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – A string representation of a flight plan.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.flight_plan.FlightPlan" title="starling.core.flight_plan.FlightPlan">FlightPlan</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">FlightPlan</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="sd">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    [190.0FL 00:12:00] &gt; FIYRE &gt; EARTH &gt; AIR &gt; SPIRT &gt; [190.0FL 01:47:59]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sd">    &#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.flight_plan.FlightPlan.load">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.flight_plan.FlightPlan" title="starling.core.flight_plan.FlightPlan"><span class="pre">starling.core.flight_plan.FlightPlan</span></a></span></span><a class="reference internal" href=".././modules/starling/core/flight_plan.html#FlightPlan.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.flight_plan.FlightPlan.load" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to a JSON file with a FlightPlan definition in a dictionary format.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.flight_plan.FlightPlan" title="starling.core.flight_plan.FlightPlan">FlightPlan</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.flight_plan.FlightPlan.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/flight_plan.html#FlightPlan.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.flight_plan.FlightPlan.save" title="Permalink to this definition"></a></dt>
 <dd><p>Write the instance to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.flight_plan.FlightPlan.to_json">
 <span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href=".././modules/starling/core/flight_plan.html#FlightPlan.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.flight_plan.FlightPlan.to_json" title="Permalink to this definition"></a></dt>
-<dd><p>Serialise the instance to JSON.</p>
+<dd><p>Serialise the instance to JSON string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

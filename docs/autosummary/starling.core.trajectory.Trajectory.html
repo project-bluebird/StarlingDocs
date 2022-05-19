@@ -114,6 +114,12 @@
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos4d.Pos4D.html#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>control_points</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><a class="reference internal" href="starling.core.pos4d.Pos4D.html#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><em>Pos4D</em></a><em>]</em><em>, </em><em>np.ndarray</em><em>]</em>) – A list or array of latitude, longitude, flight level, time points (at least length 2).
+The Trajectory is a line connecting these points.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p class="rubric">Methods</p>
@@ -139,19 +145,16 @@
 <td><p>Construct a new instance from a file.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.min_distance" title="starling.core.trajectory.Trajectory.min_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_distance</span></code></a>(other)</p></td>
-<td><p>Calculate the minimum distance [nmi] to another Trajectory.</p></td>
+<td><p>Calculate the 3D/volumetric minimum distance [nmi] to another Trajectory.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.route" title="starling.core.trajectory.Trajectory.route"><code class="xref py py-obj docutils literal notranslate"><span class="pre">route</span></code></a>()</p></td>
-<td><p>Get the Route of the Trajectory.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.save" title="starling.core.trajectory.Trajectory.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.save" title="starling.core.trajectory.Trajectory.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename)</p></td>
 <td><p>Write the instance to a file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.segments" title="starling.core.trajectory.Trajectory.segments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segments</span></code></a>()</p></td>
-<td><p>Create an iterator of the Trajectory segments.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.segments" title="starling.core.trajectory.Trajectory.segments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segments</span></code></a>()</p></td>
+<td><p>Create an iterator of the Trajectory segments (segment is a line connecting two consecutive 4D points).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.to_json" title="starling.core.trajectory.Trajectory.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
-<td><p>Serialise the instance to JSON.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.to_json" title="starling.core.trajectory.Trajectory.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<td><p>Serialise the instance to JSON string.</p></td>
 </tr>
 </tbody>
 </table>
@@ -163,68 +166,143 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.trajectory.Trajectory.control_points" title="starling.core.trajectory.Trajectory.control_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">control_points</span></code></a></p></td>
-<td><p>Returns the Trajectory as a list of Pos4D.</p></td>
+<td><p>Returns the Trajectory as a list of Pos4D objects.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py property">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.control_points">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">control_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos4d.Pos4D.html#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">Pos4D</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#starling.core.trajectory.Trajectory.control_points" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the Trajectory as a list of Pos4D.</p>
+<dd><p>Returns the Trajectory as a list of Pos4D objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of the latitude, longitude, flight level, time points
+that make up the Trajectory.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="starling.core.pos4d.Pos4D.html#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D">Pos4D</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.data">
 <span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.data" title="Permalink to this definition"></a></dt>
 <dd><p>Get the data as a serialisable list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of strings, each representing a latitude, longitude, flight level, time point.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.from_array">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a></span></span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.from_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.from_array" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from a numpy array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>a</strong> (<em>np.ndarray</em>) – A numpy array representation of the Trajectory.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory">Trajectory</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.from_json">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a></span></span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.from_json" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from JSON representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – A string representation of the Trajectory in a JSON structure.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory">Trajectory</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Trajectory</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1"> [</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">    &quot;50.7351N 3.4153W 120.0FL 00:05:00&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">    &quot;50.9515N 1.3577W 160.0FL 00:35:00&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">    &quot;51.4701N 0.4543W 180.0FL 01:30:25&quot;,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">    &quot;52.2069N 0.1713E 120.0FL 02:15:45&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">]&#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.load">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a></span></span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.load" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to a JSON file with a Trajectory definition.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory">Trajectory</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.min_distance">
 <span class="sig-name descname"><span class="pre">min_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">starling.core.trajectory.Trajectory</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.min_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.min_distance" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the minimum distance [nmi] to another Trajectory.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.route">
-<span class="sig-name descname"><span class="pre">route</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.route.Route.html#starling.core.route.Route" title="starling.core.route.Route"><span class="pre">starling.core.route.Route</span></a></span></span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.route" title="Permalink to this definition"></a></dt>
-<dd><p>Get the Route of the Trajectory.</p>
+<dd><p>Calculate the 3D/volumetric minimum distance [nmi] to another Trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><em>Trajectory</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The 3D/volumetric minimum distance in nautical miles between the two Trajectories.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.save" title="Permalink to this definition"></a></dt>
 <dd><p>Write the instance to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.segments">
 <span class="sig-name descname"><span class="pre">segments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos4d.Pos4D.html#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">Pos4D</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.pos4d.Pos4D.html#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">Pos4D</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.segments" title="Permalink to this definition"></a></dt>
-<dd><p>Create an iterator of the Trajectory segments.</p>
+<dd><p>Create an iterator of the Trajectory segments (segment is a line
+connecting two consecutive 4D points).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The Trajectory segments.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Iterator[tuple[<a class="reference internal" href="starling.core.pos4d.Pos4D.html#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D">Pos4D</a>, Pos4d]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.trajectory.Trajectory.to_json">
 <span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href=".././modules/starling/core/trajectory.html#Trajectory.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.trajectory.Trajectory.to_json" title="Permalink to this definition"></a></dt>
-<dd><p>Serialise the instance to JSON.</p>
+<dd><p>Serialise the instance to JSON string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

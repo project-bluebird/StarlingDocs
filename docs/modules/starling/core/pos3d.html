@@ -65,18 +65,32 @@
   <h1>Source code for starling.core.pos3d</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">.pos2d</span> <span class="kn">import</span> <span class="n">Pos2D</span>
 
 
 <div class="viewcode-block" id="Pos3D"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D">[docs]</a><span class="k">class</span> <span class="nc">Pos3D</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Three-dimensional position over the globe.</span>
+<span class="sd">    Three-dimensional (latitude, longitude, flight level) position over the globe.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Pos3D.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fl</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lat: float</span>
+<span class="sd">            The latitude of the position [deg].</span>
+<span class="sd">        lon: float</span>
+<span class="sd">            The longitude of the position [deg].</span>
+<span class="sd">        fl: float</span>
+<span class="sd">            The altitude of the position in flight levels (FL).</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; pos = Pos3D(50.7, -3.5, 120)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">lat</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">90.0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">lat</span> <span class="o">&gt;</span> <span class="mf">90.0</span><span class="p">):</span>
@@ -94,6 +108,19 @@
     <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a string representation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s: str</span>
+<span class="sd">            A string representation of Pos3D.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Pos3D   </span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; Pos3D(&quot;10.0S 5.0E 120FL&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -110,6 +137,15 @@
     <span class="k">def</span> <span class="nf">from_array</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a numpy array.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        a: np.ndarray</span>
+<span class="sd">            A (3,) numpy array containing the latitude, longitude and flight level.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Pos3D</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
@@ -121,39 +157,86 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the latitude of the point.</span>
+<span class="sd">        Returns the latitude of the point. Allows to access internal numpy</span>
+<span class="sd">        representation using the lat attribute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@lat</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">lat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Changes the latitude value of the location. Allows to modify the internal numpy</span>
+<span class="sd">        representation using the lat attribute.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value: float</span>
+<span class="sd">            The latitude value to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the longitude of the point.</span>
+<span class="sd">        Returns the longitude of the point. Allows to access internal numpy</span>
+<span class="sd">        representation using the lon attribute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="nd">@lon</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">lon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Changes the longitude value of the location. Allows to modify the internal numpy</span>
+<span class="sd">        representation using the lon attribute.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value: float</span>
+<span class="sd">            The longitude value to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">fl</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the flight level of the point.</span>
+<span class="sd">        Returns the flight level of the point. Allows to access internal numpy</span>
+<span class="sd">        representation using the fl attribute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="nd">@fl</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">fl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Changes the flight level of the point. Allows to access internal numpy</span>
+<span class="sd">        representation using the fl attribute.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value: float</span>
+<span class="sd">            The flight value value to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a human readable representation of the instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        str</span>
+<span class="sd">            A string representation of Pos3D (e.g. &quot;10.0S 5.0E 120FL&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fl</span><span class="si">}</span><span class="s2">FL&quot;</span>
@@ -161,6 +244,15 @@
     <span class="k">def</span> <span class="fm">__round__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos3D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Round the position elements to the given precision.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        precision: int</span>
+<span class="sd">            The precision in decimal digits.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Pos3D</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">Pos3D</span><span class="p">(</span>
@@ -172,6 +264,10 @@
 <div class="viewcode-block" id="Pos3D.pos2d"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D.pos2d">[docs]</a>    <span class="k">def</span> <span class="nf">pos2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the two-dimensional location of the position.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Pos2D</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">Pos2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span></div>
@@ -179,6 +275,15 @@
 <div class="viewcode-block" id="Pos3D.pos4d"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D.pos4d">[docs]</a>    <span class="k">def</span> <span class="nf">pos4d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos4D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a four-dimensional control-point of the position with a given time [sec].</span>
+<span class="sd">        </span>
+<span class="sd">         Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time: float</span>
+<span class="sd">            The time in seconds to be used for the 4D location.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Pos4D       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="kn">from</span> <span class="nn">.pos4d</span> <span class="kn">import</span> <span class="n">Pos4D</span>
@@ -190,26 +295,61 @@
 <span class="sd">        Determine the three-dimensional position</span>
 <span class="sd">        a given distance away [nmi] following a given heading [deg].</span>
 <span class="sd">        Flight level is maintained.</span>
+
+<span class="sd">       Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dist: float</span>
+<span class="sd">            The distance to be used in nautical miles.</span>
+<span class="sd">        heading: float</span>
+<span class="sd">            The heading to be used in degrees.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Pos3D</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">proj_pos2d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">heading</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Pos3D</span><span class="p">(</span><span class="n">proj_pos2d</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">proj_pos2d</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Pos3D.bearing_to"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D.bearing_to">[docs]</a>    <span class="k">def</span> <span class="nf">bearing_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Pos3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Pos3D.bearing_to"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D.bearing_to">[docs]</a>    <span class="k">def</span> <span class="nf">bearing_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Pos2D</span><span class="p">,</span> <span class="n">Pos3D</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the bearing [deg] to another location.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other: Union[Pos2D, Pos3D]</span>
+<span class="sd">            The other location to be used.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float</span>
+<span class="sd">            Bearing in degrees.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">pos2d</span><span class="p">())</span> <span class="o">%</span> <span class="mf">360.0</span></div>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="n">Pos3D</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Pos3D.distance"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Pos3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Pos3D.distance"><a class="viewcode-back" href="../../.././autosummary/starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Pos2D</span><span class="p">,</span> <span class="n">Pos3D</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the lateral geodesic distance [nmi] to another position.</span>
-<span class="sd">        Flight level is NOT considered.</span>
+<span class="sd">        Flight level is NOT considered (if provided in Pos3D).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other: Union[Pos2D, Pos3D]</span>
+<span class="sd">            The other location to be used.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float</span>
+<span class="sd">            Distance in nautical miles.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">pos2d</span><span class="p">())</span></div></div>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="n">Pos3D</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

@@ -26,7 +26,6 @@ starling.core.airspace.Airspace
       ~Airspace.from_json
       ~Airspace.get_FLs_entry
       ~Airspace.get_FLs_exit
-      ~Airspace.get_geometry_collection
       ~Airspace.load
       ~Airspace.rotate
       ~Airspace.route_boundary_fixes
@@ -36,7 +35,6 @@ starling.core.airspace.Airspace
       ~Airspace.scale
       ~Airspace.to_json
       ~Airspace.translate
-      ~Airspace.update_airspace
    
    
 

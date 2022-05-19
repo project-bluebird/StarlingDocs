@@ -22,7 +22,6 @@ starling.core.trajectory.Trajectory
       ~Trajectory.from_json
       ~Trajectory.load
       ~Trajectory.min_distance
-      ~Trajectory.route
       ~Trajectory.save
       ~Trajectory.segments
       ~Trajectory.to_json

@@ -109,11 +109,25 @@
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.pos4d.</span></span><span class="sig-name descname"><span class="pre">Pos4D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Four-dimensional control-point.</p>
+<p>Four-dimensional (latitude, longitude, flight level, time) control-point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lat</strong> (<em>float</em>) – The latitude of the control point in degrees.</p></li>
+<li><p><strong>lon</strong> (<em>float</em>) – The longitude of the control point in degrees.</p></li>
+<li><p><strong>fl</strong> (<em>float</em>) – The altitude of the control point in flight levels (FL).</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – The time of the control point in seconds.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pos</span> <span class="o">=</span> <span class="n">Pos4D</span><span class="p">(</span><span class="mf">50.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.5</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <p class="rubric">Methods</p>
@@ -133,7 +147,7 @@
 <td><p>Calculate the geodesic distance [nmi] to another position.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.pos4d.Pos4D.forward" title="starling.core.pos4d.Pos4D.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(dist, heading, speed)</p></td>
-<td><p>Determine the four-dimensional control-point a given distance away [nmi] following a given heading [deg] at a given constant speed [kts].</p></td>
+<td><p>Determine the four-dimensional control-point</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.pos4d.Pos4D.from_array" title="starling.core.pos4d.Pos4D.from_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_array</span></code></a>(a)</p></td>
 <td><p>Construct a new instance from a numpy array.</p></td>
@@ -142,13 +156,13 @@
 <td><p>Construct a new instance from a string representation.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.pos4d.Pos4D.interval" title="starling.core.pos4d.Pos4D.interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interval</span></code></a>(other, speed)</p></td>
-<td><p>Calculate the time interval [sec] to another position given a constant speed [kt].</p></td>
+<td><p>Calculate the time interval [sec] to another position given a constant speed [kts].</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.core.pos4d.Pos4D.pos2d" title="starling.core.pos4d.Pos4D.pos2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pos2d</span></code></a>()</p></td>
-<td><p>Get the two-dimensional location of the control-point.</p></td>
+<td><p>Get the two-dimensional location of the position.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.pos4d.Pos4D.pos3d" title="starling.core.pos4d.Pos4D.pos3d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pos3d</span></code></a>()</p></td>
-<td><p>Get the three-dimensional position of the control-point.</p></td>
+<td><p>Get the three-dimensional location of the position.</p></td>
 </tr>
 </tbody>
 </table>
@@ -175,78 +189,184 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.bearing_to">
-<span class="sig-name descname"><span class="pre">bearing_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.bearing_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.bearing_to" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bearing_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D"><span class="pre">starling.core.pos3d.Pos3D</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.bearing_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.bearing_to" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate the bearing [deg] to another location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>Union</em><em>[</em><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><em>Pos2D</em></a><em>, </em><a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D"><em>Pos3D</em></a><em>, </em><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><em>Pos4D</em></a><em>]</em>) – The other location to be used.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Bearing in degrees.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.distance">
-<span class="sig-name descname"><span class="pre">distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.distance" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the geodesic distance [nmi] to another position.
-Flight level is considered.</p>
+<span class="sig-name descname"><span class="pre">distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D"><span class="pre">starling.core.pos3d.Pos3D</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.distance" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Calculate the geodesic distance [nmi] to another position.
+Flight level is not considered.</p>
+</div></blockquote>
+<dl>
+<dt>Parameters</dt><dd><dl class="simple">
+<dt>other: Union[Pos2D, Pos3D, Pos4D]</dt><dd><p>The other location to be used.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float</dt><dd><p>Distance in nautical miles.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.fl">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fl</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#starling.core.pos4d.Pos4D.fl" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the flight level of the point.</p>
+<dd><p>Returns the flight level of the point. Allows to access internal numpy
+representation using the fl attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heading</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Determine the four-dimensional control-point
+<dd><blockquote>
+<div><p>Determine the four-dimensional control-point
 a given distance away [nmi] following a given heading [deg] at a given constant speed [kts].
 Flight level is maintained.</p>
+</div></blockquote>
+<dl>
+<dt>Parameters</dt><dd><dl class="simple">
+<dt>dist: float</dt><dd><p>The distance to be used in nmi.</p>
+</dd>
+<dt>heading: float</dt><dd><p>The heading to be used in degrees.</p>
+</dd>
+<dt>speed: float</dt><dd><p>The speed to be used in knots.</p>
+</dd>
+</dl>
+<p>Pos4D</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.from_array">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.from_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.from_array" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from a numpy array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>a</strong> (<em>np.ndarray</em>) – A (4,) numpy array containing the latitude, longitude, flight level and time.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D">Pos4D</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.from_str">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.from_str" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a new instance from a string representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – A string representation of Pos4D.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D">Pos4D</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Pos4D</span><span class="p">(</span><span class="s2">&quot;10.0S 5.0E 120FL 02:35:42&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.interval">
 <span class="sig-name descname"><span class="pre">interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><span class="pre">starling.core.pos4d.Pos4D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.interval" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the time interval [sec] to another position given a constant speed [kt].
+<dd><p>Calculate the time interval [sec] to another position given a constant speed [kts].
 Flight level is considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#starling.core.pos4d.Pos4D" title="starling.core.pos4d.Pos4D"><em>Pos4D</em></a>) – The other location to be used.</p></li>
+<li><p><strong>speed</strong> (<em>the speed to be travelled in knots</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The time terval in seconds to travel the distance given the speed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.lat">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lat</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#starling.core.pos4d.Pos4D.lat" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the latitude of the point.</p>
+<dd><p>Returns the latitude of the point. Allows to access internal numpy
+representation using the lat attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.lon">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lon</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#starling.core.pos4d.Pos4D.lon" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the longitude of the point.</p>
+<dd><p>Returns the longitude of the point. Allows to access internal numpy
+representation using the lon attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.pos2d">
 <span class="sig-name descname"><span class="pre">pos2d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D"><span class="pre">starling.core.pos2d.Pos2D</span></a></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.pos2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.pos2d" title="Permalink to this definition"></a></dt>
-<dd><p>Get the two-dimensional location of the control-point.</p>
+<dd><p>Get the two-dimensional location of the position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="starling.core.pos2d.Pos2D.html#starling.core.pos2d.Pos2D" title="starling.core.pos2d.Pos2D">Pos2D</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.pos3d">
 <span class="sig-name descname"><span class="pre">pos3d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D"><span class="pre">starling.core.pos3d.Pos3D</span></a></span></span><a class="reference internal" href=".././modules/starling/core/pos4d.html#Pos4D.pos3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.pos4d.Pos4D.pos3d" title="Permalink to this definition"></a></dt>
-<dd><p>Get the three-dimensional position of the control-point.</p>
+<dd><p>Get the three-dimensional location of the position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="starling.core.pos3d.Pos3D.html#starling.core.pos3d.Pos3D" title="starling.core.pos3d.Pos3D">Pos3D</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="starling.core.pos4d.Pos4D.time">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#starling.core.pos4d.Pos4D.time" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the time of the point.</p>
+<dd><p>Returns the time of the point. Allows to access internal numpy
+representation using the time attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

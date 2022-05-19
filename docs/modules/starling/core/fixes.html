@@ -72,12 +72,21 @@
 
 <div class="viewcode-block" id="Fixes"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes">[docs]</a><span class="k">class</span> <span class="nc">Fixes</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Dictionary of named location on the globe.</span>
+<span class="sd">    Dictionary of named locations (2D positions) on the globe.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Fixes.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">places</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Pos2D</span><span class="p">]):</span>
+<div class="viewcode-block" id="Fixes.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">places</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Pos2D</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        places: dict[str, Pos2D]</span>
+<span class="sd">            A dictionary containing names and 2D positions of fixes.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; fixes = Fixes({&quot;STHPN&quot;: Pos2D(50.9515, -1.3577)})</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">places</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">places</span><span class="p">)</span></div>
@@ -85,7 +94,29 @@
 <div class="viewcode-block" id="Fixes.from_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fixes</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Construct a new instance from JSON representation.</span>
+<span class="sd">        Construct a new instance from a string in JSON format.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s: str</span>
+<span class="sd">            A string representation of Fixes in JSON/dictionary format.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Action</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+<span class="sd">        &gt;&gt;&gt; Fixes.from_json(</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     {</span>
+<span class="sd">        &gt;&gt;&gt;     &quot;CAMBG&quot;: &quot;52.2069N 0.1713E&quot;,</span>
+<span class="sd">        &gt;&gt;&gt;     &quot;EXTER&quot;: &quot;50.7350N 3.4153W&quot;,</span>
+<span class="sd">        &gt;&gt;&gt;     &quot;HTHRW&quot;: &quot;51.4700N 0.4543W&quot;,</span>
+<span class="sd">        &gt;&gt;&gt;     &quot;STHPN&quot;: &quot;50.9515N 1.3577W&quot;</span>
+<span class="sd">        &gt;&gt;&gt;     }</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt; )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">places</span> <span class="o">=</span> <span class="p">{}</span>
@@ -98,6 +129,15 @@
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fixes</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance from a file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Path to a JSON file with a Fixes definition.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Fixes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -105,7 +145,11 @@
 
 <div class="viewcode-block" id="Fixes.data"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the data as a serialisable dictionary.</span>
+<span class="sd">        Create a dictionary with key/value pairs representing the Fixes data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
@@ -116,7 +160,11 @@
 
 <div class="viewcode-block" id="Fixes.to_json"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Serialise the instance to JSON.</span>
+<span class="sd">        Serialise the instance to JSON string.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
@@ -124,6 +172,11 @@
 <div class="viewcode-block" id="Fixes.save"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the instance to a file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Path to file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -131,7 +184,11 @@
 
 <div class="viewcode-block" id="Fixes.centre"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.centre">[docs]</a>    <span class="k">def</span> <span class="nf">centre</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the geometric centre of the Fixes.</span>
+<span class="sd">        Get the geometric centre of the Fixes 2D positions.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Pos2D</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">centre</span> <span class="o">=</span> <span class="n">Pos2D</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
@@ -146,7 +203,12 @@
 
 <div class="viewcode-block" id="Fixes.delta_lat"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.delta_lat">[docs]</a>    <span class="k">def</span> <span class="nf">delta_lat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the latitudinal delta of the Fixes.</span>
+<span class="sd">        Get the latitudinal delta of the Fixes, i.e. the range between minimum and maximum</span>
+<span class="sd">        latitude among all Pos2D positions.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span>
@@ -166,7 +228,12 @@
 
 <div class="viewcode-block" id="Fixes.delta_lon"><a class="viewcode-back" href="../../.././autosummary/starling.core.fixes.Fixes.html#starling.core.fixes.Fixes.delta_lon">[docs]</a>    <span class="k">def</span> <span class="nf">delta_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the longitudinal delta of the Fixes.</span>
+<span class="sd">        Get the longitudinal delta of the Fixes, i.e. the range between minimum and maximum</span>
+<span class="sd">        longitude among all Pos2D positions.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span>

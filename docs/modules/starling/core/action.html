@@ -65,6 +65,7 @@
   <h1>Source code for starling.core.action</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 
 <div class="viewcode-block" id="Action"><a class="viewcode-back" href="../../.././autosummary/starling.core.action.Action.html#starling.core.action.Action">[docs]</a><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
@@ -72,9 +73,36 @@
 <span class="sd">    Fundamental unit of communication between Agent and Predictor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Action.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.action.Action.html#starling.core.action.Action.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="Action.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.action.Action.html#starling.core.action.Action.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callsign: str</span>
+<span class="sd">            The Aircraft callsign.</span>
+<span class="sd">        kind: str</span>
+<span class="sd">            The kind of action. Currently we support.</span>
+<span class="sd">                - `on_route`: automatically follow filed Route</span>
+<span class="sd">                - `set_route`: go directly to named Fix on Route</span>
+<span class="sd">                - `change_heading_to`: change heading to the specified degrees</span>
+<span class="sd">                - `change_heading_by`: change heading by given degrees</span>
+<span class="sd">                - `change_flight_level_to`: go to the specified flight level</span>
+<span class="sd">                - `change_flight_level_by`: descend/ascend by specified flight levels</span>
+<span class="sd">        value: Union[int, float, str]</span>
+<span class="sd">            Allowed values for each Action kind differs:</span>
+<span class="sd">            - `on_route`: any value is permitted (use 0 as convention)</span>
+<span class="sd">            - `set_route`: str</span>
+<span class="sd">            - `change_heading_to`: float</span>
+<span class="sd">            - `change_heading_by`: float</span>
+<span class="sd">            - `change_flight_level_to`: int</span>
+<span class="sd">            - `change_flight_level_by`: int</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; action = Action(&quot;AIR123&quot;, &quot;change_flight_level_to&quot;, 300)</span>
+<span class="sd">        &gt;&gt;&gt; action = Action(&quot;AIR123&quot;, &quot;set_route&quot;, &quot;PORT1&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; action = Action(&quot;AIR123&quot;, &quot;on_route&quot;, 0)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">callsign</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -87,7 +115,20 @@
 <div class="viewcode-block" id="Action.from_str"><a class="viewcode-back" href="../../.././autosummary/starling.core.action.Action.html#starling.core.action.Action.from_str">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Action</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Construct a new instance from string representation.</span>
+<span class="sd">        Construct a new instance from a string representation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s: str</span>
+<span class="sd">            A string representation of Action.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Action</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+<span class="sd">        &gt;&gt;&gt; Action.from_str(&quot;NAX123 change_heading_by 5.0&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -102,6 +143,11 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a human readable representation of the instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        str</span>
+<span class="sd">            A string representation of Action (e.g., &quot;NAX123 change_heading_by 5.0&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">callsign</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span></div>
