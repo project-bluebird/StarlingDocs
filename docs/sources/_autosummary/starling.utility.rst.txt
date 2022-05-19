@@ -31,6 +31,7 @@ starling.utility
    starling.utility.bada
    starling.utility.constants
    starling.utility.convert
+   starling.utility.file
    starling.utility.geometry
    starling.utility.graph
    starling.utility.planner

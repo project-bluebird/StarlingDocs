@@ -1,0 +1,30 @@
+starling.utility.file
+=====================
+
+.. automodule:: starling.utility.file
+  
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      init_directories
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

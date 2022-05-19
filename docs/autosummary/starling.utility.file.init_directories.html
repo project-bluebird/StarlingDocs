@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>starling.utility.svg.line &mdash; Starling 0.1.0 documentation</title>
+  <title>starling.utility.file.init_directories &mdash; Starling 0.1.0 documentation</title>
       <link rel="stylesheet" href=".././static/pygments.css" type="text/css" />
       <link rel="stylesheet" href=".././static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src=".././static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="starling.utility.svg.polygon" href="starling.utility.svg.polygon.html" />
-    <link rel="prev" title="starling.utility.svg.gradient" href="starling.utility.svg.gradient.html" /> 
+    <link rel="next" title="starling.utility.geometry" href="starling.utility.geometry.html" />
+    <link rel="prev" title="starling.utility.file" href="starling.utility.file.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,25 +51,14 @@
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.bada.html">starling.utility.bada</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.constants.html">starling.utility.constants</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.convert.html">starling.utility.convert</a></li>
-<li class="toctree-l3"><a class="reference internal" href="starling.utility.file.html">starling.utility.file</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="starling.utility.file.html">starling.utility.file</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">starling.utility.file.init_directories</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.geometry.html">starling.utility.geometry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.graph.html">starling.utility.graph</a></li>
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.planner.html">starling.utility.planner</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="starling.utility.svg.html">starling.utility.svg</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.circle.html">starling.utility.svg.circle</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.fl_gradient.html">starling.utility.svg.fl_gradient</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.gradient.html">starling.utility.svg.gradient</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">starling.utility.svg.line</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.polygon.html">starling.utility.svg.polygon</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.polyline.html">starling.utility.svg.polyline</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.rectangle.html">starling.utility.svg.rectangle</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.stylise.html">starling.utility.svg.stylise</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.text.html">starling.utility.svg.text</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.transform.html">starling.utility.svg.transform</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.viewport.html">starling.utility.svg.viewport</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.svg.whitespace.html">starling.utility.svg.whitespace</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="starling.utility.svg.html">starling.utility.svg</a></li>
 </ul>
 </li>
 </ul>
@@ -92,10 +81,10 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="starling.html">starling</a> &raquo;</li>
           <li><a href="starling.utility.html">starling.utility</a> &raquo;</li>
-          <li><a href="starling.utility.svg.html">starling.utility.svg</a> &raquo;</li>
-      <li>starling.utility.svg.line</li>
+          <li><a href="starling.utility.file.html">starling.utility.file</a> &raquo;</li>
+      <li>starling.utility.file.init_directories</li>
       <li class="wy-breadcrumbs-aside">
-            <a href=".././sources/./autosummary/starling.utility.svg.line.rst.txt" rel="nofollow"> View page source</a>
+            <a href=".././sources/./autosummary/starling.utility.file.init_directories.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -103,12 +92,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="starling-utility-svg-line">
-<h1>starling.utility.svg.line<a class="headerlink" href="#starling-utility-svg-line" title="Permalink to this headline"></a></h1>
+  <section id="starling-utility-file-init-directories">
+<h1>starling.utility.file.init_directories<a class="headerlink" href="#starling-utility-file-init-directories" title="Permalink to this headline"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="starling.utility.svg.line">
-<span class="sig-prename descclassname"><span class="pre">starling.utility.svg.</span></span><span class="sig-name descname"><span class="pre">line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">style</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/utility/svg.html#line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.svg.line" title="Permalink to this definition"></a></dt>
-<dd><p>SVG line component.</p>
+<dt class="sig sig-object py" id="starling.utility.file.init_directories">
+<span class="sig-prename descclassname"><span class="pre">starling.utility.file.</span></span><span class="sig-name descname"><span class="pre">init_directories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/utility/file.html#init_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.file.init_directories" title="Permalink to this definition"></a></dt>
+<dd><p>Create and clean the list of given directories.</p>
 </dd></dl>
 
 </section>
@@ -117,8 +106,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="starling.utility.svg.gradient.html" class="btn btn-neutral float-left" title="starling.utility.svg.gradient" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="starling.utility.svg.polygon.html" class="btn btn-neutral float-right" title="starling.utility.svg.polygon" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="starling.utility.file.html" class="btn btn-neutral float-left" title="starling.utility.file" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="starling.utility.geometry.html" class="btn btn-neutral float-right" title="starling.utility.geometry" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
