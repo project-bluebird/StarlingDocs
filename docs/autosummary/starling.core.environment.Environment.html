@@ -132,37 +132,40 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.aircraft_lateral_distance" title="starling.core.environment.Environment.aircraft_lateral_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aircraft_lateral_distance</span></code></a>(aircraft_list)</p></td>
 <td><p>Compute distance matrix using lats/lons of aircraft</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.data" title="starling.core.environment.Environment.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.controllable_aircraft" title="starling.core.environment.Environment.controllable_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">controllable_aircraft</span></code></a>()</p></td>
+<td><p>Return callsigns of Aircraft that respond to Agent issued Actions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.data" title="starling.core.environment.Environment.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>()</p></td>
 <td><p>Get the data as a serialisable dictionary.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.distances_to_exit" title="starling.core.environment.Environment.distances_to_exit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distances_to_exit</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.distances_to_exit" title="starling.core.environment.Environment.distances_to_exit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distances_to_exit</span></code></a>()</p></td>
 <td><p>Return distance [nmi] to exit for all active Aircraft.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.exited" title="starling.core.environment.Environment.exited"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exited</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.exited" title="starling.core.environment.Environment.exited"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exited</span></code></a>()</p></td>
 <td><p>Determine which Aircraft have exited the Airspace.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.extract_exterior_coords" title="starling.core.environment.Environment.extract_exterior_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_exterior_coords</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.extract_exterior_coords" title="starling.core.environment.Environment.extract_exterior_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_exterior_coords</span></code></a>()</p></td>
 <td><p>Extract coordinates of the exterior boundary</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.extract_fixes" title="starling.core.environment.Environment.extract_fixes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_fixes</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.extract_fixes" title="starling.core.environment.Environment.extract_fixes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_fixes</span></code></a>()</p></td>
 <td><p>Extract fixes</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.finished" title="starling.core.environment.Environment.finished"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finished</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.finished" title="starling.core.environment.Environment.finished"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finished</span></code></a>()</p></td>
 <td><p>Determine if all Aircraft have exited the Airspace i.e. Scenario is finished.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.from_json" title="starling.core.environment.Environment.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(s)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.from_json" title="starling.core.environment.Environment.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(s)</p></td>
 <td><p>Construct a new instance from JSON representation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.is_active" title="starling.core.environment.Environment.is_active"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_active</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.is_active" title="starling.core.environment.Environment.is_active"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_active</span></code></a>()</p></td>
 <td><p>Determine which Aircraft are active within the Airspace.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.load" title="starling.core.environment.Environment.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.load" title="starling.core.environment.Environment.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename)</p></td>
 <td><p>Construct a new instance from a file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.save" title="starling.core.environment.Environment.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.save" title="starling.core.environment.Environment.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename)</p></td>
 <td><p>Write the instance to a file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.environment.Environment.to_json" title="starling.core.environment.Environment.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.environment.Environment.to_json" title="starling.core.environment.Environment.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Serialise the instance to JSON.</p></td>
 </tr>
 </tbody>
@@ -181,6 +184,12 @@
 <dt class="sig sig-object py" id="starling.core.environment.Environment.aircraft_lateral_distance">
 <span class="sig-name descname"><span class="pre">aircraft_lateral_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aircraft_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/environment.html#Environment.aircraft_lateral_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.environment.Environment.aircraft_lateral_distance" title="Permalink to this definition"></a></dt>
 <dd><p>Compute distance matrix using lats/lons of aircraft</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.environment.Environment.controllable_aircraft">
+<span class="sig-name descname"><span class="pre">controllable_aircraft</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href=".././modules/starling/core/environment.html#Environment.controllable_aircraft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.environment.Environment.controllable_aircraft" title="Permalink to this definition"></a></dt>
+<dd><p>Return callsigns of Aircraft that respond to Agent issued Actions.</p>
 </dd></dl>
 
 <dl class="py method">

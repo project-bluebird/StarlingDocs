@@ -19,6 +19,7 @@ starling.core.environment.Environment
       ~Environment.__init__
       ~Environment.active_aircraft_lateral_distance
       ~Environment.aircraft_lateral_distance
+      ~Environment.controllable_aircraft
       ~Environment.data
       ~Environment.distances_to_exit
       ~Environment.exited
