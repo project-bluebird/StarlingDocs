@@ -31,7 +31,6 @@ starling.agent
    starling.agent.agent
    starling.agent.agent_rule_based
    starling.agent.bc_agent
-   starling.agent.policy_gradient
    starling.agent.random
    starling.agent.simple_heading
    starling.agent.sleeping
