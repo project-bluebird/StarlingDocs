@@ -1,0 +1,31 @@
+starling.manager.event\_handler.EventHandler
+============================================
+
+.. currentmodule:: starling.manager.event_handler
+
+.. autoclass:: EventHandler
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventHandler.__init__
+      ~EventHandler.data
+      ~EventHandler.forward
+      ~EventHandler.from_json
+      ~EventHandler.load
+      ~EventHandler.save
+      ~EventHandler.to_json
+   
+   
+
+   
+   
+   

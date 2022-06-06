@@ -1,0 +1,33 @@
+starling.events
+===============
+
+.. automodule:: starling.events
+  
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   starling.events.aircraft_add
+   starling.events.event
+

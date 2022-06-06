@@ -63,10 +63,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for starling.aircraft_generator.aircraft_generator</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">Route</span>
+<span class="kn">from</span> <span class="nn">..events</span> <span class="kn">import</span> <span class="n">AddAircraftEvent</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">Route</span>
 
 
 <div class="viewcode-block" id="AircraftGenerator"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.aircraft_generator.AircraftGenerator.html#starling.aircraft_generator.aircraft_generator.AircraftGenerator">[docs]</a><span class="k">class</span> <span class="nc">AircraftGenerator</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
@@ -74,8 +78,8 @@
 <span class="sd">    Generate Aircraft for an Airspace.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AircraftGenerator.generate_aircraft"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.aircraft_generator.AircraftGenerator.html#starling.aircraft_generator.aircraft_generator.AircraftGenerator.generate_aircraft">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">generate_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Aircraft</span><span class="p">]:</span>
+<div class="viewcode-block" id="AircraftGenerator.generate_aircraft_events"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.aircraft_generator.AircraftGenerator.html#starling.aircraft_generator.aircraft_generator.AircraftGenerator.generate_aircraft_events">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">generate_aircraft_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">AddAircraftEvent</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a set of Aircraft for an Airspace.</span>
 
@@ -86,8 +90,9 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
-<span class="sd">        Dict[str, Aircraft]</span>
-<span class="sd">            A dictionary with (callsign, Aircraft) items.</span>
+<span class="sd">        List[AddAircraftEvent]</span>
+<span class="sd">            A list of AddAircraftEvents specifying Aircraft to fly through the Airspace and when</span>
+<span class="sd">            to add them to the Environment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">pass</span></div>

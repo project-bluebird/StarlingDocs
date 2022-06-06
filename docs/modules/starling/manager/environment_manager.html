@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>starling.manager.environment_manager &mdash; Starling 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../.././static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../.././static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../.././static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../.././static/documentation_options.js"></script>
+        <script src="../../.././static/jquery.js"></script>
+        <script src="../../.././static/underscore.js"></script>
+        <script src="../../.././static/doctools.js"></script>
+    <script src="../../.././static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Starling
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../.././autosummary/starling.html">starling</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Starling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>starling.manager.environment_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for starling.manager.environment_manager</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">from</span> <span class="nn">starling.core</span> <span class="kn">import</span> <span class="n">Trajectory</span><span class="p">,</span> <span class="n">Environment</span>
+<span class="kn">from</span> <span class="nn">starling.events</span> <span class="kn">import</span> <span class="n">AddAircraftEvent</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">starling.core</span> <span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Airspace</span>
+    <span class="kn">from</span> <span class="nn">starling.predictor</span> <span class="kn">import</span> <span class="n">Predictor</span>
+    <span class="kn">from</span> <span class="nn">starling.manager</span> <span class="kn">import</span> <span class="n">EventHandler</span>
+
+
+<div class="viewcode-block" id="EnvironmentManager"><a class="viewcode-back" href="../../.././autosummary/starling.manager.environment_manager.EnvironmentManager.html#starling.manager.environment_manager.EnvironmentManager">[docs]</a><span class="k">class</span> <span class="nc">EnvironmentManager</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manage and evolve the Environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EnvironmentManager.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.manager.environment_manager.EnvironmentManager.html#starling.manager.environment_manager.EnvironmentManager.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">event_handler</span><span class="p">:</span> <span class="n">EventHandler</span><span class="p">,</span> <span class="n">predictor</span><span class="p">:</span> <span class="n">Predictor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a new instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        airspace: Airspace</span>
+<span class="sd">            The Airspace to be controlled.</span>
+<span class="sd">        event_handler: EventHandler</span>
+<span class="sd">            The EventHandler applies events to the internal environment of the EM.</span>
+<span class="sd">        predictor: Predictor</span>
+<span class="sd">            Aircraft Trajectory prediction used to evolve Aircraft.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">airspace</span><span class="o">=</span><span class="n">airspace</span><span class="p">,</span> <span class="n">aircraft</span><span class="o">=</span><span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_handler</span> <span class="o">=</span> <span class="n">event_handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictor</span> <span class="o">=</span> <span class="n">predictor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions_to_apply</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># keep track of full trajectories travelled by all Aircraft</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EnvironmentManager.get_trajectory"><a class="viewcode-back" href="../../.././autosummary/starling.manager.environment_manager.EnvironmentManager.html#starling.manager.environment_manager.EnvironmentManager.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return full Trajectory travelled by an Aircraft up to current Environment time.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callsign: str</span>
+<span class="sd">            The Aircraft callsign.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Trajectory</span>
+<span class="sd">            The Aircraft Trajectory travelled so far.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="n">callsign</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">full_trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="n">callsign</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">full_trajectory</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="EnvironmentManager.evolve_aircraft"><a class="viewcode-back" href="../../.././autosummary/starling.manager.environment_manager.EnvironmentManager.html#starling.manager.environment_manager.EnvironmentManager.evolve_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">evolve_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsigns</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evolve the specified Aircraft in the Environment for time_step [sec].</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callsigns: List[str]</span>
+<span class="sd">            A list of Aircraft callsigns to evolve in time.</span>
+<span class="sd">        time_step: float</span>
+<span class="sd">            Amount of time in seconds to evolve the Environment for.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Dict[str, Trajectory]</span>
+<span class="sd">            The subtrajectories travelled during time_step. The dictionary keys are Aircraft callsigns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">subtrajectories</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">callsign</span> <span class="ow">in</span> <span class="n">callsigns</span><span class="p">:</span>
+            <span class="n">subtrajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predictor</span><span class="o">.</span><span class="n">future_trajectory</span><span class="p">(</span>
+                <span class="n">callsign</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_to_apply</span>
+            <span class="p">)</span>
+
+            <span class="c1"># if there is no trajectory, move on to the next Aircraft</span>
+            <span class="k">if</span> <span class="n">subtrajectory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># save subtrajectory prediction and move the aircraft</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">travel</span><span class="p">(</span><span class="n">subtrajectory</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">control_points</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subtrajectory</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
+            <span class="n">subtrajectories</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="n">subtrajectory</span>
+
+            <span class="c1"># keep track of what is requested in actions</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">requested_heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predictor</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span>
+                <span class="n">callsign</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">requested_heading</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">requested_fl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predictor</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span>
+                <span class="n">callsign</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">requested_fl</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">on_route</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predictor</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">on_route</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">subtrajectories</span></div>
+
+<div class="viewcode-block" id="EnvironmentManager.observe"><a class="viewcode-back" href="../../.././autosummary/starling.manager.environment_manager.EnvironmentManager.html#starling.manager.environment_manager.EnvironmentManager.observe">[docs]</a>    <span class="k">def</span> <span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Environment</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evolve the Environment: apply Events and update Aircraft Trajectories.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time_step: float</span>
+<span class="sd">            Amount of time [sec] to evolve the Environment for.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Tuple[Environment, Dict[str, Trajectory]]</span>
+<span class="sd">            Return observation of the new state: the updated Environment and the subtrajectories travelled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># to ensure that we start moving aircraft at the correct time, keep track of any new ones</span>
+        <span class="c1"># that may be added</span>
+        <span class="n">upcoming_aircaft_callsigns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">callsign</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_handler</span><span class="o">.</span><span class="n">upcoming</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">AddAircraftEvent</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># enact the events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_handler</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">time_step</span><span class="p">)</span>
+
+        <span class="c1"># track any newly-added aircraft events</span>
+        <span class="n">newly_added_aircraft_events</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">callsign</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">start_time</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_handler</span><span class="o">.</span><span class="n">completed</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">AddAircraftEvent</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">callsign</span> <span class="ow">in</span> <span class="n">upcoming_aircaft_callsigns</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1"># gather the callsigns to be moved</span>
+        <span class="n">aircraft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+        <span class="c1"># gather the time at which movement should start. note that if the aircraft has not</span>
+        <span class="c1"># just been added then it will be the current env time, if not it will be the</span>
+        <span class="c1"># time the aircraft is meant to start moving. this deals with the case where the</span>
+        <span class="c1"># aircraft has to start moving after env.time but before env.time + time_step</span>
+        <span class="n">aircraft_start_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span>
+            <span class="k">if</span> <span class="n">callsign</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">newly_added_aircraft_events</span> <span class="k">else</span> <span class="n">newly_added_aircraft_events</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">callsign</span> <span class="ow">in</span> <span class="n">aircraft</span>
+        <span class="p">])</span>
+
+        <span class="c1"># get the unique start times and sort</span>
+        <span class="n">sorted_unique_start_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">aircraft_start_times</span><span class="p">))</span>
+
+        <span class="c1"># storage for the subtrajectories of all aircraft</span>
+        <span class="n">subtrajectories</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># the time the environment will have after being evolved</span>
+        <span class="n">env_end_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">time_step</span>
+
+        <span class="c1"># move the aircraft in batches, where a batch of aircraft all share the same start time</span>
+        <span class="k">for</span> <span class="n">start_time</span> <span class="ow">in</span> <span class="n">sorted_unique_start_times</span><span class="p">:</span>
+            <span class="c1"># move along the environment&#39;s time to the aircraft&#39;s start time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">start_time</span>
+
+            <span class="c1"># get the aircraft starting at this time</span>
+            <span class="n">starting_aircraft</span> <span class="o">=</span> <span class="n">aircraft</span><span class="p">[</span><span class="n">aircraft_start_times</span> <span class="o">==</span> <span class="n">start_time</span><span class="p">]</span>
+
+            <span class="c1"># calculate the time they should travel for</span>
+            <span class="n">travel_time</span> <span class="o">=</span> <span class="n">env_end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+
+            <span class="c1"># edge case: the aircraft wants to move at the time env.time + step_time,</span>
+            <span class="c1"># in this case nothing needs to be done</span>
+            <span class="k">if</span> <span class="n">travel_time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># move along the corresponding aircraft</span>
+            <span class="n">stj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evolve_aircraft</span><span class="p">(</span><span class="n">starting_aircraft</span><span class="p">,</span> <span class="n">travel_time</span><span class="p">)</span>
+            <span class="n">subtrajectories</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">stj</span><span class="p">)</span>
+
+        <span class="c1"># finally, move the environment time to the end time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">env_end_time</span>
+
+        <span class="c1"># empty all the actions to apply to aircraft</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions_to_apply</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">subtrajectories</span></div>
+
+<div class="viewcode-block" id="EnvironmentManager.receive_actions"><a class="viewcode-back" href="../../.././autosummary/starling.manager.environment_manager.EnvironmentManager.html#starling.manager.environment_manager.EnvironmentManager.receive_actions">[docs]</a>    <span class="k">def</span> <span class="nf">receive_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Store Actions to apply when self.observe() is called. Actions issued to Aircraft that cannot be</span>
+<span class="sd">        controlled by an Agent are discarded.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        actions: List[Action]</span>
+<span class="sd">            List of Actions to issue to Aircraft.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">allowed_actions</span> <span class="o">=</span> <span class="p">[</span><span class="n">action</span> <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">action</span><span class="o">.</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">controllable</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions_to_apply</span> <span class="o">=</span> <span class="n">allowed_actions</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Prosperity.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

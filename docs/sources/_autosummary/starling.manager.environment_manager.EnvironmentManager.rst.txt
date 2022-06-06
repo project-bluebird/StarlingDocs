@@ -1,0 +1,29 @@
+starling.manager.environment\_manager.EnvironmentManager
+========================================================
+
+.. currentmodule:: starling.manager.environment_manager
+
+.. autoclass:: EnvironmentManager
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EnvironmentManager.__init__
+      ~EnvironmentManager.evolve_aircraft
+      ~EnvironmentManager.get_trajectory
+      ~EnvironmentManager.observe
+      ~EnvironmentManager.receive_actions
+   
+   
+
+   
+   
+   

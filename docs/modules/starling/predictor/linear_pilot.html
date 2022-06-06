@@ -63,11 +63,15 @@
            <div itemprop="articleBody">
              
   <h1>Source code for starling.predictor.linear_pilot</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 
-<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">,</span> <span class="n">Pos2D</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Trajectory</span>
 <span class="kn">from</span> <span class="nn">.predictor</span> <span class="kn">import</span> <span class="n">Predictor</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Pos2D</span>
 
 
 <div class="viewcode-block" id="LinearPilot"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.linear_pilot.LinearPilot.html#starling.predictor.linear_pilot.LinearPilot">[docs]</a><span class="k">class</span> <span class="nc">LinearPilot</span><span class="p">(</span><span class="n">Predictor</span><span class="p">):</span>
@@ -77,14 +81,12 @@
 <span class="sd">    instruction, it continues on that heading until an `on_route` or `set_route` action is issued.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="LinearPilot.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.linear_pilot.LinearPilot.html#starling.predictor.linear_pilot.LinearPilot.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">step_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fix_proximity_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="LinearPilot.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.linear_pilot.LinearPilot.html#starling.predictor.linear_pilot.LinearPilot.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fix_proximity_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        environment : Environment</span>
-<span class="sd">            An Environment instance</span>
 <span class="sd">        step_time: float</span>
 <span class="sd">            The internal step time of the predictor. The time taken between each control point within the returned Trajectory is step_time.</span>
 <span class="sd">        fix_proximity_threshold: float</span>
@@ -92,18 +94,7 @@
 <span class="sd">            The next target Fix on Route for the Aircraft is then updated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">step_time</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Step-time must be positive.&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">fix_proximity_threshold</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Fix proximity threshold must be positive.&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">next_fix</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">aircraft</span> <span class="ow">in</span> <span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">next_fix</span><span class="p">[</span><span class="n">aircraft</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">step_time</span> <span class="o">=</span> <span class="n">step_time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fix_proximity_threshold</span> <span class="o">=</span> <span class="n">fix_proximity_threshold</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LinearPilot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">step_time</span><span class="p">,</span> <span class="n">fix_proximity_threshold</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LinearPilot.get_target_pos"><a class="viewcode-back" href="../../.././autosummary/starling.predictor.linear_pilot.LinearPilot.html#starling.predictor.linear_pilot.LinearPilot.get_target_pos">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callsign</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pos2D</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -182,14 +173,11 @@
 
             <span class="n">step</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step_time</span><span class="p">,</span> <span class="n">dt</span> <span class="o">-</span> <span class="n">time</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">start_time</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">time</span><span class="p">):</span>
-
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_heading</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_flight_level</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-
-            <span class="n">control_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">pos3d</span><span class="p">()</span><span class="o">.</span><span class="n">pos4d</span><span class="p">(</span><span class="n">time</span> <span class="o">+</span> <span class="n">step</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_heading</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_flight_level</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
 
             <span class="n">time</span> <span class="o">+=</span> <span class="n">step</span>
+            <span class="n">control_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">pos3d</span><span class="p">()</span><span class="o">.</span><span class="n">pos4d</span><span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">time</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -212,10 +200,12 @@
             <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">heading</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="n">value</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">on_route</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">requested_heading</span> <span class="o">=</span> <span class="n">heading</span> <span class="o">%</span> <span class="mi">360</span>
+
         <span class="k">elif</span> <span class="n">action</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;change_heading_to&quot;</span><span class="p">:</span>
             <span class="n">heading</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">value</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">on_route</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">requested_heading</span> <span class="o">=</span> <span class="n">heading</span> <span class="o">%</span> <span class="mi">360</span>
+
         <span class="k">elif</span> <span class="n">action</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;on_route&quot;</span><span class="p">:</span>
             <span class="c1"># target pos is the next Fix on Route</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span>
@@ -223,6 +213,7 @@
             <span class="n">heading</span> <span class="o">=</span> <span class="n">pos</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">target_pos</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">on_route</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">requested_heading</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">elif</span> <span class="n">action</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;set_route&quot;</span><span class="p">:</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">pos2d</span><span class="p">()</span>
             <span class="n">target_fix</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">value</span>
@@ -233,6 +224,7 @@
             <span class="c1"># save what the next Fix is</span>
             <span class="n">fix_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">target_fix</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">next_fix</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="n">fix_idx</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognised Action kind: </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">kind</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -252,8 +244,10 @@
 
         <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;change_flight_level_by&quot;</span><span class="p">:</span>
             <span class="n">flight_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">fl</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="n">value</span>
+
         <span class="k">elif</span> <span class="n">action</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;change_flight_level_to&quot;</span><span class="p">:</span>
             <span class="n">flight_level</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">value</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognised Action kind: </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">kind</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -290,11 +284,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">new_pos</span><span class="o">.</span><span class="n">lat</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">new_pos</span><span class="o">.</span><span class="n">lon</span>
 
-        <span class="c1"># if route_folliwng - update next_fix</span>
+        <span class="c1"># if route_following - update next_fix</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">on_route</span><span class="p">[</span><span class="n">callsign</span><span class="p">]:</span>
             <span class="n">target_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_target_pos</span><span class="p">(</span><span class="n">callsign</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="n">new_pos</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">target_pos</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_proximity_threshold</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">next_fix</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_fix</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">flight_plan</span><span class="o">.</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">next_fix</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
@@ -310,7 +306,7 @@
 <span class="sd">            Amount of time [sec] to evolve the Aircraft for</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># assume climd/descend rate of 20 FL a minute</span>
+        <span class="c1"># assume climb/descend rate of 20 FL a minute</span>
         <span class="n">rate</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">/</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span>
 
         <span class="n">fl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">aircraft</span><span class="p">[</span><span class="n">callsign</span><span class="p">]</span><span class="o">.</span><span class="n">fl</span>

@@ -17,8 +17,8 @@ starling.aircraft\_generator.tactical.Tactical
    .. autosummary::
    
       ~Tactical.__init__
-      ~Tactical.check_entry_contract
-      ~Tactical.generate_aircraft
+      ~Tactical.create_aircraft_event
+      ~Tactical.generate_aircraft_events
       ~Tactical.get_contract_times
    
    

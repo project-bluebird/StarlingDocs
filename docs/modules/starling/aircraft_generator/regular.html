@@ -63,13 +63,15 @@
            <div itemprop="articleBody">
              
   <h1>Source code for starling.aircraft_generator.regular</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.aircraft_generator</span> <span class="kn">import</span> <span class="n">AircraftGenerator</span>
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">Contract</span><span class="p">,</span> <span class="n">FlightPlan</span><span class="p">,</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">..utility</span> <span class="kn">import</span> <span class="n">convert</span>
+<span class="kn">from</span> <span class="nn">..events</span> <span class="kn">import</span> <span class="n">AddAircraftEvent</span>
 
 
 <div class="viewcode-block" id="Regular"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular">[docs]</a><span class="k">class</span> <span class="nc">Regular</span><span class="p">(</span><span class="n">AircraftGenerator</span><span class="p">):</span>
@@ -99,7 +101,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="n">total_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_aircraft</span> <span class="o">=</span> <span class="n">num_aircraft</span></div>
 
-<div class="viewcode-block" id="Regular.generate_aircraft"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular.generate_aircraft">[docs]</a>    <span class="k">def</span> <span class="nf">generate_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">routes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Aircraft</span><span class="p">]:</span>
+<div class="viewcode-block" id="Regular.generate_aircraft_events"><a class="viewcode-back" href="../../.././autosummary/starling.aircraft_generator.regular.Regular.html#starling.aircraft_generator.regular.Regular.generate_aircraft_events">[docs]</a>    <span class="k">def</span> <span class="nf">generate_aircraft_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airspace</span><span class="p">:</span> <span class="n">Airspace</span><span class="p">,</span> <span class="n">routes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">AddAircraftEvent</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a set of Aircraft for the given Airspace.</span>
 
@@ -112,8 +114,9 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
-<span class="sd">        Dict[str, Aircraft]</span>
-<span class="sd">            A dictionary with (callsign, Aircraft) items.</span>
+<span class="sd">        List[AddAircraftEvent]</span>
+<span class="sd">            A list of AddAircraftEvents specifying Aircraft to fly through the Airspace and when</span>
+<span class="sd">            to add them to the Environment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Create start times for all Aircraft ensuring that the Aircraft starts</span>
@@ -125,7 +128,7 @@
             <span class="n">t</span> <span class="o">+=</span> <span class="n">start_times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">start_times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span>
 
-        <span class="n">aircraft</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">aircraft_events</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">start_time</span> <span class="ow">in</span> <span class="n">start_times</span><span class="p">:</span>
             <span class="n">flight_time</span> <span class="o">=</span> <span class="n">convert</span><span class="o">.</span><span class="n">time_str</span><span class="p">(</span><span class="s2">&quot;00:30:00&quot;</span><span class="p">)</span>
             <span class="n">route</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">routes</span><span class="p">)</span>
@@ -145,11 +148,13 @@
             <span class="n">pos</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">pos3d</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">fl</span><span class="p">)</span>
             <span class="n">heading</span> <span class="o">=</span> <span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">bearing_to</span><span class="p">(</span><span class="n">airspace</span><span class="o">.</span><span class="n">fixes</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
 
-            <span class="n">aircraft</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;AIR</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">aircraft</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span>
-                <span class="n">flight_plan</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">vertical_speed</span><span class="p">,</span> <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span>
+            <span class="n">aircraft</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span>
+                <span class="n">flight_plan</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">fl</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">vertical_speed</span>
             <span class="p">)</span>
+            <span class="n">callsign</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;AIR</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">aircraft_events</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">aircraft_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AddAircraftEvent</span><span class="p">(</span><span class="n">callsign</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">aircraft</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">aircraft</span></div></div>
+        <span class="k">return</span> <span class="n">aircraft_events</span></div></div>
 </pre></div>
 
            </div>

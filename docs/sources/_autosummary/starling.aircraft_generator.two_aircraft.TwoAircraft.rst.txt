@@ -17,7 +17,7 @@ starling.aircraft\_generator.two\_aircraft.TwoAircraft
    .. autosummary::
    
       ~TwoAircraft.__init__
-      ~TwoAircraft.generate_aircraft
+      ~TwoAircraft.generate_aircraft_events
       ~TwoAircraft.get_climber_contract_FLs
       ~TwoAircraft.get_contract_times
       ~TwoAircraft.get_descender_contract_FLs

@@ -32,6 +32,8 @@
    starling.aircraft_generator
    starling.airspace_generator
    starling.core
+   starling.events
+   starling.manager
    starling.objective
    starling.predictor
    starling.render

@@ -1,0 +1,27 @@
+starling.events.event.Event
+===========================
+
+.. currentmodule:: starling.events.event
+
+.. autoclass:: Event
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Event.__init__
+      ~Event.data
+      ~Event.run
+   
+   
+
+   
+   
+   

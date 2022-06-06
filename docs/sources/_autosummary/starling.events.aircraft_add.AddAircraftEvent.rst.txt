@@ -1,0 +1,31 @@
+starling.events.aircraft\_add.AddAircraftEvent
+==============================================
+
+.. currentmodule:: starling.events.aircraft_add
+
+.. autoclass:: AddAircraftEvent
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AddAircraftEvent.__init__
+      ~AddAircraftEvent.data
+      ~AddAircraftEvent.from_json
+      ~AddAircraftEvent.load
+      ~AddAircraftEvent.run
+      ~AddAircraftEvent.save
+      ~AddAircraftEvent.to_json
+   
+   
+
+   
+   
+   

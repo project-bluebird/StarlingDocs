@@ -1,0 +1,33 @@
+starling.manager
+================
+
+.. automodule:: starling.manager
+  
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   starling.manager.environment_manager
+   starling.manager.event_handler
+

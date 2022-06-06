@@ -17,7 +17,7 @@ starling.aircraft\_generator.regular.Regular
    .. autosummary::
    
       ~Regular.__init__
-      ~Regular.generate_aircraft
+      ~Regular.generate_aircraft_events
       ~Regular.get_contract_times
    
    
