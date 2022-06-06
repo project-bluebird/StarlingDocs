@@ -1,0 +1,6 @@
+starling.utility.bada.flight\_condition
+=======================================
+
+.. currentmodule:: starling.utility.bada
+
+.. autofunction:: flight_condition

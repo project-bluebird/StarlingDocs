@@ -25,6 +25,7 @@ starling.core.aircraft.Aircraft
       ~Aircraft.pos2d
       ~Aircraft.pos3d
       ~Aircraft.save
+      ~Aircraft.set_bada_parameters
       ~Aircraft.to_json
       ~Aircraft.travel
    

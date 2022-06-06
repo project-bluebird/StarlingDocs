@@ -112,7 +112,7 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.core.atmosphere.</span></span><span class="sig-name descname"><span class="pre">Atmosphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class to describe the atmospheric conditions in a BADA atmospheric model.
-See ECC Technical/Scientific Report No. 2010-001 for specific details.
+See EEC Technical/Scientific Report No. 2010-001 for specific details.
 If you instantiate this class without any arguments it will return by
 default an ISA (International Standard Atmosphere). Note below MSL refers
 to mean sea level.</p>
@@ -142,23 +142,65 @@ altitude of zero (in Pa)</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.__init__" title="starling.core.atmosphere.Atmosphere.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([delta_T, delta_P])</p></td>
 <td><p>Construct a new instance of an atmosphere</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.density_from_fl" title="starling.core.atmosphere.Atmosphere.density_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">density_from_fl</span></code></a>(flight_level)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.cas_to_tas" title="starling.core.atmosphere.Atmosphere.cas_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cas_to_tas</span></code></a>(flight_level, calibrated_air_speed)</p></td>
+<td><p>Convert calibrated air speed (CAS) to true air speed (TAS).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.density_from_fl" title="starling.core.atmosphere.Atmosphere.density_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">density_from_fl</span></code></a>(flight_level)</p></td>
 <td><p>Calculate the density in an atmosphere at a given flight level.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.geodet_altitude_from_fl" title="starling.core.atmosphere.Atmosphere.geodet_altitude_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geodet_altitude_from_fl</span></code></a>(flight_level)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.geodet_altitude_from_fl" title="starling.core.atmosphere.Atmosphere.geodet_altitude_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geodet_altitude_from_fl</span></code></a>(flight_level)</p></td>
 <td><p>Calculate the geodetic height at a given flight level.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.geopot_altitude_from_fl" title="starling.core.atmosphere.Atmosphere.geopot_altitude_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geopot_altitude_from_fl</span></code></a>(flight_level)</p></td>
-<td><p>Calculate the geopotential height at a given flight level, by first converting the flight level to pressure altitude (Hp) and the using equations 3-31 in ECC Technical/Scientific Report No.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.geopot_altitude_from_fl" title="starling.core.atmosphere.Atmosphere.geopot_altitude_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geopot_altitude_from_fl</span></code></a>(flight_level)</p></td>
+<td><p>Calculate the geopotential height at a given flight level, by first converting the flight level to pressure altitude (Hp) and the using equations 3-31 in EEC Technical/Scientific Report No.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.gs_to_tas" title="starling.core.atmosphere.Atmosphere.gs_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gs_to_tas</span></code></a>(ground_speed)</p></td>
+<td><p>Convert ground speed (GS) to true air speed (TAS).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.mach_cas_trans_altitude" title="starling.core.atmosphere.Atmosphere.mach_cas_trans_altitude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mach_cas_trans_altitude</span></code></a>(mach, ...)</p></td>
+<td><p>For given mach number and calibrated air speed find the pressure altitude at which these two quantities represent the same true air speed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.mach_to_tas" title="starling.core.atmosphere.Atmosphere.mach_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mach_to_tas</span></code></a>(flight_level, mach)</p></td>
+<td><p>Converts the mach number to a true airspeed (TAS).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.pressure_from_fl" title="starling.core.atmosphere.Atmosphere.pressure_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pressure_from_fl</span></code></a>(flight_level)</p></td>
 <td><p>Calculate the pressure in an atmosphere at a given flight level.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.temperature_from_fl" title="starling.core.atmosphere.Atmosphere.temperature_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">temperature_from_fl</span></code></a>(flight_level)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.tas_to_cas" title="starling.core.atmosphere.Atmosphere.tas_to_cas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_cas</span></code></a>(flight_level, true_air_speed)</p></td>
+<td><p>Convert true air speed (TAS) to calibrated air speed (CAS).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.tas_to_gs" title="starling.core.atmosphere.Atmosphere.tas_to_gs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_gs</span></code></a>(true_air_speed)</p></td>
+<td><p>Convert true air speed (TAS) to ground speed (GS).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.tas_to_mach" title="starling.core.atmosphere.Atmosphere.tas_to_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_mach</span></code></a>(flight_level, true_air_speed)</p></td>
+<td><p>Converts the true airspeed (TAS) to a mach number.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#starling.core.atmosphere.Atmosphere.temperature_from_fl" title="starling.core.atmosphere.Atmosphere.temperature_from_fl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">temperature_from_fl</span></code></a>(flight_level)</p></td>
 <td><p>Calculate the temperature in an atmosphere at a given flight level.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.cas_to_tas">
+<span class="sig-name descname"><span class="pre">cas_to_tas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibrated_air_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.cas_to_tas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.cas_to_tas" title="Permalink to this definition"></a></dt>
+<dd><p>Convert calibrated air speed (CAS) to true air speed (TAS).
+See equation 3.1-23 in EEC Technical/Scientific Report No. 2010-003.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flight_level</strong> (<em>float</em>) – A flight level</p></li>
+<li><p><strong>calibrated_air_speed</strong> (<em>float</em>) – The calibrated air speed of the aircraft (in m/s)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The true air speed of the aircraft (in m/s)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.density_from_fl">
 <span class="sig-name descname"><span class="pre">density_from_fl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.density_from_fl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.density_from_fl" title="Permalink to this definition"></a></dt>
@@ -182,7 +224,7 @@ height.</p>
 <span class="sig-name descname"><span class="pre">geodet_altitude_from_fl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.geodet_altitude_from_fl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.geodet_altitude_from_fl" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate the geodetic height at a given flight level. Here we
 first calculate the geopotential height and then convert to
-geodetic height using equation 2-7 in ECC Technical/Scientific Report
+geodetic height using equation 2-7 in EEC Technical/Scientific Report
 No. 2010-001.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -203,7 +245,7 @@ height.</p>
 <span class="sig-name descname"><span class="pre">geopot_altitude_from_fl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.geopot_altitude_from_fl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.geopot_altitude_from_fl" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate the geopotential height at a given flight level, by
 first converting the flight level to pressure altitude (Hp) and
-the using equations 3-31 in ECC Technical/Scientific Report
+the using equations 3-31 in EEC Technical/Scientific Report
 No. 2010-001.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -220,11 +262,74 @@ level height.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.gs_to_tas">
+<span class="sig-name descname"><span class="pre">gs_to_tas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ground_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.gs_to_tas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.gs_to_tas" title="Permalink to this definition"></a></dt>
+<dd><p>Convert ground speed (GS) to true air speed (TAS).
+This is merely a holding routine. For the moment the airspeed and
+ground speed are set to be equal. I.e. we are ignoring any
+correction due to windspeed at the location of the aircraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ground_speed</strong> (<em>float</em>) – The ground speed of the aircraft (in m/s)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The true air speed of the aircraft (in m/s)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.mach_cas_trans_altitude">
+<span class="sig-name descname"><span class="pre">mach_cas_trans_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibrated_air_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.mach_cas_trans_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.mach_cas_trans_altitude" title="Permalink to this definition"></a></dt>
+<dd><p>For given mach number and calibrated air speed find the pressure altitude at which
+these two quantities represent the same true air speed.
+See equations 3.1-27 to 3.1-29 in EEC Technical/Scientific Report No. 2010-003.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mach</strong> (<em>float</em>) – The given mach number</p></li>
+<li><p><strong>calibrated_air_speed</strong> (<em>float</em>) – The given calibrated air speed (in m/s)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transition pressure altitude (in m)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.mach_to_tas">
+<span class="sig-name descname"><span class="pre">mach_to_tas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.mach_to_tas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.mach_to_tas" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the mach number to a true airspeed (TAS).
+See equation 3.1-26 in EEC Technical/Scientific Report No. 2010-003.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flight_level</strong> (<em>float</em>) – A flight level</p></li>
+<li><p><strong>mach</strong> (<em>float</em>) – The mach number of the aircraft (dimensionless)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The aircrafts true air speed (in m/s)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.pressure_from_fl">
 <span class="sig-name descname"><span class="pre">pressure_from_fl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.pressure_from_fl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.pressure_from_fl" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate the pressure in an atmosphere at a given flight level.
 Note here we first convert the flight level to a pressure altitude (Hp)
-See equations 3.26 in ECC Technical/Scientific Report No. 2010-001.</p>
+See equations 3.26 in EEC Technical/Scientific Report No. 2010-001.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>flight_level</strong> (<em>float</em>) – A flight level</p>
@@ -240,11 +345,73 @@ height.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.tas_to_cas">
+<span class="sig-name descname"><span class="pre">tas_to_cas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_air_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.tas_to_cas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.tas_to_cas" title="Permalink to this definition"></a></dt>
+<dd><p>Convert true air speed (TAS) to calibrated air speed (CAS).
+See equation 3.1-24 in EEC Technical/Scientific Report No. 2010-003.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flight_level</strong> (<em>float</em>) – A flight level</p></li>
+<li><p><strong>true_air_speed</strong> (<em>float</em>) – The true air speed of the aircraft (in m/s)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The calibrated air speed of the aircraft (in m/s)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.tas_to_gs">
+<span class="sig-name descname"><span class="pre">tas_to_gs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_air_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.tas_to_gs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.tas_to_gs" title="Permalink to this definition"></a></dt>
+<dd><p>Convert true air speed (TAS) to ground speed (GS).
+This is merely a holding routine. For the moment the airspeed and
+ground speed are set to be equal. I.e. we are ignoring any
+correction due to windspeed at the location of the aircraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>true_air_speed</strong> (<em>float</em>) – The true air speed of the aircraft (in m/s)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The ground speed of the aircraft (in m/s)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.tas_to_mach">
+<span class="sig-name descname"><span class="pre">tas_to_mach</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_air_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.tas_to_mach"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.tas_to_mach" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the true airspeed (TAS) to a mach number.
+See equation 3.1-26 in EEC Technical/Scientific Report No. 2010-003.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flight_level</strong> (<em>float</em>) – A flight level</p></li>
+<li><p><strong>true_air_speed</strong> (<em>float</em>) – The true air speed of the aircraft (in m/s)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The aircrafts speed as a mach number (dimensionless)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="starling.core.atmosphere.Atmosphere.temperature_from_fl">
 <span class="sig-name descname"><span class="pre">temperature_from_fl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/core/atmosphere.html#Atmosphere.temperature_from_fl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.core.atmosphere.Atmosphere.temperature_from_fl" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate the temperature in an atmosphere at a given flight level.
 Note here we first convert the flight level to a pressure altitude (Hp)
-See equations 3.28 in ECC Technical/Scientific Report No. 2010-001.</p>
+See equations 3.28 in EEC Technical/Scientific Report No. 2010-001.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>flight_level</strong> (<em>float</em>) – A flight level</p>

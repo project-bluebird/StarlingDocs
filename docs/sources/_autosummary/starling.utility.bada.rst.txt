@@ -14,16 +14,15 @@ starling.utility.bada
    .. autosummary::
       :toctree:
    
-      change_in_pressure_height
-      dHp_dt
+      bada_dy_dt
+      change_in_pressure_height_and_mass
       energy_share_factor
+      flight_condition
       get_banking_angle
       get_drag
-      get_maximum_climb_thrust
       get_thrust
-      get_thrust_and_drag
-      gs_to_tas
-      tas_to_mach
+      rate_of_mass_change
+      reduced_climb_power_correction
    
    
 

@@ -20,7 +20,6 @@ starling.core.aircraft
       :template: custom-class-template.rst
    
       Aircraft
-      BadaAircraft
    
    
 

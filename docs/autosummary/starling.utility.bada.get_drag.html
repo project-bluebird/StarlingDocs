@@ -18,7 +18,7 @@
     <script src=".././static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="starling.utility.bada.get_maximum_climb_thrust" href="starling.utility.bada.get_maximum_climb_thrust.html" />
+    <link rel="next" title="starling.utility.bada.get_thrust" href="starling.utility.bada.get_thrust.html" />
     <link rel="prev" title="starling.utility.bada.get_banking_angle" href="starling.utility.bada.get_banking_angle.html" /> 
 </head>
 
@@ -51,16 +51,15 @@
 <li class="toctree-l2"><a class="reference internal" href="starling.runner.html">starling.runner</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="starling.utility.html">starling.utility</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="starling.utility.bada.html">starling.utility.bada</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html">starling.utility.bada.change_in_pressure_height</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.dHp_dt.html">starling.utility.bada.dHp_dt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.bada_dy_dt.html">starling.utility.bada.bada_dy_dt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.change_in_pressure_height_and_mass.html">starling.utility.bada.change_in_pressure_height_and_mass</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.energy_share_factor.html">starling.utility.bada.energy_share_factor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.flight_condition.html">starling.utility.bada.flight_condition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_banking_angle.html">starling.utility.bada.get_banking_angle</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">starling.utility.bada.get_drag</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_maximum_climb_thrust.html">starling.utility.bada.get_maximum_climb_thrust</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_thrust.html">starling.utility.bada.get_thrust</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_thrust_and_drag.html">starling.utility.bada.get_thrust_and_drag</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.gs_to_tas.html">starling.utility.bada.gs_to_tas</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.tas_to_mach.html">starling.utility.bada.tas_to_mach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.rate_of_mass_change.html">starling.utility.bada.rate_of_mass_change</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.reduced_climb_power_correction.html">starling.utility.bada.reduced_climb_power_correction</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.constants.html">starling.utility.constants</a></li>
@@ -107,15 +106,18 @@
 <h1>starling.utility.bada.get_drag<a class="headerlink" href="#starling-utility-bada-get-drag" title="Permalink to this headline"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="starling.utility.bada.get_drag">
-<span class="sig-prename descclassname"><span class="pre">starling.utility.bada.</span></span><span class="sig-name descname"><span class="pre">get_drag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bada_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_air_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">banking_angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/utility/bada.html#get_drag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.bada.get_drag" title="Permalink to this definition"></a></dt>
-<dd><p>This function computes the drag on an aircraft as described in the BADA manual.</p>
+<span class="sig-prename descclassname"><span class="pre">starling.utility.bada.</span></span><span class="sig-name descname"><span class="pre">get_drag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bada_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_air_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">banking_angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aircraft_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/utility/bada.html#get_drag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.bada.get_drag" title="Permalink to this definition"></a></dt>
+<dd><p>This function computes the drag on an aircraft. Here we use equations 3.6-1
+to 3.6-5 in EEC Technical/Scientific Report No. 2010-003.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bada_parameters</strong> (<em>dict</em>) – Dictionary or aircraft parameters from the BADA database.</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – The mass of the aircraft (in kg)</p></li>
 <li><p><strong>true_air_speed</strong> (<em>float</em>) – The true air speed (in m/s)</p></li>
 <li><p><strong>density</strong> (<em>float</em>) – The density of the air.</p></li>
-<li><p><strong>angle</strong> (<em>banking</em>) – The abnking angle of the airplane.</p></li>
+<li><p><strong>angle</strong> (<em>banking</em>) – The banking angle of the airplane.</p></li>
+<li><p><strong>aircraft_state</strong> (<em>str</em>) – The state of the aircraft</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -134,7 +136,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="starling.utility.bada.get_banking_angle.html" class="btn btn-neutral float-left" title="starling.utility.bada.get_banking_angle" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="starling.utility.bada.get_maximum_climb_thrust.html" class="btn btn-neutral float-right" title="starling.utility.bada.get_maximum_climb_thrust" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="starling.utility.bada.get_thrust.html" class="btn btn-neutral float-right" title="starling.utility.bada.get_thrust" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

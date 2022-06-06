@@ -18,8 +18,8 @@
     <script src=".././static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="starling.utility.bada.get_banking_angle" href="starling.utility.bada.get_banking_angle.html" />
-    <link rel="prev" title="starling.utility.bada.dHp_dt" href="starling.utility.bada.dHp_dt.html" /> 
+    <link rel="next" title="starling.utility.bada.flight_condition" href="starling.utility.bada.flight_condition.html" />
+    <link rel="prev" title="starling.utility.bada.change_in_pressure_height_and_mass" href="starling.utility.bada.change_in_pressure_height_and_mass.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,16 +51,15 @@
 <li class="toctree-l2"><a class="reference internal" href="starling.runner.html">starling.runner</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="starling.utility.html">starling.utility</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="starling.utility.bada.html">starling.utility.bada</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html">starling.utility.bada.change_in_pressure_height</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.dHp_dt.html">starling.utility.bada.dHp_dt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.bada_dy_dt.html">starling.utility.bada.bada_dy_dt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.change_in_pressure_height_and_mass.html">starling.utility.bada.change_in_pressure_height_and_mass</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">starling.utility.bada.energy_share_factor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.flight_condition.html">starling.utility.bada.flight_condition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_banking_angle.html">starling.utility.bada.get_banking_angle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_drag.html">starling.utility.bada.get_drag</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_maximum_climb_thrust.html">starling.utility.bada.get_maximum_climb_thrust</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_thrust.html">starling.utility.bada.get_thrust</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_thrust_and_drag.html">starling.utility.bada.get_thrust_and_drag</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.gs_to_tas.html">starling.utility.bada.gs_to_tas</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.tas_to_mach.html">starling.utility.bada.tas_to_mach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.rate_of_mass_change.html">starling.utility.bada.rate_of_mass_change</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.reduced_climb_power_correction.html">starling.utility.bada.reduced_climb_power_correction</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.constants.html">starling.utility.constants</a></li>
@@ -107,13 +106,13 @@
 <h1>starling.utility.bada.energy_share_factor<a class="headerlink" href="#starling-utility-bada-energy-share-factor" title="Permalink to this headline"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="starling.utility.bada.energy_share_factor">
-<span class="sig-prename descclassname"><span class="pre">starling.utility.bada.</span></span><span class="sig-name descname"><span class="pre">energy_share_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aircraft_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/utility/bada.html#energy_share_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.bada.energy_share_factor" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">starling.utility.bada.</span></span><span class="sig-name descname"><span class="pre">energy_share_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/utility/bada.html#energy_share_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.bada.energy_share_factor" title="Permalink to this definition"></a></dt>
 <dd><p>Given a mach number calculate energy share factor. See equations
-3.2-8 to 3.2-11 in ECC Technical/Scientific Report No. 2010-003.</p>
+3.2-8 to 3.2-11 in EEC Technical/Scientific Report No. 2010-003.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>aircraft_state</strong> (<em>str</em>) – The state of the aircraft</p></li>
+<li><p><strong>flight_condition</strong> (<em>The</em>) – The flight condition of the aircraft</p></li>
 <li><p><strong>mach</strong> (<em>float</em>) – The aircrafts speed as a mach number (dimensionless)</p></li>
 <li><p><strong>temperature</strong> (<em>float</em>) – The atmospheric temperature at height of the aircraft (in K)</p></li>
 <li><p><strong>delta_t</strong> (<em>float</em>) – The BADA atmosphere temperature differential at a pressure
@@ -138,8 +137,8 @@ altitude of zero (in K)</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="starling.utility.bada.dHp_dt.html" class="btn btn-neutral float-left" title="starling.utility.bada.dHp_dt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="starling.utility.bada.get_banking_angle.html" class="btn btn-neutral float-right" title="starling.utility.bada.get_banking_angle" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="starling.utility.bada.change_in_pressure_height_and_mass.html" class="btn btn-neutral float-left" title="starling.utility.bada.change_in_pressure_height_and_mass" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="starling.utility.bada.flight_condition.html" class="btn btn-neutral float-right" title="starling.utility.bada.flight_condition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

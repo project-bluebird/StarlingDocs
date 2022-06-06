@@ -17,10 +17,17 @@ starling.core.atmosphere.Atmosphere
    .. autosummary::
    
       ~Atmosphere.__init__
+      ~Atmosphere.cas_to_tas
       ~Atmosphere.density_from_fl
       ~Atmosphere.geodet_altitude_from_fl
       ~Atmosphere.geopot_altitude_from_fl
+      ~Atmosphere.gs_to_tas
+      ~Atmosphere.mach_cas_trans_altitude
+      ~Atmosphere.mach_to_tas
       ~Atmosphere.pressure_from_fl
+      ~Atmosphere.tas_to_cas
+      ~Atmosphere.tas_to_gs
+      ~Atmosphere.tas_to_mach
       ~Atmosphere.temperature_from_fl
    
    

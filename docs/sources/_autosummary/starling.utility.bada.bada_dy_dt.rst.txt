@@ -1,0 +1,6 @@
+starling.utility.bada.bada\_dy\_dt
+==================================
+
+.. currentmodule:: starling.utility.bada
+
+.. autofunction:: bada_dy_dt

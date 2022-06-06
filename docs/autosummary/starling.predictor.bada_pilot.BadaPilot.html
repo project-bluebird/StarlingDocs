@@ -96,12 +96,9 @@
 <dt class="sig sig-object py" id="starling.predictor.bada_pilot.BadaPilot">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">starling.predictor.bada_pilot.</span></span><span class="sig-name descname"><span class="pre">BadaPilot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_proximity_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href=".././modules/starling/predictor/bada_pilot.html#BadaPilot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.predictor.bada_pilot.BadaPilot" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="starling.predictor.predictor.Predictor.html#starling.predictor.predictor.Predictor" title="starling.predictor.predictor.Predictor"><code class="xref py py-class docutils literal notranslate"><span class="pre">starling.predictor.predictor.Predictor</span></code></a></p>
-<p>Evolves the Aircraft with constant speed along it’s heading.
-If aircraft is in Route following mode, the heading is updated accordingly.</p>
-<p>Aircraft can be instructed to go directly to any Fix on its Route by giving a set_route command.
-Aircraft also responds to change_heading_* actions. If Aircraft is “on heading”, it continues on
-that heading until an on_route or set_route action is issued, returning the Aircraft to Route
-following behaviour.</p>
+<p>Evolves Aircraft with constant speed and vertical speed along it’s heading. Responds to lateral and vertical Actions.
+If aircraft is in Route following mode, the heading is updated when a Fix is passed. If Aircraft is given a <cite>change_heading_*</cite>
+instruction, it continues on that heading until an <cite>on_route</cite> or <cite>set_route</cite> action is issued.</p>
 <p>The rate of climb or descent is determined using a BADA model implementation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.predictor.bada_pilot.BadaPilot.__init__">
@@ -129,7 +126,7 @@ The next target Fix on Route for the Aircraft is then updated.</p></li>
 <td><p>Construct a new instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#starling.predictor.bada_pilot.BadaPilot.future_trajectory" title="starling.predictor.bada_pilot.BadaPilot.future_trajectory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">future_trajectory</span></code></a>(callsign, environment, dt, ...)</p></td>
-<td><p>Predict the Trajectory evolution of a single Aircraft within the Environment for dt (delta t).</p></td>
+<td><p>Predict the Trajectory evolution of a single Aircraft within the Environment for dt amount of time.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#starling.predictor.bada_pilot.BadaPilot.get_target_pos" title="starling.predictor.bada_pilot.BadaPilot.get_target_pos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_target_pos</span></code></a>(callsign)</p></td>
 <td><p>Get Pos2D of next Fix on Route.</p></td>
@@ -151,7 +148,7 @@ The next target Fix on Route for the Aircraft is then updated.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="starling.predictor.bada_pilot.BadaPilot.future_trajectory">
 <span class="sig-name descname"><span class="pre">future_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callsign</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><span class="pre">Environment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="starling.core.action.Action.html#starling.core.action.Action" title="starling.core.action.Action"><span class="pre">Action</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="starling.core.trajectory.Trajectory.html#starling.core.trajectory.Trajectory" title="starling.core.trajectory.Trajectory"><span class="pre">Trajectory</span></a></span></span><a class="reference internal" href=".././modules/starling/predictor/bada_pilot.html#BadaPilot.future_trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.predictor.bada_pilot.BadaPilot.future_trajectory" title="Permalink to this definition"></a></dt>
-<dd><p>Predict the Trajectory evolution of a single Aircraft within the Environment for dt (delta t).
+<dd><p>Predict the Trajectory evolution of a single Aircraft within the Environment for dt amount of time.
 Change heading or flight level if requested in Actions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -159,7 +156,18 @@ Change heading or flight level if requested in Actions.</p>
 <li><p><strong>callsign</strong> (<em>str</em>) – Aircraft callsign</p></li>
 <li><p><strong>environment</strong> (<a class="reference internal" href="starling.core.environment.Environment.html#starling.core.environment.Environment" title="starling.core.environment.Environment"><em>Environment</em></a>) – An Environment instance</p></li>
 <li><p><strong>dt</strong> (<em>float</em>) – The amount of time [sec] for which to evolve the Aircraft Trajectory</p></li>
-<li><p><strong>actions</strong> (<em>list</em><em>[</em><a class="reference internal" href="starling.core.action.Action.html#starling.core.action.Action" title="starling.core.action.Action"><em>Action</em></a><em>]</em>) – List of Actions issued to the Aircraft</p></li>
+<li><p><strong>actions</strong> (<em>list</em><em>[</em><a class="reference internal" href="starling.core.action.Action.html#starling.core.action.Action" title="starling.core.action.Action"><em>Action</em></a><em>]</em>) – <dl class="simple">
+<dt>List of Actions issued to the Aircraft. Action kind can be one of:</dt><dd><ul>
+<li><p><cite>on_route</cite>: automatically follow filed Route</p></li>
+<li><p><cite>set_route</cite>: go directly to named Fix on Route</p></li>
+<li><p><cite>change_heading_to</cite>: change heading to the specified degrees</p></li>
+<li><p><cite>change_heading_by</cite>: change heading by given degrees</p></li>
+<li><p><cite>change_flight_level_to</cite>: go to the specified flight level</p></li>
+<li><p><cite>change_flight_level_by</cite>: descend/ascend by specified flight levels</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

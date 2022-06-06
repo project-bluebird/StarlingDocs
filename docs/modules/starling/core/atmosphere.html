@@ -70,35 +70,30 @@
 
 <div class="viewcode-block" id="Atmosphere"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere">[docs]</a><span class="k">class</span> <span class="nc">Atmosphere</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to describe the atmospheric conditions in a BADA atmospheric model. </span>
-<span class="sd">    See ECC Technical/Scientific Report No. 2010-001 for specific details.</span>
-<span class="sd">    If you instantiate this class without any arguments it will return by </span>
+<span class="sd">    Class to describe the atmospheric conditions in a BADA atmospheric model.</span>
+<span class="sd">    See EEC Technical/Scientific Report No. 2010-001 for specific details.</span>
+<span class="sd">    If you instantiate this class without any arguments it will return by</span>
 <span class="sd">    default an ISA (International Standard Atmosphere). Note below MSL refers</span>
 <span class="sd">    to mean sea level.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Atmosphere.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">delta_T</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-            <span class="n">delta_P</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="p">):</span>
+<div class="viewcode-block" id="Atmosphere.__init__"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta_T</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">delta_P</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a new instance of an atmosphere</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        delta_T : float = 0.0</span>
-<span class="sd">            The BADA atmosphere temperature differential at a pressure </span>
+<span class="sd">            The BADA atmosphere temperature differential at a pressure</span>
 <span class="sd">            altitude of zero (in K)</span>
 <span class="sd">        delta_P : float = 0.0</span>
-<span class="sd">            The BADA atmosphere pressure differential at a pressure </span>
+<span class="sd">            The BADA atmosphere pressure differential at a pressure</span>
 <span class="sd">            altitude of zero (in Pa)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">delta_P</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
             <span class="n">P_msl</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span> <span class="o">+</span> <span class="n">delta_P</span>
             <span class="n">expo</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span>
-            <span class="n">Hp_msl</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span><span class="p">)</span> <span class="o">*</span> \
-                     <span class="p">((</span><span class="n">P_msl</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span><span class="p">)</span> <span class="o">**</span> <span class="n">expo</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">Hp_msl</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">P_msl</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span><span class="p">)</span> <span class="o">**</span> <span class="n">expo</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">P_msl</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span>
             <span class="n">Hp_msl</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -122,7 +117,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the temperature in an atmosphere at a given flight level.</span>
 <span class="sd">        Note here we first convert the flight level to a pressure altitude (Hp)</span>
-<span class="sd">        See equations 3.28 in ECC Technical/Scientific Report No. 2010-001.</span>
+<span class="sd">        See equations 3.28 in EEC Technical/Scientific Report No. 2010-001.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -146,7 +141,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the pressure in an atmosphere at a given flight level.</span>
 <span class="sd">        Note here we first convert the flight level to a pressure altitude (Hp)</span>
-<span class="sd">        See equations 3.26 in ECC Technical/Scientific Report No. 2010-001.</span>
+<span class="sd">        See equations 3.26 in EEC Technical/Scientific Report No. 2010-001.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -157,19 +152,17 @@
 <span class="sd">        -------</span>
 <span class="sd">        float</span>
 <span class="sd">            The bada atmospheric pressure at the corresponding flight level</span>
-<span class="sd">            height. </span>
+<span class="sd">            height.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Hp</span> <span class="o">=</span> <span class="n">flight_level</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">FL_TO_M</span>
         <span class="n">expo</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">Hp</span> <span class="o">&lt;=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span><span class="p">:</span>
-            <span class="n">press</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span> <span class="o">*</span> \
-                    <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">Hp</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span><span class="p">)</span> <span class="o">**</span> <span class="n">expo</span>
+            <span class="n">press</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">Hp</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span><span class="p">)</span> <span class="o">**</span> <span class="n">expo</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">P_trop</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span> <span class="o">*</span> \
-                     <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span><span class="p">)</span> <span class="o">**</span> <span class="n">expo</span>
-            <span class="n">press</span> <span class="o">=</span> <span class="n">P_trop</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span> <span class="o">*</span> \
-                                    <span class="p">(</span><span class="n">Hp</span> <span class="o">-</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span><span class="p">)</span> <span class="o">/</span> \
-                                    <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_isa_trop</span><span class="p">))</span>
+            <span class="n">P_trop</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span><span class="p">)</span> <span class="o">**</span> <span class="n">expo</span>
+            <span class="n">press</span> <span class="o">=</span> <span class="n">P_trop</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+                <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span> <span class="o">*</span> <span class="p">(</span><span class="n">Hp</span> <span class="o">-</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_isa_trop</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">press</span></div>
 
 <div class="viewcode-block" id="Atmosphere.density_from_fl"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.density_from_fl">[docs]</a>    <span class="k">def</span> <span class="nf">density_from_fl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flight_level</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -195,8 +188,8 @@
 <div class="viewcode-block" id="Atmosphere.geopot_altitude_from_fl"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.geopot_altitude_from_fl">[docs]</a>    <span class="k">def</span> <span class="nf">geopot_altitude_from_fl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flight_level</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the geopotential height at a given flight level, by</span>
-<span class="sd">        first converting the flight level to pressure altitude (Hp) and </span>
-<span class="sd">        the using equations 3-31 in ECC Technical/Scientific Report </span>
+<span class="sd">        first converting the flight level to pressure altitude (Hp) and</span>
+<span class="sd">        the using equations 3-31 in EEC Technical/Scientific Report</span>
 <span class="sd">        No. 2010-001.</span>
 
 <span class="sd">        Parameters</span>
@@ -212,19 +205,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Hp</span> <span class="o">=</span> <span class="n">flight_level</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">FL_TO_M</span>
         <span class="k">if</span> <span class="n">Hp</span> <span class="o">&lt;=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span><span class="p">:</span>
-            <span class="n">altitude</span> <span class="o">=</span> <span class="n">Hp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Hp_msl</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta_T</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span><span class="p">)</span> <span class="o">*</span> \
-                       <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">Hp</span><span class="p">)</span> <span class="o">/</span> \
-                              <span class="bp">self</span><span class="o">.</span><span class="n">T_isa_msl</span><span class="p">)</span>
+            <span class="n">altitude</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Hp</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Hp_msl</span>
+                <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta_T</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span><span class="p">)</span>
+                <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">Hp</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_isa_msl</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">altitude</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_trop</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_isa_trop</span><span class="p">)</span> <span class="o">*</span> \
-                       <span class="p">(</span><span class="n">Hp</span> <span class="o">-</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span><span class="p">)</span>
+            <span class="n">altitude</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_trop</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_isa_trop</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Hp</span> <span class="o">-</span> <span class="n">constants</span><span class="o">.</span><span class="n">HP_TROP</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">altitude</span></div>
 
 <div class="viewcode-block" id="Atmosphere.geodet_altitude_from_fl"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.geodet_altitude_from_fl">[docs]</a>    <span class="k">def</span> <span class="nf">geodet_altitude_from_fl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flight_level</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the geodetic height at a given flight level. Here we</span>
-<span class="sd">        first calculate the geopotential height and then convert to </span>
-<span class="sd">        geodetic height using equation 2-7 in ECC Technical/Scientific Report </span>
+<span class="sd">        first calculate the geopotential height and then convert to</span>
+<span class="sd">        geodetic height using equation 2-7 in EEC Technical/Scientific Report</span>
 <span class="sd">        No. 2010-001.</span>
 
 <span class="sd">        Parameters</span>
@@ -240,7 +235,171 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">geopot_altitude_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">)</span>
         <span class="n">altitude</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_E</span> <span class="o">*</span> <span class="n">H</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">R_E</span> <span class="o">-</span> <span class="n">H</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">altitude</span></div></div>
+        <span class="k">return</span> <span class="n">altitude</span></div>
+
+<div class="viewcode-block" id="Atmosphere.cas_to_tas"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.cas_to_tas">[docs]</a>    <span class="k">def</span> <span class="nf">cas_to_tas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flight_level</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">calibrated_air_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert calibrated air speed (CAS) to true air speed (TAS).</span>
+<span class="sd">        See equation 3.1-23 in EEC Technical/Scientific Report No. 2010-003.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        flight_level : float</span>
+<span class="sd">            A flight level</span>
+<span class="sd">        calibrated_air_speed : float</span>
+<span class="sd">            The calibrated air speed of the aircraft (in m/s)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The true air speed of the aircraft (in m/s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span>
+        <span class="n">p_over_rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">density_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">)</span>
+        <span class="n">p_over_rho_zero</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">RHO_ZERO</span>
+        <span class="n">p_ratio</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">calibrated_air_speed</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">p_over_rho_zero</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">p_ratio</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">mu</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">))</span> <span class="o">**</span> <span class="n">mu</span>
+        <span class="n">true_air_speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">p_over_rho</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">true_air_speed</span></div>
+
+<div class="viewcode-block" id="Atmosphere.tas_to_cas"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.tas_to_cas">[docs]</a>    <span class="k">def</span> <span class="nf">tas_to_cas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flight_level</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">true_air_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert true air speed (TAS) to calibrated air speed (CAS).</span>
+<span class="sd">        See equation 3.1-24 in EEC Technical/Scientific Report No. 2010-003.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        flight_level : float</span>
+<span class="sd">            A flight level</span>
+<span class="sd">        true_air_speed : float</span>
+<span class="sd">            The true air speed of the aircraft (in m/s)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The calibrated air speed of the aircraft (in m/s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span>
+        <span class="n">p_over_rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">density_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">)</span>
+        <span class="n">p_over_rho_zero</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">RHO_ZERO</span>
+        <span class="n">p_ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">)</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">P_ZERO</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">true_air_speed</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">p_over_rho</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">p_ratio</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">mu</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">))</span> <span class="o">**</span> <span class="n">mu</span>
+        <span class="n">calibrated_air_speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">p_over_rho_zero</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">calibrated_air_speed</span></div>
+
+<div class="viewcode-block" id="Atmosphere.gs_to_tas"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.gs_to_tas">[docs]</a>    <span class="k">def</span> <span class="nf">gs_to_tas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ground_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert ground speed (GS) to true air speed (TAS).</span>
+<span class="sd">        This is merely a holding routine. For the moment the airspeed and</span>
+<span class="sd">        ground speed are set to be equal. I.e. we are ignoring any</span>
+<span class="sd">        correction due to windspeed at the location of the aircraft.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ground_speed : float</span>
+<span class="sd">            The ground speed of the aircraft (in m/s)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The true air speed of the aircraft (in m/s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">true_air_speed</span> <span class="o">=</span> <span class="n">ground_speed</span>
+        <span class="k">return</span> <span class="n">true_air_speed</span></div>
+
+<div class="viewcode-block" id="Atmosphere.tas_to_gs"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.tas_to_gs">[docs]</a>    <span class="k">def</span> <span class="nf">tas_to_gs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_air_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert true air speed (TAS) to ground speed (GS).</span>
+<span class="sd">        This is merely a holding routine. For the moment the airspeed and</span>
+<span class="sd">        ground speed are set to be equal. I.e. we are ignoring any</span>
+<span class="sd">        correction due to windspeed at the location of the aircraft.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        true_air_speed : float</span>
+<span class="sd">            The true air speed of the aircraft (in m/s)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The ground speed of the aircraft (in m/s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ground_speed</span> <span class="o">=</span> <span class="n">true_air_speed</span>
+        <span class="k">return</span> <span class="n">ground_speed</span></div>
+
+<div class="viewcode-block" id="Atmosphere.tas_to_mach"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.tas_to_mach">[docs]</a>    <span class="k">def</span> <span class="nf">tas_to_mach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flight_level</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">true_air_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the true airspeed (TAS) to a mach number.</span>
+<span class="sd">        See equation 3.1-26 in EEC Technical/Scientific Report No. 2010-003.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        flight_level : float</span>
+<span class="sd">            A flight level</span>
+<span class="sd">        true_air_speed : float</span>
+<span class="sd">            The true air speed of the aircraft (in m/s)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The aircrafts speed as a mach number (dimensionless)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mach</span> <span class="o">=</span> <span class="n">true_air_speed</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">mach</span></div>
+
+<div class="viewcode-block" id="Atmosphere.mach_to_tas"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.mach_to_tas">[docs]</a>    <span class="k">def</span> <span class="nf">mach_to_tas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flight_level</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the mach number to a true airspeed (TAS).</span>
+<span class="sd">        See equation 3.1-26 in EEC Technical/Scientific Report No. 2010-003.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        flight_level : float</span>
+<span class="sd">            A flight level</span>
+<span class="sd">        mach : float</span>
+<span class="sd">            The mach number of the aircraft (dimensionless)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The aircrafts true air speed (in m/s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">true_air_speed</span> <span class="o">=</span> <span class="n">mach</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature_from_fl</span><span class="p">(</span><span class="n">flight_level</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">true_air_speed</span></div>
+
+<div class="viewcode-block" id="Atmosphere.mach_cas_trans_altitude"><a class="viewcode-back" href="../../.././autosummary/starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere.mach_cas_trans_altitude">[docs]</a>    <span class="k">def</span> <span class="nf">mach_cas_trans_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">calibrated_air_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For given mach number and calibrated air speed find the pressure altitude at which</span>
+<span class="sd">        these two quantities represent the same true air speed.</span>
+<span class="sd">        See equations 3.1-27 to 3.1-29 in EEC Technical/Scientific Report No. 2010-003.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mach : float</span>
+<span class="sd">            The given mach number</span>
+<span class="sd">        calibrated_air_speed : float</span>
+<span class="sd">            The given calibrated air speed (in m/s)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The transition pressure altitude (in m)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mu_inv</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">kappa_prime</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAPPA</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">pressure_ratio</span> <span class="o">=</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">kappa_prime</span> <span class="o">*</span> <span class="p">(</span><span class="n">calibrated_air_speed</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">A_ZERO</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="n">mu_inv</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">kappa_prime</span> <span class="o">*</span> <span class="n">mach</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="n">mu_inv</span> <span class="o">-</span> <span class="mf">1.0</span>
+        <span class="p">)</span>
+        <span class="n">temperature_ratio</span> <span class="o">=</span> <span class="n">pressure_ratio</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">BETA_T</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">R_GAS</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">G_ACC</span><span class="p">)</span>
+
+        <span class="n">transition_altitude</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">temperature_ratio</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">T_ZERO</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_T</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1000.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.304</span> <span class="o">*</span> <span class="mf">6.5</span><span class="p">))</span> <span class="o">*</span> <span class="n">convert</span><span class="o">.</span><span class="n">FT_TO_M</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">transition_altitude</span></div></div>
 </pre></div>
 
            </div>

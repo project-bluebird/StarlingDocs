@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>starling.utility.bada.gs_to_tas &mdash; Starling 0.1.0 documentation</title>
+  <title>starling.utility.bada.change_in_pressure_height_and_mass &mdash; Starling 0.1.0 documentation</title>
       <link rel="stylesheet" href=".././static/pygments.css" type="text/css" />
       <link rel="stylesheet" href=".././static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src=".././static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="starling.utility.bada.tas_to_mach" href="starling.utility.bada.tas_to_mach.html" />
-    <link rel="prev" title="starling.utility.bada.get_thrust_and_drag" href="starling.utility.bada.get_thrust_and_drag.html" /> 
+    <link rel="next" title="starling.utility.bada.energy_share_factor" href="starling.utility.bada.energy_share_factor.html" />
+    <link rel="prev" title="starling.utility.bada.bada_dy_dt" href="starling.utility.bada.bada_dy_dt.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,16 +51,15 @@
 <li class="toctree-l2"><a class="reference internal" href="starling.runner.html">starling.runner</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="starling.utility.html">starling.utility</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="starling.utility.bada.html">starling.utility.bada</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.change_in_pressure_height.html">starling.utility.bada.change_in_pressure_height</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.dHp_dt.html">starling.utility.bada.dHp_dt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.bada_dy_dt.html">starling.utility.bada.bada_dy_dt</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">starling.utility.bada.change_in_pressure_height_and_mass</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.energy_share_factor.html">starling.utility.bada.energy_share_factor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.flight_condition.html">starling.utility.bada.flight_condition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_banking_angle.html">starling.utility.bada.get_banking_angle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_drag.html">starling.utility.bada.get_drag</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_maximum_climb_thrust.html">starling.utility.bada.get_maximum_climb_thrust</a></li>
 <li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_thrust.html">starling.utility.bada.get_thrust</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.get_thrust_and_drag.html">starling.utility.bada.get_thrust_and_drag</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">starling.utility.bada.gs_to_tas</a></li>
-<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.tas_to_mach.html">starling.utility.bada.tas_to_mach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.rate_of_mass_change.html">starling.utility.bada.rate_of_mass_change</a></li>
+<li class="toctree-l4"><a class="reference internal" href="starling.utility.bada.reduced_climb_power_correction.html">starling.utility.bada.reduced_climb_power_correction</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="starling.utility.constants.html">starling.utility.constants</a></li>
@@ -93,9 +92,9 @@
           <li><a href="starling.html">starling</a> &raquo;</li>
           <li><a href="starling.utility.html">starling.utility</a> &raquo;</li>
           <li><a href="starling.utility.bada.html">starling.utility.bada</a> &raquo;</li>
-      <li>starling.utility.bada.gs_to_tas</li>
+      <li>starling.utility.bada.change_in_pressure_height_and_mass</li>
       <li class="wy-breadcrumbs-aside">
-            <a href=".././sources/./autosummary/starling.utility.bada.gs_to_tas.rst.txt" rel="nofollow"> View page source</a>
+            <a href=".././sources/./autosummary/starling.utility.bada.change_in_pressure_height_and_mass.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -103,24 +102,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="starling-utility-bada-gs-to-tas">
-<h1>starling.utility.bada.gs_to_tas<a class="headerlink" href="#starling-utility-bada-gs-to-tas" title="Permalink to this headline"></a></h1>
+  <section id="starling-utility-bada-change-in-pressure-height-and-mass">
+<h1>starling.utility.bada.change_in_pressure_height_and_mass<a class="headerlink" href="#starling-utility-bada-change-in-pressure-height-and-mass" title="Permalink to this headline"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="starling.utility.bada.gs_to_tas">
-<span class="sig-prename descclassname"><span class="pre">starling.utility.bada.</span></span><span class="sig-name descname"><span class="pre">gs_to_tas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ground_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href=".././modules/starling/utility/bada.html#gs_to_tas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.bada.gs_to_tas" title="Permalink to this definition"></a></dt>
-<dd><p>Convert ground speed (GS) to true air speed (TAS).
-This is merely a holding routine. For the moment the airspeed and
-ground speed are set to be equal. I.e. we are ignoring any
-correction due to windspeed at the location of the aircraft.</p>
+<dt class="sig sig-object py" id="starling.utility.bada.change_in_pressure_height_and_mass">
+<span class="sig-prename descclassname"><span class="pre">starling.utility.bada.</span></span><span class="sig-name descname"><span class="pre">change_in_pressure_height_and_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aircraft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><span class="pre">Aircraft</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">atmos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere" title="starling.core.atmosphere.Atmosphere"><span class="pre">Atmosphere</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">aircraft_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href=".././modules/starling/utility/bada.html#change_in_pressure_height_and_mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#starling.utility.bada.change_in_pressure_height_and_mass" title="Permalink to this definition"></a></dt>
+<dd><p>For a given aircraft find its change in pressure height and mass
+over a given time interval using a fourth order Runge-Kutta integration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ground_speed</strong> (<em>float</em>) – The ground speed of the aircraft (in m/s)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>aircraft</strong> (<a class="reference internal" href="starling.core.aircraft.Aircraft.html#starling.core.aircraft.Aircraft" title="starling.core.aircraft.Aircraft"><em>Aircraft</em></a>) – The aircraft for which to find the change in pressure height and mass</p></li>
+<li><p><strong>atmos</strong> (<a class="reference internal" href="starling.core.atmosphere.Atmosphere.html#starling.core.atmosphere.Atmosphere" title="starling.core.atmosphere.Atmosphere"><em>Atmosphere</em></a>) – The BADA atmosphere used to represent the atmosphere at lat and lon of
+the aircraft.</p></li>
+<li><p><strong>aircraft_state</strong> (<em>str</em>) – The state of the aircraft.</p></li>
+<li><p><strong>time_interval</strong> (<em>float</em>) – The time interval in seconds</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The true air speed of the aircraft (in m/s)</p>
+<dd class="field-even"><p>Two floats which are the change in pressure height (in meters) and
+the mass (in kg) at end of time-step</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>Tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -131,8 +135,8 @@ correction due to windspeed at the location of the aircraft.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="starling.utility.bada.get_thrust_and_drag.html" class="btn btn-neutral float-left" title="starling.utility.bada.get_thrust_and_drag" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="starling.utility.bada.tas_to_mach.html" class="btn btn-neutral float-right" title="starling.utility.bada.tas_to_mach" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="starling.utility.bada.bada_dy_dt.html" class="btn btn-neutral float-left" title="starling.utility.bada.bada_dy_dt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="starling.utility.bada.energy_share_factor.html" class="btn btn-neutral float-right" title="starling.utility.bada.energy_share_factor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

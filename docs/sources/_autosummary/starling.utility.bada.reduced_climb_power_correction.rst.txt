@@ -1,0 +1,6 @@
+starling.utility.bada.reduced\_climb\_power\_correction
+=======================================================
+
+.. currentmodule:: starling.utility.bada
+
+.. autofunction:: reduced_climb_power_correction
