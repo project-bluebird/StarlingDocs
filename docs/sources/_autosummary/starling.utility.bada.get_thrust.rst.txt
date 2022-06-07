@@ -1,6 +1,0 @@
-starling.utility.bada.get\_thrust
-=================================
-
-.. currentmodule:: starling.utility.bada
-
-.. autofunction:: get_thrust

@@ -1,6 +1,0 @@
-starling.utility.bada.change\_in\_pressure\_height\_and\_mass
-=============================================================
-
-.. currentmodule:: starling.utility.bada
-
-.. autofunction:: change_in_pressure_height_and_mass

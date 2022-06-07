@@ -1,6 +1,0 @@
-starling.utility.bada.rate\_of\_mass\_change
-============================================
-
-.. currentmodule:: starling.utility.bada
-
-.. autofunction:: rate_of_mass_change

@@ -1,6 +1,0 @@
-starling.utility.file.init\_directories
-=======================================
-
-.. currentmodule:: starling.utility.file
-
-.. autofunction:: init_directories
